@@ -18,6 +18,7 @@ SceneAssignment2::~SceneAssignment2()
 
 void SceneAssignment2::Init()
 {
+	//among us
 	SceneBase::Init();
 	
 	stopwatch = new StopWatch();
