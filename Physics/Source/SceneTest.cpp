@@ -5,7 +5,7 @@
 #include "Application.h"
 #include "GL\glew.h"
 
-SceneTest::SceneTest()
+SceneTest::SceneTest() : m_worldHeight(0), m_worldWidth(0)
 {
 }
 
