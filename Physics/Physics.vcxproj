@@ -165,6 +165,7 @@
     <ClCompile Include="Source\SceneAssignment2.cpp" />
     <ClCompile Include="Source\SceneAssignment2_Menu.cpp" />
     <ClCompile Include="Source\SceneBase.cpp" />
+    <ClCompile Include="Source\SceneTest.cpp" />
     <ClCompile Include="Source\shader.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
   </ItemGroup>
@@ -184,6 +185,7 @@
     <ClInclude Include="Source\SceneAssignment2.h" />
     <ClInclude Include="Source\SceneAssignment2_Menu.h" />
     <ClInclude Include="Source\SceneBase.h" />
+    <ClInclude Include="Source\SceneTest.h" />
     <ClInclude Include="Source\shader.hpp" />
     <ClInclude Include="Source\Utility.h" />
     <ClInclude Include="Source\Vertex.h" />

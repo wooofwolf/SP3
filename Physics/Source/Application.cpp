@@ -13,6 +13,7 @@
 
 #include "SceneAssignment2_Menu.h"
 #include "SceneAssignment2.h"
+#include "SceneTest.h"
 
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
@@ -128,11 +129,8 @@ void Application::Init()
 void Application::Run()
 {
 	//Main Loop
-	Scene *scene1 = new SceneAssignment2();
-	Scene* scene2 = new SceneAssignment2_Menu();
-	Scene* scene = scene2;
-	scene1->Init();
-	scene2->Init();
+	Scene *scene = new SceneTest();
+	scene->Init();
 
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
@@ -144,16 +142,9 @@ void Application::Run()
 		//Get and organize events, like keyboard and mouse input, window resizing, etc...
 		glfwPollEvents();
         m_timer.waitUntil(frameTime);       // Frame rate limiter. Limits each frame to a specified time in ms.   
-
-		if (sceneNo == 1)
-			scene = scene2;
-		else
-			scene = scene1;
 	} //Check if the ESC key had been pressed or if the window had been closed
-	scene1->Exit();
-	scene2->Exit();
-	delete scene1;
-	delete scene2;
+	scene->Exit();
+	delete scene;
 }
 
 void Application::Exit()
