@@ -32,7 +32,7 @@ void Map::readFile(std::string fileName)
 				++y;
 				x = 0;
 			}
-			else if (c == '1' || c == '0')
+			else if (c - '0' >= static_cast<int>(TILES::TILE_NONE) && c - '0' <= static_cast<int>(TILES::TILE_TOTAL))
 			{
 				mapGrid[x][y] = c - '0';
 				++x;

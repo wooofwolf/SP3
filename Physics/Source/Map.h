@@ -5,6 +5,14 @@
 class Map
 {
 private:
+	// Tileset
+	enum class TILES
+	{
+		TILE_NONE = 0,
+		TILE_WALL,
+		TILE_TOTAL
+	};
+
 	// Variables
 	int mapGrid[200][200];
 
