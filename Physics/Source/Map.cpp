@@ -1,0 +1,42 @@
+#include "Map.h"
+
+#include <iostream>
+#include <string>
+#include <fstream>
+
+Map::Map() : mapGrid{0}
+{
+}
+
+Map::~Map()
+{
+}
+
+int Map::getGrid(int x, int y)
+{
+	return mapGrid[x][y];
+}
+
+void Map::readFile(std::string fileName)
+{
+	std::fstream fin;
+
+	fin.open(fileName, std::ios::in);
+		int x, y;
+		x = y = 0;
+		char c;
+		while (fin.get(c))
+		{
+			if (c == '\n')
+			{
+				++y;
+				x = 0;
+			}
+			else if (c == '1' || c == '0')
+			{
+				mapGrid[x][y] = c - '0';
+				++x;
+			}
+		}
+	fin.close();
+}

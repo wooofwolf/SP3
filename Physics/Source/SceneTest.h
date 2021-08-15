@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SceneBase.h"
+#include "Map.h"
 
 class SceneTest : public SceneBase
 {
@@ -8,6 +9,7 @@ private:
 	// Variables
 	float m_worldWidth;
 	float m_worldHeight;
+	Map* map;
 
 public:
 	// Constructor

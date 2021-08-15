@@ -4,8 +4,9 @@
 
 #include "Application.h"
 #include "GL\glew.h"
+#include "Map.h"
 
-SceneTest::SceneTest() : m_worldHeight(0), m_worldWidth(0)
+SceneTest::SceneTest() : m_worldHeight(0), m_worldWidth(0), map(nullptr)
 {
 }
 
@@ -20,6 +21,10 @@ void SceneTest::Init()
 	// Calculating aspect ratio
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
+
+	// Test map
+	map = new Map();
+	map->readFile("Maps/TestMap.csv");
 }
 
 void SceneTest::Update(double dt)
@@ -50,12 +55,30 @@ void SceneTest::Render()
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
 
+	for (int y = 0; y < 200; ++y)
+	{
+		for (int x = 0; x < 200; ++x)
+		{
+			if (map->getGrid(x, y) == 1)
+			{
+				modelStack.PushMatrix();
+					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y , 0);
+					modelStack.Scale(2, 2, 2);
+					RenderMesh(meshList[GEO_CUBE], true);
+				modelStack.PopMatrix();
+			}
+		}
+	}
+
 	std::ostringstream ss;
-	ss << "Hello World";
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 10, 10);
+	ss.precision(5);
+	ss << "FPS: " << fps;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
 }
 
 void SceneTest::Exit()
 {
 	SceneBase::Exit();
+
+	delete map;
 }
