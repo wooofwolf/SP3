@@ -24,7 +24,7 @@ void SceneTest::Init()
 
 	// Test map
 	map = new Map();
-	map->readFile("Maps/TestMap.csv");
+	map->ReadFile("Maps/TestMap.csv");
 }
 
 void SceneTest::Update(double dt)
@@ -59,7 +59,7 @@ void SceneTest::Render()
 	{
 		for (int x = 0; x < 200; ++x)
 		{
-			if (map->getGrid(x, y) == 1)
+			if (map->GetGrid(x, y) == 1)
 			{
 				modelStack.PushMatrix();
 					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y , 0);

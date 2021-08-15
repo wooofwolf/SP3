@@ -4,6 +4,8 @@
 #include <string>
 #include <fstream>
 
+#include "GL/glew.h"
+
 Map::Map() : mapGrid{0}
 {
 }
@@ -12,12 +14,12 @@ Map::~Map()
 {
 }
 
-int Map::getGrid(int x, int y)
+int Map::GetGrid(int x, int y)
 {
 	return mapGrid[x][y];
 }
 
-void Map::readFile(std::string fileName)
+void Map::ReadFile(std::string fileName)
 {
 	std::fstream fin;
 

@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "MatrixStack.h"
+
 class Map
 {
 private:
@@ -23,8 +25,8 @@ public:
 	~Map();
 
 	// Accessors
-	int getGrid(int x, int y);
+	int GetGrid(int x, int y);
 	// Mutators
-	void readFile(std::string fileName);
+	void ReadFile(std::string fileName);
 };
 
