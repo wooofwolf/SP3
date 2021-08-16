@@ -18,6 +18,12 @@ void SceneTest::Init()
 {
 	SceneBase::Init();
 
+	//entitylist
+
+	//Player player = new Player();
+	//player.init();
+	//entitylist.pushback(player);
+
 	// Calculating aspect ratio
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
@@ -29,6 +35,11 @@ void SceneTest::Init()
 
 void SceneTest::Update(double dt)
 {
+	//for (int i = 0; i < entitylist.size(); i++)
+	//{
+	//	entitylist[i]->pos += go->vel * player.GetGameSpeed() * dt;
+	//}
+
 	SceneBase::Update(dt);
 }
 
