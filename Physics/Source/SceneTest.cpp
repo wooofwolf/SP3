@@ -86,6 +86,11 @@ void SceneTest::Update(double dt)
 
 void SceneTest::Render()
 {
+	double x, y;
+	Application::GetCursorPos(&x, &y);
+	int w = Application::GetWindowWidth();
+	int h = Application::GetWindowHeight();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// Projection matrix : Orthographic Projection
 	Mtx44 projection;
@@ -107,8 +112,8 @@ void SceneTest::Render()
 	modelStack.PushMatrix();
 	{
 		modelStack.Translate(player->getPos().x, player->getPos().y, 0);
-		modelStack.Rotate(Math::DegreeToRadian(atan2f(player->getRotate().y, player->getRotate().x)), 0, 0, 1);
-		modelStack.Scale(player->getScale().x, player->getScale().y, player->getScale().z);
+		modelStack.Rotate(Math::RadianToDegree(atan2f(m_worldHeight - (y / h) * m_worldHeight - player->getPos().y, (x / w) * m_worldWidth - player->getPos().x)), 0, 0, 1);
+		modelStack.Scale(player->getScale().x, player->getScale().y * 0.5, player->getScale().z);
 		RenderMesh(meshList[GEO_CUBE_RED], false);
 	}
 	modelStack.PopMatrix();

@@ -11,6 +11,8 @@ protected:
 
 	MS modelStack;
 
+	SceneBase* base;
+
 public:
 	// Constructor
 	Player();
@@ -26,5 +28,7 @@ public:
 	Vector3 getPos();
 	Vector3 getRotate();
 	Vector3 getScale();
+
+	void setRotate(int x, int y);
 };
 
