@@ -2,6 +2,7 @@
 
 #include "SceneBase.h"
 #include "Map.h"
+#include "Guns.h"
 
 class SceneTest : public SceneBase
 {
@@ -10,6 +11,11 @@ private:
 	float m_worldWidth;
 	float m_worldHeight;
 	Map* map;
+	GunComponent* simpleGun;
+	GunComponent* revolver;
+	GunComponent* shotgun;
+	GunComponent* minigun;
+	GunComponent* activeGun;
 
 public:
 	// Constructor

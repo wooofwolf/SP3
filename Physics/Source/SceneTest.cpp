@@ -5,6 +5,7 @@
 #include "Application.h"
 #include "GL\glew.h"
 #include "Map.h"
+#include "Guns.h"
 
 SceneTest::SceneTest():map(nullptr)
 {
@@ -26,11 +27,52 @@ void SceneTest::Init()
 	// Test map
 	map = new Map();
 	//map->ReadFile("Maps/TestMap.csv");
+
+	// Test guns
+	simpleGun = new ConcreteGunComponent();
+	revolver = new Revolver(simpleGun);
+	shotgun = new Shotgun(simpleGun);
+	minigun = new Minigun(simpleGun);
+	activeGun = revolver;
+
+	revolver->nextGun = shotgun;
+	revolver->prevGun = minigun;
+	shotgun->nextGun = minigun;
+	shotgun->prevGun = revolver;
+	minigun->nextGun = revolver;
+	minigun->prevGun = shotgun;
 }
 
 void SceneTest::Update(double dt)
 {
 	SceneBase::Update(dt);
+
+	static bool bQButtonState = false;
+	if (!bQButtonState && Application::IsKeyPressed('Q'))
+	{
+		activeGun = activeGun->prevGun;
+		bQButtonState = true;
+	}
+	else if (bQButtonState && !Application::IsKeyPressed('Q'))
+		bQButtonState = false;
+
+	static bool bEButtonState = false;
+	if (!bEButtonState && Application::IsKeyPressed('E'))
+	{
+		activeGun = activeGun->nextGun;
+		bEButtonState = true;
+	}
+	else if (bEButtonState && !Application::IsKeyPressed('E'))
+		bEButtonState = false;
+
+	static bool bFireButtonState = false;
+	if (!bFireButtonState && Application::IsMousePressed(0))
+	{
+		activeGun->FireGun();
+		bFireButtonState = true;
+	}
+	else if (bFireButtonState && !Application::IsMousePressed(0))
+		bFireButtonState = false;
 }
 
 void SceneTest::Render()
@@ -64,4 +106,9 @@ void SceneTest::Exit()
 	SceneBase::Exit();
 
 	delete map;
+
+	delete simpleGun;
+	delete revolver;
+	delete shotgun;
+	delete minigun;
 }
