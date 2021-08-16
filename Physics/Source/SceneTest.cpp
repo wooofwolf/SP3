@@ -117,9 +117,9 @@ void SceneTest::Render()
 	{
 		for (int x = 0; x < 200; ++x)
 		{
-			switch (map->GetGrid(x, y))
+			switch (map->GetTile(x, y))
 			{
-			case 1:
+			case Map::TILES::TILE_WALL:
 				Vector3 tilePos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
 				float width = (tilePos - Camera::GetInstance()->position).Length();
 				float height = Camera::GetInstance()->position.z - tilePos.z;

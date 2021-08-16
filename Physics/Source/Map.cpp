@@ -9,7 +9,7 @@
 #include "Camera.h"
 #include "SceneBase.h"
 
-Map::Map() : mapGrid{0}
+Map::Map() : mapGrid{TILES::TILE_NONE}
 {
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
@@ -31,9 +31,9 @@ void Map::RenderMap(std::string fileName)
 	{
 		for (int x = 0; x < 200; ++x)
 		{
-			switch(GetGrid(x,y))
+			switch(GetTile(x,y))
 			{
-			case 1:
+			case TILES::TILE_WALL:
 				Vector3 tilePos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
 				float width = (tilePos - Camera::GetInstance()->position).Length();
 				float height = Camera::GetInstance()->position.z - tilePos.z;
@@ -55,7 +55,7 @@ void Map::RenderMap(std::string fileName)
 	}
 }
 
-int Map::GetGrid(int x, int y)
+Map::TILES Map::GetTile(int x, int y)
 {
 	return mapGrid[x][y];
 }
@@ -77,7 +77,7 @@ void Map::ReadFile(std::string fileName)
 			}
 			else if (c - '0' >= static_cast<int>(TILES::TILE_NONE) && c - '0' <= static_cast<int>(TILES::TILE_TOTAL))
 			{
-				mapGrid[x][y] = c - '0';
+				mapGrid[x][y] = static_cast<Map::TILES>(c - '0');
 				++x;
 			}
 		}
