@@ -13,7 +13,7 @@ private:
 	float m_worldHeight;
 	Map* map;
 
-	std::vector<Entity*> EntityList;
+	//std::vector<Entity*> EntityList;
 
 	Player* player;
 
