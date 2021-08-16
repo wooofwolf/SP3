@@ -3,14 +3,13 @@
 #include <string>
 
 #include "MatrixStack.h"
-#include "SceneBase.h"
 #include "SingletonPattern.h"
 #include "MeshList.h"
 
-class Map: public SceneBase, public SingletonPattern<Map>
+class Map: public SingletonPattern<Map>
 {
 	friend SingletonPattern<Map>;
-private:
+public:
 	// Tileset
 	enum class TILES
 	{
@@ -18,10 +17,7 @@ private:
 		TILE_WALL,
 		TILE_TOTAL
 	};
-	// Variables
-	int mapGrid[200][200];
 
-public:
 	float m_worldWidth;
 	float m_worldHeight;
 	
@@ -31,10 +27,14 @@ public:
 	~Map();
 	void RenderMap(std::string fileName);
 	// Accessors
-	int GetGrid(int x, int y);
+	TILES GetTile(int x, int y);
 	// Mutators
 	void ReadFile(std::string fileName);
 
-	Mesh* mesh;
+private:
+	// Variables
+	TILES mapGrid[200][200];
+
+	MS modelStack;
 };
 

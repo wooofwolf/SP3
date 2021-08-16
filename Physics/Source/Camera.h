@@ -2,9 +2,11 @@
 #define CAMERA_H
 
 #include "Vector3.h"
+#include "SingletonPattern.h"
 
-class Camera
+class Camera: public SingletonPattern<Camera>
 {
+	friend SingletonPattern<Camera>;
 public:
 	Vector3 position;
 	Vector3 target;

@@ -36,7 +36,6 @@ void SceneTest::Init()
 
 	// Test map
 	map = Map::GetInstance();
-	//map->ReadFile("Maps/TestMap.csv");
 
 	// Test guns
 	simpleGun = new ConcreteGunComponent();
@@ -108,16 +107,42 @@ void SceneTest::Render()
 	// Camera matrix
 	viewStack.LoadIdentity();
 	viewStack.LookAt(
-		camera.position.x, camera.position.y, camera.position.z,
-		camera.target.x, camera.target.y, camera.target.z,
-		camera.up.x, camera.up.y, camera.up.z
+		camera->position.x, camera->position.y, camera->position.z,
+		camera->target.x, camera->target.y, camera->target.z,
+		camera->up.x, camera->up.y, camera->up.z
 	);
 
 
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
+	//map->RenderMap("Maps/TestMap.csv");
+	map->ReadFile("Maps/TestMap.csv");
+	for (int y = 0; y < 200; ++y)
+	{
+		for (int x = 0; x < 200; ++x)
+		{
+			switch (map->GetTile(x, y))
+			{
+			case Map::TILES::TILE_WALL:
+				Vector3 tilePos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
+				float width = (tilePos - Camera::GetInstance()->position).Length();
+				float height = Camera::GetInstance()->position.z - tilePos.z;
+				float hypotenuse = sqrtf(width * width + height * height);
+				float maxWidth = (Vector3(m_worldWidth + 2, m_worldHeight + 2, 1) - Camera::GetInstance()->position).Length();
+				float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
 
-	map->RenderMap("Maps/TestMap.csv");
+				if (hypotenuse <= maxHypotenuse)
+				{
+					modelStack.PushMatrix();
+					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
+					modelStack.Scale(2, 2, 2);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE), true);
+					modelStack.PopMatrix();
+					break;
+				}
+			}
+		}
+	}
 
 	//modelStack.PushMatrix();
 	//player->Render();

@@ -3,12 +3,14 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+
 #include "Application.h"
 #include "GL/glew.h"
+#include "Camera.h"
+#include "SceneBase.h"
 
-Map::Map() : mapGrid{0}
+Map::Map() : mapGrid{TILES::TILE_NONE}
 {
-	SceneBase::Init();
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 }
@@ -19,41 +21,41 @@ Map::~Map()
 
 void Map::RenderMap(std::string fileName)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	// Projection matrix : Orthographic Projection
-	Mtx44 projection;
-	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
-	projectionStack.LoadMatrix(projection);
-
-	// Camera matrix
-	viewStack.LoadIdentity();
-	viewStack.LookAt(
-		camera.position.x, camera.position.y, camera.position.z,
-		camera.target.x, camera.target.y, camera.target.z,
-		camera.up.x, camera.up.y, camera.up.z
-	);
 	ReadFile(fileName);
+	
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	// Model matrix : an identity matrix (model will be at the origin)
-	//modelStack.LoadIdentity();
+	modelStack.LoadIdentity();
 	for (int y = 0; y < 200; ++y)
 	{
 		for (int x = 0; x < 200; ++x)
 		{
-			switch(GetGrid(x,y))
+			switch(GetTile(x,y))
 			{
-			case 1:
-				modelStack.PushMatrix();
-				modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
-				modelStack.Scale(2, 2, 2);
-				RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE), true);
-				modelStack.PopMatrix();
-				break;
+			case TILES::TILE_WALL:
+				Vector3 tilePos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
+				float width = (tilePos - Camera::GetInstance()->position).Length();
+				float height = Camera::GetInstance()->position.z - tilePos.z;
+				float hypotenuse = sqrtf(width * width + height * height);
+				float maxWidth = (Vector3(m_worldWidth + 2, m_worldHeight + 2, 1) - Camera::GetInstance()->position).Length();
+				float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
+
+				if (hypotenuse <= maxHypotenuse)
+				{
+					modelStack.PushMatrix();
+					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
+					modelStack.Scale(2, 2, 2);
+					//RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE), true);
+					modelStack.PopMatrix();
+					break;
+				}
 			}
 		}
 	}
 }
 
-int Map::GetGrid(int x, int y)
+Map::TILES Map::GetTile(int x, int y)
 {
 	return mapGrid[x][y];
 }
@@ -75,7 +77,7 @@ void Map::ReadFile(std::string fileName)
 			}
 			else if (c - '0' >= static_cast<int>(TILES::TILE_NONE) && c - '0' <= static_cast<int>(TILES::TILE_TOTAL))
 			{
-				mapGrid[x][y] = c - '0';
+				mapGrid[x][y] = static_cast<Map::TILES>(c - '0');
 				++x;
 			}
 		}
