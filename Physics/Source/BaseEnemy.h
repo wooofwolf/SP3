@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
 #include "Entity.h"
-#include "Map.h"
 class BaseEnemy : public Entity
 {
 public:
@@ -11,7 +10,6 @@ public:
 	void Render();
 	void Movement();
 	Vector3 GetEnemyPos();
-	Map* map;
 protected: 
 	enum DIRECTION
 	{
@@ -52,24 +50,28 @@ public:
 };
 class CavemenRanged :public EnemyDecorator
 {
+public:
 	CavemenRanged(BaseEnemy* baseEnemy);
 
 	void Attack() const override;
 };
 class Knights : public EnemyDecorator
 {
+public:
 	Knights(BaseEnemy* baseEnemy);
 
 	void Attack() const override;
 };
 class Archer : public EnemyDecorator
 {
+public:
 	Archer(BaseEnemy* baseEnemy);
 
 	void Attack() const override;
 };
 class Cyborg : public EnemyDecorator
 {
+public:
 	Cyborg(BaseEnemy* baseEnemy);
 
 	void Attack() const override;
@@ -77,6 +79,7 @@ class Cyborg : public EnemyDecorator
 
 class Sniper : public EnemyDecorator
 {
+public:
 	Sniper(BaseEnemy* baseEnemy);
 
 	void Attack() const override;

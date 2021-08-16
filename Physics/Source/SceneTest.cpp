@@ -21,7 +21,7 @@ void SceneTest::Init()
 
 	player = Player::GetInstance();
 	player->Init();
-	baseEnemy = new BaseEnemy();
+	baseEnemy = new ConcreteBaseEnemy();
 	baseEnemy->Init();
 	//EntityList.push_back(player);
 

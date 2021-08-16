@@ -57,3 +57,71 @@ Vector3 BaseEnemy::GetEnemyPos()
 {
 	return pos;
 }
+
+void ConcreteBaseEnemy::Attack() const
+{
+	std::cout << "ConcreteBaseEnemy Attack!!" << std::endl;
+}
+
+EnemyDecorator::EnemyDecorator(BaseEnemy* baseEnemy): baseEnemy(baseEnemy)
+{
+}
+
+void EnemyDecorator::Attack() const
+{
+	std::cout << "EnemyDecorator Attack!!" << std::endl;
+}
+
+CavemenMelee::CavemenMelee(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
+{
+}
+
+void CavemenMelee::Attack() const
+{
+	std::cout << "Cavemen Melee Attack!!" << std::endl;
+}
+
+CavemenRanged::CavemenRanged(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
+{
+}
+
+void CavemenRanged::Attack() const
+{
+	std::cout << "Cavemen Ranged Attack!!" << std::endl;
+}
+
+Knights::Knights(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
+{
+}
+
+void Knights::Attack() const
+{
+	std::cout << "Knights Attack!!" << std::endl;
+}
+
+Archer::Archer(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
+{
+}
+
+void Archer::Attack() const
+{
+	std::cout << "Archer Attack!!" << std::endl;
+}
+
+Cyborg::Cyborg(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
+{
+}
+
+void Cyborg::Attack() const
+{
+	std::cout << "Cyborg Attack!!" << std::endl;
+}
+
+Sniper::Sniper(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
+{
+}
+
+void Sniper::Attack() const
+{
+	std::cout << "Sniper Attack!!" << std::endl;
+}

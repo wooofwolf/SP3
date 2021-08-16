@@ -22,11 +22,18 @@ public:
 	GunComponent* minigun;
 	GunComponent* activeGun;
 
+	BaseEnemy* baseEnemy;
+	BaseEnemy* cavemanMelee;
+	BaseEnemy* cavemeanRanged;
+	BaseEnemy* Knight;
+	BaseEnemy* Archer;
+	BaseEnemy* Cyborg;
+	BaseEnemy* Sniper;
+
+
 	std::vector<Entity*> EntityList;
 
 	Player* player;
-
-	BaseEnemy* baseEnemy;
 public:
 	// Constructor
 	SceneTest();
