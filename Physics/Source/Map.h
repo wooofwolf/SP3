@@ -4,7 +4,9 @@
 
 #include "MatrixStack.h"
 
-class Map
+#include "SceneBase.h"
+
+class Map: public SceneBase
 {
 private:
 	// Tileset
@@ -14,19 +16,23 @@ private:
 		TILE_WALL,
 		TILE_TOTAL
 	};
-
 	// Variables
 	int mapGrid[200][200];
 
 public:
+	float m_worldWidth;
+	float m_worldHeight;
+	
 	// Constructor
 	Map();
 	// Destructor
 	~Map();
-
+	void RenderMap(std::string fileName);
 	// Accessors
 	int GetGrid(int x, int y);
 	// Mutators
 	void ReadFile(std::string fileName);
+
+	Mesh* mesh;
 };
 
