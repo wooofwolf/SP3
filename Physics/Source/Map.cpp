@@ -42,12 +42,22 @@ void Map::RenderMap(std::string fileName)
 			switch(GetGrid(x,y))
 			{
 			case 1:
-				modelStack.PushMatrix();
-				modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
-				modelStack.Scale(2, 2, 2);
-				RenderMesh(meshList[GEO_CUBE], true);
-				modelStack.PopMatrix();
-				break;
+				Vector3 tilePos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
+				float width = (tilePos - camera.position).Length();
+				float height = camera.position.z - tilePos.z;
+				float hypotenuse = sqrtf(width * width + height * height);
+				float maxWidth = (Vector3(m_worldWidth + 2, m_worldHeight + 2, 1) - camera.position).Length();
+				float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
+
+				if (hypotenuse <= maxHypotenuse)
+				{
+					modelStack.PushMatrix();
+					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
+					modelStack.Scale(2, 2, 2);
+					RenderMesh(meshList[GEO_CUBE], true);
+					modelStack.PopMatrix();
+					break;
+				}
 			}
 		}
 	}
