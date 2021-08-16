@@ -14,6 +14,9 @@ protected:
 
 	SceneBase* base;
 
+	float m_speed;
+	float SprintSpeed;
+
 public:
 	// Constructor
 	Player();
@@ -26,10 +29,10 @@ public:
 
 	void Movement();
 
-	Vector3 getPos();
-	Vector3 getRotate();
-	Vector3 getScale();
+	Vector3 GetPos();
+	Vector3 GetRotate();
+	Vector3 GetScale();
 
-	void setRotate(int x, int y);
+	float GetGameSpeed();
 };
 
