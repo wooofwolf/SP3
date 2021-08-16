@@ -35,23 +35,28 @@ void SceneTest::Update(double dt)
 
 void SceneTest::Render()
 {
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//// Projection matrix : Orthographic Projection
-	//Mtx44 projection;
-	//projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
-	//projectionStack.LoadMatrix(projection);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// Projection matrix : Orthographic Projection
+	Mtx44 projection;
+	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
+	projectionStack.LoadMatrix(projection);
 
-	//// Camera matrix
-	//viewStack.LoadIdentity();
-	//viewStack.LookAt(
-	//	camera.position.x, camera.position.y, camera.position.z,
-	//	camera.target.x, camera.target.y, camera.target.z,
-	//	camera.up.x, camera.up.y, camera.up.z
-	//);
+	// Camera matrix
+	viewStack.LoadIdentity();
+	viewStack.LookAt(
+		camera.position.x, camera.position.y, camera.position.z,
+		camera.target.x, camera.target.y, camera.target.z,
+		camera.up.x, camera.up.y, camera.up.z
+	);
 
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
 	map->RenderMap("Maps/TestMap.csv");
+
+	modelStack.PushMatrix();
+	modelStack.Translate(10,90,0);
+	RenderMesh(meshList[GEO_BASEENEMY], true);
+	modelStack.PopMatrix();
 
 	std::ostringstream ss;
 	ss.precision(5);

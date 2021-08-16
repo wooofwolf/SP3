@@ -114,6 +114,7 @@ void SceneBase::Init()
 	meshList[GEO_WIN_1]->textureID = LoadTGA("Image//left-wins.tga");
 	meshList[GEO_WIN_2] = MeshBuilder::GenerateQuad("win-2", Color(1, 1, 1), 200.f);
 	meshList[GEO_WIN_2]->textureID = LoadTGA("Image//right-wins.tga");
+	meshList[GEO_BASEENEMY] = MeshBuilder::GenerateCube("BaseEnemy/Caveman", Color(0, 0, 1),1.f);
 
 	bLightEnabled = false;
 }
