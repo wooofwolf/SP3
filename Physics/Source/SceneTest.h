@@ -3,6 +3,8 @@
 #include "SceneBase.h"
 #include "Map.h"
 
+#include "Player.h"
+
 class SceneTest : public SceneBase
 {
 private:
@@ -10,6 +12,10 @@ private:
 	float m_worldWidth;
 	float m_worldHeight;
 	Map* map;
+
+	std::vector<Entity*> EntityList;
+
+	Player* player;
 
 public:
 	// Constructor

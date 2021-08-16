@@ -13,29 +13,31 @@ Player::~Player()
 void Player::Init()
 {
 	hp = 1;
-	pos.Set(1, -1, 0);
-	scale.Set(1, 1, 1);
+	pos.Set(10, 90, 1);
+	scale.Set(3, 3, 3);
 	normal.Set(1, 0, 0);
 	active = true;
 }
 
-void Player::Update()
+void Player::Update(double dt)
 {
+	
+
 	if (Application::IsKeyPressed('W'))
 	{
-
+		pos.y += 1;
 	}	
 	if (Application::IsKeyPressed('S'))
 	{
-
+		pos.y -= 1;
 	}	
 	if (Application::IsKeyPressed('A'))
 	{
-
+		pos.x -= 1;
 	}	
 	if (Application::IsKeyPressed('D'))
 	{
-
+		pos.x += 1;
 	}
 }
 
@@ -58,4 +60,19 @@ void Player::Render()
 void Player::Movement()
 {
 
+}
+
+Vector3 Player::getPos()
+{
+	return pos;
+}
+
+Vector3 Player::getRotate()
+{
+	return normal;
+}
+
+Vector3 Player::getScale()
+{
+	return scale;
 }
