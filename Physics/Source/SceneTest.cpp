@@ -17,6 +17,8 @@ SceneTest::~SceneTest()
 
 void SceneTest::Init()
 {
+	renderer = new Renderer();
+
 	SceneBase::Init();
 
 	player = Player::GetInstance();
@@ -96,7 +98,8 @@ void SceneTest::Render()
 	int w = Application::GetWindowWidth();
 	int h = Application::GetWindowHeight();
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	renderer->Reset();
+
 	// Projection matrix : Orthographic Projection
 	Mtx44 projection;
 	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
@@ -110,9 +113,15 @@ void SceneTest::Render()
 		camera.up.x, camera.up.y, camera.up.z
 	);
 
+
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
+
 	map->RenderMap("Maps/TestMap.csv");
+
+	//modelStack.PushMatrix();
+	//player->Render();
+	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	{
@@ -125,13 +134,24 @@ void SceneTest::Render()
 
 	modelStack.PushMatrix();
 	modelStack.Translate(10,90,0);
-	RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), true);
+	RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
 	modelStack.PopMatrix();
 
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(MeshList::GetInstance()->GetMesh(MeshList::GEO_TEXT), ss.str(), Color(0, 1, 0), 3, 0, 3);
+
+	modelStack.PushMatrix();
+	{
+		modelStack.Translate(20, 50, 0);
+		modelStack.Rotate(0, 0, 0, 1);
+		modelStack.Scale(5, 5, 5);
+		renderer->RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE), true);
+	}
+	modelStack.PopMatrix();
+
+	///renderer->RenderTextOnScreen(MeshList::GetInstance()->GetMesh(MeshList::GEO_TEXT), "Test", Color(0, 1, 0), 3, 0, 6);
 }
 
 void SceneTest::Exit()

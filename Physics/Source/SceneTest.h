@@ -9,6 +9,8 @@
 
 #include "MeshList.h"
 
+#include "Renderer.h"
+
 class SceneTest : public SceneBase
 {
 private:
@@ -18,6 +20,8 @@ private:
 	Map* map;
 
 public:
+	Renderer* renderer;
+
 	MeshList* meshlist;
 	
 	GunComponent* simpleGun;
@@ -33,7 +37,6 @@ public:
 	BaseEnemy* Archer;
 	BaseEnemy* Cyborg;
 	BaseEnemy* Sniper;
-
 
 	std::vector<Entity*> EntityList;
 
