@@ -17,25 +17,38 @@ void Player::Init()
 	scale.Set(3, 3, 3);
 	normal.Set(1, 0, 0);
 	active = true;
+
+	m_speed = 1.f;
+	SprintSpeed = 1.f;
 }
 
 void Player::Update(double dt)
 {
+	// Currently Hold Space to slow time, Change to a timer toggle later
+	if (Application::IsKeyPressed(VK_SPACE))
+	{
+		m_speed = 0.5f;
+	}
+	else
+	{
+		m_speed = 1.f;
+	}
+
 	if (Application::IsKeyPressed('W'))
 	{
-		pos.y += 1;
+		pos.y += 30 * dt * m_speed * SprintSpeed;
 	}	
 	if (Application::IsKeyPressed('S'))
 	{
-		pos.y -= 1;
+		pos.y -= 30 * dt * m_speed * SprintSpeed;
 	}	
 	if (Application::IsKeyPressed('A'))
 	{
-		pos.x -= 1;
+		pos.x -= 30 * dt * m_speed * SprintSpeed;
 	}	
 	if (Application::IsKeyPressed('D'))
 	{
-		pos.x += 1;
+		pos.x += 30 * dt * m_speed * SprintSpeed;
 	}
 }
 
@@ -60,23 +73,22 @@ void Player::Movement()
 
 }
 
-Vector3 Player::getPos()
+Vector3 Player::GetPos()
 {
 	return pos;
 }
 
-Vector3 Player::getRotate()
+Vector3 Player::GetRotate()
 {
 	return normal;
 }
 
-Vector3 Player::getScale()
+Vector3 Player::GetScale()
 {
 	return scale;
 }
 
-void Player::setRotate(int x, int y)
+float Player::GetGameSpeed()
 {
-	normal.x = x;
-	normal.y = y;
+	return m_speed;
 }

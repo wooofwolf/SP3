@@ -2,16 +2,20 @@
 
 #include "Vector3.h"
 #include "Entity.h"
-
 #include "SceneBase.h"
+#include "SingletonPattern.h"
 
-class Player : public Entity
+class Player : public Entity, public SingletonPattern<Player>
 {
+	friend SingletonPattern<Player>;
 protected:
 
 	MS modelStack;
 
 	SceneBase* base;
+
+	float m_speed;
+	float SprintSpeed;
 
 public:
 	// Constructor
@@ -25,10 +29,10 @@ public:
 
 	void Movement();
 
-	Vector3 getPos();
-	Vector3 getRotate();
-	Vector3 getScale();
+	Vector3 GetPos();
+	Vector3 GetRotate();
+	Vector3 GetScale();
 
-	void setRotate(int x, int y);
+	float GetGameSpeed();
 };
 

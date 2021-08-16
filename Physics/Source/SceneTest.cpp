@@ -19,7 +19,7 @@ void SceneTest::Init()
 {
 	SceneBase::Init();
 
-	player = new Player();
+	player = Player::GetInstance();
 	player->Init();
 	baseEnemy = new BaseEnemy();
 	baseEnemy->Init();
@@ -30,7 +30,7 @@ void SceneTest::Init()
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 
 	// Test map
-	map = new Map();
+	map = Map::GetInstance();
 	//map->ReadFile("Maps/TestMap.csv");
 
 	// Test guns
@@ -113,9 +113,9 @@ void SceneTest::Render()
 
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(player->getPos().x, player->getPos().y, 0);
-		modelStack.Rotate(Math::RadianToDegree(atan2f(m_worldHeight - (y / h) * m_worldHeight - player->getPos().y, (x / w) * m_worldWidth - player->getPos().x)), 0, 0, 1);
-		modelStack.Scale(player->getScale().x, player->getScale().y * 0.5, player->getScale().z);
+		modelStack.Translate(player->GetPos().x, player->GetPos().y, 0);
+		modelStack.Rotate(Math::RadianToDegree(atan2f(m_worldHeight - (y / h) * m_worldHeight - player->GetPos().y, (x / w) * m_worldWidth - player->GetPos().x)), 0, 0, 1);
+		modelStack.Scale(player->GetScale().x, player->GetScale().y * 0.5, player->GetScale().z);
 		RenderMesh(meshList[GEO_CUBE_RED], false);
 	}
 	modelStack.PopMatrix();
