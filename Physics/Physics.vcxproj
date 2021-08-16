@@ -159,12 +159,14 @@
     <ClCompile Include="Source\Entity.cpp" />
     <ClCompile Include="Source\Flipper.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
+    <ClCompile Include="Source\Guns.cpp" />
     <ClCompile Include="Source\LoadOBJ.cpp" />
     <ClCompile Include="Source\LoadTGA.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Map.cpp" />
     <ClCompile Include="Source\Mesh.cpp" />
     <ClCompile Include="Source\MeshBuilder.cpp" />
+    <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\SceneAssignment2.cpp" />
     <ClCompile Include="Source\SceneAssignment2_Menu.cpp" />
     <ClCompile Include="Source\SceneBase.cpp" />
@@ -180,6 +182,7 @@
     <ClInclude Include="Source\Entity.h" />
     <ClInclude Include="Source\Flipper.h" />
     <ClInclude Include="Source\GameObject.h" />
+    <ClInclude Include="Source\Guns.h" />
     <ClInclude Include="Source\Light.h" />
     <ClInclude Include="Source\LoadOBJ.h" />
     <ClInclude Include="Source\LoadTGA.h" />
@@ -187,6 +190,7 @@
     <ClInclude Include="Source\Material.h" />
     <ClInclude Include="Source\Mesh.h" />
     <ClInclude Include="Source\MeshBuilder.h" />
+    <ClInclude Include="Source\Player.h" />
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\SceneAssignment2.h" />
     <ClInclude Include="Source\SceneAssignment2_Menu.h" />
