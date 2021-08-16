@@ -79,7 +79,7 @@ void SceneAssignment2_Menu::Render()
 	modelStack.PushMatrix();
 		modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 1);
 		modelStack.Scale(1.f, .5f, .5f);
-		RenderMesh(meshList[GEO_BACKGROUND], true);
+		//RenderMesh(meshList[GEO_BACKGROUND], true);
 	modelStack.PopMatrix();
 }
 

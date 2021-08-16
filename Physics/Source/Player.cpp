@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Application.h"
 #include "GL\glew.h"
+#include "SceneBase.h"
 
 Player::Player()
 {
@@ -12,6 +13,14 @@ Player::~Player()
 
 void Player::Init()
 {
+
+}
+
+void Player::Init(int m_worldWidth, int m_worldHeight)
+{
+	this->m_worldWidth = m_worldWidth;
+	this->m_worldHeight = m_worldHeight;
+
 	hp = 1;
 	pos.Set(10, 90, 1);
 	scale.Set(3, 3, 3);
@@ -54,18 +63,23 @@ void Player::Update(double dt)
 
 void Player::Render()
 {
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	double x, y;
+	Application::GetCursorPos(&x, &y);
+	int w = Application::GetWindowWidth();
+	int h = Application::GetWindowHeight();
 
-	//modelStack.LoadIdentity();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//modelStack.PushMatrix();
-	//{
-	//	modelStack.Translate(pos.x, pos.y, pos.z);
-	//	modelStack.Rotate(Math::RadianToDegree(atan2f(normal.y, normal.x)), 0, 0, 1);
-	//	modelStack.Scale(scale.x, scale.y, scale.z);
-	//	//RenderMesh(meshList[GEO_CUBE], true);
-	//}
-	//modelStack.PopMatrix();
+	modelStack.LoadIdentity();
+
+	modelStack.PushMatrix();
+	{
+		modelStack.Translate(pos.x, pos.y, 0);
+		modelStack.Rotate(Math::RadianToDegree(atan2f(m_worldHeight - (y / h) * m_worldHeight - pos.y, (x / w) * m_worldWidth - pos.x)), 0, 0, 1);
+		modelStack.Scale(scale.x, scale.y * 0.5, scale.z);
+		//RenderMesh(meshlist->GetMesh(MeshList::GEO_CUBE_RED), false);
+	}
+	modelStack.PopMatrix();
 }
 
 void Player::Movement()

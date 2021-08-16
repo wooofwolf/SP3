@@ -1,0 +1,43 @@
+#include "GL\glew.h"
+
+#include "MeshList.h"
+#include "MeshBuilder.h"
+#include "LoadTGA.h"
+
+#include "Vertex.h"
+
+MeshList::MeshList()
+{
+	for (int i = 0; i < NUM_GEOMETRY; ++i)
+	{
+		meshlist[i] = NULL;
+	}
+	meshlist[GEO_AXES] = MeshBuilder::GenerateAxes("reference", 1000, 1000, 1000);
+	meshlist[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(1, 1, 0), 10, 10, 1.f);
+	meshlist[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 1, 1), 2.f);
+	meshlist[GEO_CUBE_RED] = MeshBuilder::GenerateCube("cube2", Color(1, 0, 0), 2.f);
+	meshlist[GEO_CYLINDER] = MeshBuilder::GenerateCylinder("cylinder", Color(1, 1, 1), 8, 1.f, 1.f);
+	meshlist[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
+	meshlist[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
+	meshlist[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
+	meshlist[GEO_BACKGROUND] = MeshBuilder::GenerateQuad("background", Color(1, 1, 1), 200.f);
+	//meshlist[GEO_BACKGROUND]->textureID = LoadTGA("Image//menu-wallpaper.tga");
+	meshlist[GEO_WIN_1] = MeshBuilder::GenerateQuad("win-1", Color(1, 1, 1), 200.f);
+	//meshlist[GEO_WIN_1]->textureID = LoadTGA("Image//left-wins.tga");
+	meshlist[GEO_WIN_2] = MeshBuilder::GenerateQuad("win-2", Color(1, 1, 1), 200.f);
+	//meshlist[GEO_WIN_2]->textureID = LoadTGA("Image//right-wins.tga");
+	meshlist[GEO_BASEENEMY] = MeshBuilder::GenerateCube("BaseEnemy/Caveman", Color(0, 0, 1), 1.f);
+}
+
+MeshList::~MeshList()
+{
+	for (int i = 0; i < NUM_GEOMETRY; i++)
+	{
+		delete meshlist[i];
+	}
+}
+
+Mesh* MeshList::GetMesh(GEOMETRY_TYPE geometryType)
+{
+	return meshlist[geometryType];
+}

@@ -28,6 +28,9 @@ void SceneTest::Init()
 	// Calculating aspect ratio
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
+	
+	player = Player::GetInstance();
+	player->Init(m_worldWidth, m_worldHeight);
 
 	// Test map
 	map = Map::GetInstance();
@@ -116,19 +119,19 @@ void SceneTest::Render()
 		modelStack.Translate(player->GetPos().x, player->GetPos().y, 0);
 		modelStack.Rotate(Math::RadianToDegree(atan2f(m_worldHeight - (y / h) * m_worldHeight - player->GetPos().y, (x / w) * m_worldWidth - player->GetPos().x)), 0, 0, 1);
 		modelStack.Scale(player->GetScale().x, player->GetScale().y * 0.5, player->GetScale().z);
-		RenderMesh(meshList[GEO_CUBE_RED], false);
+		RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE_RED), false);
 	}
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(10,90,0);
-	RenderMesh(meshList[GEO_BASEENEMY], true);
+	RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), true);
 	modelStack.PopMatrix();
 
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
+	RenderTextOnScreen(MeshList::GetInstance()->GetMesh(MeshList::GEO_TEXT), ss.str(), Color(0, 1, 0), 3, 0, 3);
 }
 
 void SceneTest::Exit()

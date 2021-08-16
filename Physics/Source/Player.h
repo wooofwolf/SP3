@@ -17,6 +17,10 @@ protected:
 	float m_speed;
 	float SprintSpeed;
 
+	int m_worldWidth;
+	int m_worldHeight;
+
+
 public:
 	// Constructor
 	Player();
@@ -24,6 +28,7 @@ public:
 	~Player();
 
 	void Init();
+	void Init(int m_worldWidth, int m_worldHeight);
 	void Update(double dt);
 	void Render();
 
