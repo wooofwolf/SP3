@@ -60,7 +60,7 @@ protected:
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
 
-	Camera camera;
+	Camera* camera;
 
 	MS modelStack;
 	MS viewStack;
