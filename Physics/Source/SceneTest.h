@@ -2,7 +2,9 @@
 
 #include "SceneBase.h"
 #include "Map.h"
+#include "Guns.h"
 
+#include "BaseEnemy.h"
 #include "Player.h"
 
 class SceneTest : public SceneBase
@@ -13,15 +15,24 @@ private:
 	float m_worldHeight;
 	Map* map;
 
-	//std::vector<Entity*> EntityList;
+public:
+	GunComponent* simpleGun;
+	GunComponent* revolver;
+	GunComponent* shotgun;
+	GunComponent* minigun;
+	GunComponent* activeGun;
+
+	std::vector<Entity*> EntityList;
 
 	Player* player;
 
+	BaseEnemy* baseEnemy;
 public:
 	// Constructor
 	SceneTest();
 	// Destructor
 	~SceneTest();
+
 
 	virtual void Init();
 	virtual void Update(double dt);
