@@ -4,6 +4,7 @@
 #include "Map.h"
 #include "Guns.h"
 
+#include "BaseEnemy.h"
 #include "Player.h"
 
 class SceneTest : public SceneBase
@@ -13,8 +14,8 @@ private:
 	float m_worldWidth;
 	float m_worldHeight;
 	Map* map;
-	GunComponent* simpleGun;
-	GunComponent* revolver;
+
+public:
 	GunComponent* shotgun;
 	GunComponent* minigun;
 	GunComponent* activeGun;
@@ -23,11 +24,13 @@ private:
 
 	Player* player;
 
+	BaseEnemy* baseEnemy;
 public:
 	// Constructor
 	SceneTest();
 	// Destructor
 	~SceneTest();
+
 
 	virtual void Init();
 	virtual void Update(double dt);

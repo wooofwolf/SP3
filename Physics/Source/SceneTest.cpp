@@ -118,6 +118,11 @@ void SceneTest::Render()
 	}
 	modelStack.PopMatrix();
 
+	modelStack.PushMatrix();
+	modelStack.Translate(10,90,0);
+	RenderMesh(meshList[GEO_BASEENEMY], true);
+	modelStack.PopMatrix();
+
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
