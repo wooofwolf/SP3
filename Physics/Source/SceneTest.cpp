@@ -19,6 +19,12 @@ void SceneTest::Init()
 {
 	SceneBase::Init();
 
+	player = Player::GetInstance();
+	player->Init();
+	baseEnemy = new ConcreteBaseEnemy();
+	baseEnemy->Init();
+	//EntityList.push_back(player);
+
 	// Calculating aspect ratio
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
@@ -54,7 +60,7 @@ void SceneTest::Update(double dt)
 
 	SceneBase::Update(dt);
 	player->Update(dt);
-
+	baseEnemy->Update(dt);
 	static bool bQButtonState = false;
 	if (!bQButtonState && Application::IsKeyPressed('Q'))
 	{
