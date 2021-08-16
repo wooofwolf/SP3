@@ -3,11 +3,12 @@
 #include <string>
 
 #include "MatrixStack.h"
-
 #include "SceneBase.h"
+#include "SingletonPattern.h"
 
-class Map: public SceneBase
+class Map: public SceneBase, public SingletonPattern<Map>
 {
+	friend SingletonPattern<Map>;
 private:
 	// Tileset
 	enum class TILES
