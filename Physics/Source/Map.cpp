@@ -54,7 +54,7 @@ void Map::RenderMap(std::string fileName)
 					modelStack.PushMatrix();
 					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
 					modelStack.Scale(2, 2, 2);
-					RenderMesh(meshList[GEO_CUBE], true);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE), true);
 					modelStack.PopMatrix();
 					break;
 				}
