@@ -1,0 +1,24 @@
+#pragma once
+
+#include "Vector3.h"
+
+class Entity
+{
+private:
+	// Variables
+	int hp;
+	Vector3 pos;
+	Vector3 vel;
+	Vector3 scale;
+	Vector3 normal;
+	bool active;
+
+public:
+	// Constructor
+	Entity();
+	// Destructor
+	~Entity();
+
+	virtual void Movement() = 0;
+};
+
