@@ -21,8 +21,6 @@ void Player::Init()
 
 void Player::Update(double dt)
 {
-	
-
 	if (Application::IsKeyPressed('W'))
 	{
 		pos.y += 1;
@@ -43,18 +41,18 @@ void Player::Update(double dt)
 
 void Player::Render()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	modelStack.LoadIdentity();
+	//modelStack.LoadIdentity();
 
-	modelStack.PushMatrix();
-	{
-		modelStack.Translate(pos.x, pos.y, pos.z);
-		modelStack.Rotate(Math::RadianToDegree(atan2f(normal.y, normal.x)), 0, 0, 1);
-		modelStack.Scale(scale.x, scale.y, scale.z);
-		//RenderMesh(meshList[GEO_CUBE], true);
-	}
-	modelStack.PopMatrix();
+	//modelStack.PushMatrix();
+	//{
+	//	modelStack.Translate(pos.x, pos.y, pos.z);
+	//	modelStack.Rotate(Math::RadianToDegree(atan2f(normal.y, normal.x)), 0, 0, 1);
+	//	modelStack.Scale(scale.x, scale.y, scale.z);
+	//	//RenderMesh(meshList[GEO_CUBE], true);
+	//}
+	//modelStack.PopMatrix();
 }
 
 void Player::Movement()
@@ -75,4 +73,10 @@ Vector3 Player::getRotate()
 Vector3 Player::getScale()
 {
 	return scale;
+}
+
+void Player::setRotate(int x, int y)
+{
+	normal.x = x;
+	normal.y = y;
 }
