@@ -28,7 +28,7 @@ void SceneTest::Init()
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 
 	// Test map
-	map = new Map();
+	map = Map::GetInstance();
 	//map->ReadFile("Maps/TestMap.csv");
 
 	// Test guns
