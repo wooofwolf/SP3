@@ -5,6 +5,7 @@
 #include "MatrixStack.h"
 #include "SceneBase.h"
 #include "SingletonPattern.h"
+#include "MeshList.h"
 
 class Map: public SceneBase, public SingletonPattern<Map>
 {

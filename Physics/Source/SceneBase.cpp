@@ -97,26 +97,6 @@ void SceneBase::Init()
 
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
-	for(int i = 0; i < NUM_GEOMETRY; ++i)
-	{
-		meshList[i] = NULL;
-	}
-	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("reference", 1000, 1000, 1000);
-	meshList[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(1, 1, 0), 10, 10, 1.f);
-	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 1, 1), 2.f);
-	meshList[GEO_CUBE_RED] = MeshBuilder::GenerateCube("cube2", Color(1, 0, 0), 2.f);
-	meshList[GEO_CYLINDER] = MeshBuilder::GenerateCylinder("cylinder", Color(1, 1, 1), 8, 1.f, 1.f);
-	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
-	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
-	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
-	meshList[GEO_BACKGROUND] = MeshBuilder::GenerateQuad("background", Color(1, 1, 1), 200.f);
-	meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//menu-wallpaper.tga");
-	meshList[GEO_WIN_1] = MeshBuilder::GenerateQuad("win-1", Color(1, 1, 1), 200.f);
-	meshList[GEO_WIN_1]->textureID = LoadTGA("Image//left-wins.tga");
-	meshList[GEO_WIN_2] = MeshBuilder::GenerateQuad("win-2", Color(1, 1, 1), 200.f);
-	meshList[GEO_WIN_2]->textureID = LoadTGA("Image//right-wins.tga");
-	meshList[GEO_BASEENEMY] = MeshBuilder::GenerateCube("BaseEnemy/Caveman", Color(0, 0, 1),1.f);
-
 	bLightEnabled = false;
 }
 
@@ -251,12 +231,6 @@ void SceneBase::Render()
 
 void SceneBase::Exit()
 {
-	// Cleanup VBO
-	for(int i = 0; i < NUM_GEOMETRY; ++i)
-	{
-		if(meshList[i])
-			delete meshList[i];
-	}
 	glDeleteProgram(m_programID);
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 }

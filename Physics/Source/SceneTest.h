@@ -7,6 +7,8 @@
 #include "BaseEnemy.h"
 #include "Player.h"
 
+#include "MeshList.h"
+
 class SceneTest : public SceneBase
 {
 private:
@@ -16,6 +18,8 @@ private:
 	Map* map;
 
 public:
+	MeshList* meshlist;
+	
 	GunComponent* simpleGun;
 	GunComponent* revolver;
 	GunComponent* shotgun;

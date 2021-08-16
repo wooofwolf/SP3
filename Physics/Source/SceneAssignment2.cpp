@@ -889,88 +889,88 @@ void SceneAssignment2::Update(double dt)
 
 void SceneAssignment2::RenderGO(GameObject *go)
 {
-	switch(go->type)
-	{
-	case GameObject::GO_BALL:
-		//Exercise 4: render a sphere using scale and pos
-		modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-			RenderMesh(meshList[GEO_BALL], true);
-		modelStack.PopMatrix();
-		//Exercise 11: think of a way to give balls different colors
-		break;
-	case GameObject::GO_WALL:
-		modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-			modelStack.Rotate(Math::RadianToDegree(atan2f(go->normal.y, go->normal.x)), 0, 0, 1);
-			modelStack.Scale(go->scale.x * 0.5f, go->scale.y * 0.5f, go->scale.z);
-			RenderMesh(meshList[GEO_CUBE], true);
-		modelStack.PopMatrix();
-		break;
-	case GameObject::GO_PILLAR:
-		modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-			modelStack.Rotate(90, 1, 0, 0);
-			RenderMesh(meshList[GEO_CYLINDER], true);
-		modelStack.PopMatrix();
-		break;
-	case GameObject::GO_BRICK:
-		if (static_cast<Brick*>(go)->isPowerup)
-		{
-			delete meshList[GEO_CUBE];
-			if (static_cast<PowerupBrick*>(go)->powerupType == PowerupBrick::PU_MULTIPLY)
-				meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(0.266f, 0.333f, 0.353f), 2.f);
-			else
-				meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(0, 1.f, 0), 2.f);
-		}
-		modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-			modelStack.Rotate(Math::RadianToDegree(atan2f(go->normal.y, go->normal.x)), 0, 0, 1);
-			modelStack.Scale(go->scale.x * 0.5f, go->scale.y * 0.5f, go->scale.z * 0.5f);
-			RenderMesh(meshList[GEO_CUBE], true);
-		modelStack.PopMatrix();
-		delete meshList[GEO_CUBE];
-		meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 1, 1), 2.f);
-		break;
-	case GameObject::GO_BRICK_CORNER:
-		modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-			modelStack.Rotate(90, 1, 0, 0);
-			RenderMesh(meshList[GEO_CYLINDER], true);
-		modelStack.PopMatrix();
-		break;
-	case GameObject::GO_BUMPER:
-		modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-			modelStack.Rotate(Math::RadianToDegree(atan2f(go->normal.y, go->normal.x)), 0, 0, 1);
-			modelStack.Scale(go->scale.x * 0.5f, go->scale.y * 0.5f, go->scale.z * 0.5f);
-			RenderMesh(meshList[GEO_CUBE], true);
-		modelStack.PopMatrix();
-		break;
-	case GameObject::GO_FLIPPER:
-		modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-			modelStack.Rotate(Math::RadianToDegree(atan2f(go->normal.y, go->normal.x)), 0, 0, 1);
-			if (go == flipperL || go == flipperL2)
-				modelStack.Translate(0, 0.5f * -go->scale.y, 0);
-			else
-				modelStack.Translate(0, 0.5f * go->scale.y, 0);
-			modelStack.Scale(go->scale.x * 0.5f, go->scale.y * 0.5f, go->scale.z * 0.5f);
-			RenderMesh(meshList[GEO_CUBE], true);
-		modelStack.PopMatrix();
-		break;
-	case GameObject::GO_BUMPER_PILLAR:
-		modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-			modelStack.Rotate(90, 1, 0, 0);
-			RenderMesh(meshList[GEO_CYLINDER], true);
-		modelStack.PopMatrix();
-		break;
-	}
+	//switch(go->type)
+	//{
+	//case GameObject::GO_BALL:
+	//	//Exercise 4: render a sphere using scale and pos
+	//	modelStack.PushMatrix();
+	//		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+	//		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	//		RenderMesh(meshList[GEO_BALL], true);
+	//	modelStack.PopMatrix();
+	//	//Exercise 11: think of a way to give balls different colors
+	//	break;
+	//case GameObject::GO_WALL:
+	//	modelStack.PushMatrix();
+	//		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+	//		modelStack.Rotate(Math::RadianToDegree(atan2f(go->normal.y, go->normal.x)), 0, 0, 1);
+	//		modelStack.Scale(go->scale.x * 0.5f, go->scale.y * 0.5f, go->scale.z);
+	//		RenderMesh(meshList[GEO_CUBE], true);
+	//	modelStack.PopMatrix();
+	//	break;
+	//case GameObject::GO_PILLAR:
+	//	modelStack.PushMatrix();
+	//		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+	//		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	//		modelStack.Rotate(90, 1, 0, 0);
+	//		RenderMesh(meshList[GEO_CYLINDER], true);
+	//	modelStack.PopMatrix();
+	//	break;
+	//case GameObject::GO_BRICK:
+	//	if (static_cast<Brick*>(go)->isPowerup)
+	//	{
+	//		delete meshList[GEO_CUBE];
+	//		if (static_cast<PowerupBrick*>(go)->powerupType == PowerupBrick::PU_MULTIPLY)
+	//			meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(0.266f, 0.333f, 0.353f), 2.f);
+	//		else
+	//			meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(0, 1.f, 0), 2.f);
+	//	}
+	//	modelStack.PushMatrix();
+	//		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+	//		modelStack.Rotate(Math::RadianToDegree(atan2f(go->normal.y, go->normal.x)), 0, 0, 1);
+	//		modelStack.Scale(go->scale.x * 0.5f, go->scale.y * 0.5f, go->scale.z * 0.5f);
+	//		RenderMesh(meshList[GEO_CUBE], true);
+	//	modelStack.PopMatrix();
+	//	delete meshList[GEO_CUBE];
+	//	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 1, 1), 2.f);
+	//	break;
+	//case GameObject::GO_BRICK_CORNER:
+	//	modelStack.PushMatrix();
+	//		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+	//		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	//		modelStack.Rotate(90, 1, 0, 0);
+	//		RenderMesh(meshList[GEO_CYLINDER], true);
+	//	modelStack.PopMatrix();
+	//	break;
+	//case GameObject::GO_BUMPER:
+	//	modelStack.PushMatrix();
+	//		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+	//		modelStack.Rotate(Math::RadianToDegree(atan2f(go->normal.y, go->normal.x)), 0, 0, 1);
+	//		modelStack.Scale(go->scale.x * 0.5f, go->scale.y * 0.5f, go->scale.z * 0.5f);
+	//		RenderMesh(meshList[GEO_CUBE], true);
+	//	modelStack.PopMatrix();
+	//	break;
+	//case GameObject::GO_FLIPPER:
+	//	modelStack.PushMatrix();
+	//		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+	//		modelStack.Rotate(Math::RadianToDegree(atan2f(go->normal.y, go->normal.x)), 0, 0, 1);
+	//		if (go == flipperL || go == flipperL2)
+	//			modelStack.Translate(0, 0.5f * -go->scale.y, 0);
+	//		else
+	//			modelStack.Translate(0, 0.5f * go->scale.y, 0);
+	//		modelStack.Scale(go->scale.x * 0.5f, go->scale.y * 0.5f, go->scale.z * 0.5f);
+	//		RenderMesh(meshList[GEO_CUBE], true);
+	//	modelStack.PopMatrix();
+	//	break;
+	//case GameObject::GO_BUMPER_PILLAR:
+	//	modelStack.PushMatrix();
+	//		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+	//		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	//		modelStack.Rotate(90, 1, 0, 0);
+	//		RenderMesh(meshList[GEO_CYLINDER], true);
+	//	modelStack.PopMatrix();
+	//	break;
+	//}
 }
 
 void SceneAssignment2::Render()
@@ -996,7 +996,7 @@ void SceneAssignment2::Render()
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
 	
-	RenderMesh(meshList[GEO_AXES], false);
+	/*RenderMesh(meshList[GEO_AXES], false);
 
 	if (m_ghost->active)
 	{
@@ -1054,7 +1054,7 @@ void SceneAssignment2::Render()
 		modelStack.PopMatrix();
 
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 3, 12, 20);
-	}
+	}*/
 }
 
 void SceneAssignment2::Exit()
