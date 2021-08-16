@@ -3,9 +3,13 @@
 #include "Vector3.h"
 #include "Entity.h"
 
+#include "SceneBase.h"
+
 class Player : public Entity
 {
-private:
+protected:
+
+	MS modelStack;
 
 public:
 	// Constructor
@@ -14,9 +18,13 @@ public:
 	~Player();
 
 	void Init();
-	void Update();
+	void Update(double dt);
 	void Render();
 
 	void Movement();
+
+	Vector3 getPos();
+	Vector3 getRotate();
+	Vector3 getScale();
 };
 

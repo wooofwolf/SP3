@@ -4,6 +4,8 @@
 #include "Map.h"
 #include "Guns.h"
 
+#include "Player.h"
+
 class SceneTest : public SceneBase
 {
 private:
@@ -16,6 +18,10 @@ private:
 	GunComponent* shotgun;
 	GunComponent* minigun;
 	GunComponent* activeGun;
+
+	std::vector<Entity*> EntityList;
+
+	Player* player;
 
 public:
 	// Constructor

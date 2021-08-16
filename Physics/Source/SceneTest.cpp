@@ -19,8 +19,11 @@ void SceneTest::Init()
 {
 	SceneBase::Init();
 
+	player = new Player();
+	player->Init();
+	//EntityList.push_back(player);
 
-	//Calculating aspect ratio
+	// Calculating aspect ratio
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 
@@ -45,7 +48,13 @@ void SceneTest::Init()
 
 void SceneTest::Update(double dt)
 {
+	//for (int i = 0; i < entitylist.size(); i++)
+	//{
+	//	entitylist[i]->pos += go->vel * player.GetGameSpeed() * dt;
+	//}
+
 	SceneBase::Update(dt);
+	player->Update(dt);
 
 	static bool bQButtonState = false;
 	if (!bQButtonState && Application::IsKeyPressed('Q'))
@@ -77,23 +86,32 @@ void SceneTest::Update(double dt)
 
 void SceneTest::Render()
 {
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//// Projection matrix : Orthographic Projection
-	//Mtx44 projection;
-	//projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
-	//projectionStack.LoadMatrix(projection);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// Projection matrix : Orthographic Projection
+	Mtx44 projection;
+	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
+	projectionStack.LoadMatrix(projection);
 
-	//// Camera matrix
-	//viewStack.LoadIdentity();
-	//viewStack.LookAt(
-	//	camera.position.x, camera.position.y, camera.position.z,
-	//	camera.target.x, camera.target.y, camera.target.z,
-	//	camera.up.x, camera.up.y, camera.up.z
-	//);
+	// Camera matrix
+	viewStack.LoadIdentity();
+	viewStack.LookAt(
+		camera.position.x, camera.position.y, camera.position.z,
+		camera.target.x, camera.target.y, camera.target.z,
+		camera.up.x, camera.up.y, camera.up.z
+	);
 
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
 	map->RenderMap("Maps/TestMap.csv");
+
+	modelStack.PushMatrix();
+	{
+		modelStack.Translate(player->getPos().x, player->getPos().y, 0);
+		modelStack.Rotate(Math::DegreeToRadian(atan2f(player->getRotate().y, player->getRotate().x)), 0, 0, 1);
+		modelStack.Scale(player->getScale().x, player->getScale().y, player->getScale().z);
+		RenderMesh(meshList[GEO_CUBE_RED], false);
+	}
+	modelStack.PopMatrix();
 
 	std::ostringstream ss;
 	ss.precision(5);
@@ -106,6 +124,8 @@ void SceneTest::Exit()
 	SceneBase::Exit();
 
 	delete map;
+
+	delete player;
 
 	delete simpleGun;
 	delete revolver;
