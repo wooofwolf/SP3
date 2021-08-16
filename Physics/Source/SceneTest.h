@@ -16,6 +16,8 @@ private:
 	Map* map;
 
 public:
+	GunComponent* simpleGun;
+	GunComponent* revolver;
 	GunComponent* shotgun;
 	GunComponent* minigun;
 	GunComponent* activeGun;

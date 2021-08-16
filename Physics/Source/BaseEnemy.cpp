@@ -1,18 +1,11 @@
 #include "BaseEnemy.h"
 #include <MyMath.h>
-BaseEnemy::BaseEnemy()
-	: Damage(0)
-	, map(NULL)
-{
-}
-
 BaseEnemy::~BaseEnemy()
 {
 }
 
 void BaseEnemy::Init()
 {
-	Damage = 5;
 	vel = 0.7;
 	active = true;
 	pos = Vector3(10, 90, 0);
@@ -22,15 +15,20 @@ void BaseEnemy::Update(double dt)
 {
 	if (!active)
 		return;
+	Movement();
 }
 
-void BaseEnemy::Patrol()
+void BaseEnemy::Render()
+{
+}
+
+void BaseEnemy::Movement()
 {
 	directionalCD = Math::RandIntMinMax(4, 7);
 	direction = Math::RandIntMinMax(1, 4);
 	if (directionalCD > 0)
 	{
-		directionalCD --;
+		directionalCD--;
 		if (direction == 1)
 		{
 			pos.x += 1;

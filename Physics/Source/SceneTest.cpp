@@ -21,6 +21,8 @@ void SceneTest::Init()
 
 	player = new Player();
 	player->Init();
+	baseEnemy = new BaseEnemy();
+	baseEnemy->Init();
 	//EntityList.push_back(player);
 
 	// Calculating aspect ratio
@@ -55,7 +57,7 @@ void SceneTest::Update(double dt)
 
 	SceneBase::Update(dt);
 	player->Update(dt);
-
+	baseEnemy->Update(dt);
 	static bool bQButtonState = false;
 	if (!bQButtonState && Application::IsKeyPressed('Q'))
 	{
