@@ -2,11 +2,12 @@
 
 #include "Vector3.h"
 #include "Entity.h"
-
 #include "SceneBase.h"
+#include "SingletonPattern.h"
 
-class Player : public Entity
+class Player : public Entity, public SingletonPattern<Player>
 {
+	friend SingletonPattern<Player>;
 protected:
 
 	MS modelStack;

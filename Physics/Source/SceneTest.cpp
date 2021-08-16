@@ -19,7 +19,7 @@ void SceneTest::Init()
 {
 	SceneBase::Init();
 
-	player = new Player();
+	player = Player::GetInstance();
 	player->Init();
 	//EntityList.push_back(player);
 
