@@ -223,16 +223,24 @@ void SceneTest::Render()
 	//RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
 	//modelStack.PopMatrix();
 
-	for (Projectile* projectile : projectileList)
+	std::vector<Projectile*>::iterator it = projectileList.begin();
+	for ( ; it != projectileList.end(); )
 	{
+		Projectile* projectile = (Projectile*)*it;
 		projectile->Collisioncheck(activeTileList);
-		if (projectile->active)
+		if (!projectile->active)
+		{
+			it = projectileList.erase(it);
+		}
+		else
 		{
 			modelStack.PushMatrix();
 				modelStack.Translate(projectile->GetPos().x, projectile->GetPos().y, projectile->GetPos().z);
 				modelStack.Scale(projectile->GetScale().x, projectile->GetScale().y, projectile->GetScale().z);
 				RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BALL), false);
 			modelStack.PopMatrix();
+
+			++it;
 		}
 	}
 
