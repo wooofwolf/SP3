@@ -29,16 +29,12 @@ BaseEnemy* SceneTest::SpawnEnemies()
 
 void SceneTest::Init()
 {
-	renderer = new Renderer();
-
 	SceneBase::Init();
 
 
 	
 	/*baseEnemy = new ConcreteBaseEnemy();
 	baseEnemy->Init();*/
-	player = Player::GetInstance();
-	player->Init();
 	
 	//EntityList.push_back(player);
 
@@ -78,6 +74,9 @@ void SceneTest::Update(double dt)
 	//}
 
 	SceneBase::Update(dt);
+	
+	camera->Update(dt);
+
 	player->Update(dt);
 	//baseEnemy->Update(dt);
 	static bool bQButtonState = false;
@@ -118,7 +117,7 @@ void SceneTest::Render()
 	int w = Application::GetWindowWidth();
 	int h = Application::GetWindowHeight();
 
-	renderer->Reset();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Projection matrix : Orthographic Projection
 	Mtx44 projection;
@@ -183,7 +182,7 @@ void SceneTest::Render()
 	{
 		modelStack.Translate(player->GetPos().x, player->GetPos().y, 0);
 		modelStack.Rotate(Math::RadianToDegree(atan2f(m_worldHeight - (y / h) * m_worldHeight - player->GetPos().y, (x / w) * m_worldWidth - player->GetPos().x)), 0, 0, 1);
-		modelStack.Scale(player->GetScale().x, player->GetScale().y * 0.5, player->GetScale().z);
+		modelStack.Scale(player->GetScale().x, player->GetScale().y, player->GetScale().z);
 		RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE_RED), false);
 	}
 	modelStack.PopMatrix();
@@ -200,16 +199,7 @@ void SceneTest::Render()
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(MeshList::GetInstance()->GetMesh(MeshList::GEO_TEXT), ss.str(), Color(0, 1, 0), 3, 0, 3);
 
-	modelStack.PushMatrix();
-	{
-		modelStack.Translate(20, 50, 0);
-		modelStack.Rotate(0, 0, 0, 1);
-		modelStack.Scale(5, 5, 5);
-		renderer->RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE), true);
-	}
-	modelStack.PopMatrix();
-
-	///renderer->RenderTextOnScreen(MeshList::GetInstance()->GetMesh(MeshList::GEO_TEXT), "Test", Color(0, 1, 0), 3, 0, 6);
+	//RenderTextOnScreen(MeshList::GetInstance()->GetMesh(MeshList::GEO_TEXT), "Test", Color(0, 1, 0), 3, 0, 6);
 }
 
 void SceneTest::Exit()
