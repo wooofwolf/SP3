@@ -35,8 +35,8 @@ void SceneTest::Init()
 
 
 	
-	baseEnemy = new ConcreteBaseEnemy();
-	baseEnemy->Init();
+	/*baseEnemy = new ConcreteBaseEnemy();
+	baseEnemy->Init();*/
 	player = Player::GetInstance();
 	player->Init();
 	
@@ -188,12 +188,12 @@ void SceneTest::Render()
 	}
 	modelStack.PopMatrix();
 
-	baseEnemy->active = true;
+	//baseEnemy->active = true;
 
-	modelStack.PushMatrix();
-	modelStack.Translate(2 + 4 * baseEnemy->GetEnemyPos().x, m_worldHeight - 2 - 4 * baseEnemy->GetEnemyPos().y, 1);
-	RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
-	modelStack.PopMatrix();
+	//modelStack.PushMatrix();
+	//modelStack.Translate(2 + 4 * baseEnemy->GetEnemyPos().x, m_worldHeight - 2 - 4 * baseEnemy->GetEnemyPos().y, 1);
+	//RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
+	//modelStack.PopMatrix();
 
 	std::ostringstream ss;
 	ss.precision(5);
