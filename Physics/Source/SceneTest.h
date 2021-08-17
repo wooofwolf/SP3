@@ -21,6 +21,9 @@ private:
 	float m_worldHeight;
 	Map* map;
 
+	bool NearXEdge = false;
+	bool NearYEdge = false;
+
 public:
 	//Renderer* renderer;
 

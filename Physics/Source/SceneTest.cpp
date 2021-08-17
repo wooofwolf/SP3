@@ -83,8 +83,36 @@ void SceneTest::Update(double dt)
 	//camera->Update(dt);
 
 	player->Update(dt);
-	camera->position.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, 2);
-	camera->target.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, player->GetPos().z);
+
+	// yes i hard found the values where the outside of the map starts to show
+	// theres probably a better way to find these values but i cant be bothered lol -yh
+	if ((player->GetPos().x > 90 && player->GetPos().x < 714))
+	{
+		NearXEdge = false;
+
+		camera->position.x = player->GetPos().x - m_worldWidth / 2;
+		camera->target.x = player->GetPos().x - m_worldWidth / 2;
+		//camera->position.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, 2);
+		//camera->target.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, player->GetPos().z);
+	}
+	else
+	{
+		NearXEdge = true;
+	}
+	if ((player->GetPos().y < 50 && player->GetPos().y > -653))
+	{
+		NearYEdge = false;
+
+		camera->position.y = player->GetPos().y - m_worldHeight / 2;
+		camera->target.y = player->GetPos().y - m_worldHeight / 2;
+		//camera->position.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, 2);
+		//camera->target.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, player->GetPos().z);
+	}
+	else
+	{
+		NearYEdge = true;
+	}
+
 	//baseEnemy->Update(dt);
 	revolver->UpdateFireRateTimer(dt);
 	shotgun->UpdateFireRateTimer(dt);
@@ -218,15 +246,34 @@ void SceneTest::Render()
 	//player->Render();
 	//modelStack.PopMatrix();
 
+	//done for now
+
+	Vector3 playerpos;
+
+	if (NearXEdge == true || NearYEdge == true)
+	{
+		// make code the do pls thank
+
+		playerpos = player->GetPos();
+	}
+	else
+	{
+		playerpos.Set(m_worldWidth * 0.5, m_worldHeight * 0.5);
+	}
+
+	Vector3 dir = Vector3((x / w) * m_worldWidth - playerpos.x, m_worldHeight - (y / h) * m_worldHeight - playerpos.y, 0);
+	player->SetRotate(dir);
+
 	modelStack.PushMatrix();
 	{
 		modelStack.Translate(player->GetPos().x, player->GetPos().y, 0);
-		modelStack.Rotate(Math::RadianToDegree(atan2f(m_worldHeight - (y / h) * m_worldHeight - player->GetPos().y, (x / w) * m_worldWidth - player->GetPos().x)), 0, 0, 1);
-		player->SetRotate(Vector3((x / w) * m_worldWidth - player->GetPos().x, m_worldHeight - (y / h) * m_worldHeight - player->GetPos().y, 0));
+		modelStack.Rotate(Math::RadianToDegree(atan2f(dir.y, dir.x)), 0, 0, 1);
 		modelStack.Scale(player->GetScale().x, player->GetScale().y, player->GetScale().z);
 		RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE_RED), false);
 	}
 	modelStack.PopMatrix();
+
+	//std::cout << (x / w) * m_worldWidth << ' ' << m_worldHeight - (y / h) * m_worldHeight << std::endl;
 
 	//baseEnemy->active = true;
 
