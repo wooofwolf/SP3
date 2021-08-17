@@ -34,6 +34,8 @@ public:
 	void Init(int m_worldWidth, int m_worldHeight);
 	void Update(double dt);
 	void Render();
+	void Exit();
+
 	void Collisioncheck(std::vector<Vector3> activeTileList);
 
 	void Movement();
