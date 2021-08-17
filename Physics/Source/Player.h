@@ -35,6 +35,7 @@ public:
 	void Update(double dt);
 	void Render();
 	void Collisioncheck(std::vector<Vector3> activeTileList);
+	void Exit();
 
 	void Movement();
 
@@ -42,6 +43,7 @@ public:
 	Vector3 GetRotate();
 	Vector3 GetScale();
 
+	void SetRotate(Vector3 rotate);
 	void SetPos(Vector3 pos);
 
 	float GetGameSpeed();

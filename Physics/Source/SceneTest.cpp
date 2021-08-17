@@ -62,10 +62,16 @@ void SceneTest::Init()
 
 	revolver->nextGun = shotgun;
 	revolver->prevGun = minigun;
+	revolver->fireRate = 1;
+	revolver->fireRateTimer = 0;
 	shotgun->nextGun = minigun;
 	shotgun->prevGun = revolver;
+	shotgun->fireRate = 2;
+	shotgun->fireRateTimer = 0;
 	minigun->nextGun = revolver;
 	minigun->prevGun = shotgun;
+	minigun->fireRate = 0.5;
+	minigun->fireRateTimer = 0;
 
 	activeTileList.clear();
 }
@@ -80,6 +86,9 @@ void SceneTest::Update(double dt)
 	SceneBase::Update(dt);
 	player->Update(dt);
 	baseEnemy->Update(dt);
+	revolver->UpdateFireRateTimer(dt);
+	shotgun->UpdateFireRateTimer(dt);
+	minigun->UpdateFireRateTimer(dt);
 	static bool bQButtonState = false;
 	if (!bQButtonState && Application::IsKeyPressed('Q'))
 	{
@@ -101,12 +110,21 @@ void SceneTest::Update(double dt)
 	static bool bFireButtonState = false;
 	if (!bFireButtonState && Application::IsMousePressed(0))
 	{
-		activeGun->FireGun();
+		Projectile* proj = activeGun->FireGun();
+		if (proj != nullptr)
+		{
+			proj->Init();
+			projectileList.push_back(proj);
+		}
 		bFireButtonState = true;
 	}
 	else if (bFireButtonState && !Application::IsMousePressed(0))
 		bFireButtonState = false;
 	
+	for (Projectile* proj : projectileList)
+	{
+		proj->Update(dt);
+	}
 }
 
 void SceneTest::Render()
@@ -183,6 +201,7 @@ void SceneTest::Render()
 	{
 		modelStack.Translate(player->GetPos().x, player->GetPos().y, 0);
 		modelStack.Rotate(Math::RadianToDegree(atan2f(m_worldHeight - (y / h) * m_worldHeight - player->GetPos().y, (x / w) * m_worldWidth - player->GetPos().x)), 0, 0, 1);
+		player->SetRotate(Vector3((x / w) * m_worldWidth - player->GetPos().x, m_worldHeight - (y / h) * m_worldHeight - player->GetPos().y, 0));
 		modelStack.Scale(player->GetScale().x, player->GetScale().y * 0.5, player->GetScale().z);
 		RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE_RED), false);
 	}
@@ -202,6 +221,18 @@ void SceneTest::Render()
 	//RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
 	//modelStack.PopMatrix();
 
+	for (Projectile* projectile : projectileList)
+	{
+		projectile->Collisioncheck(activeTileList);
+		if (projectile->active)
+		{
+			modelStack.PushMatrix();
+				modelStack.Translate(projectile->GetPos().x, projectile->GetPos().y, projectile->GetPos().z);
+				modelStack.Scale(projectile->GetScale().x, projectile->GetScale().y, projectile->GetScale().z);
+				RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BALL), false);
+			modelStack.PopMatrix();
+		}
+	}
 
 	std::ostringstream ss;
 	ss.precision(5);
@@ -232,4 +263,11 @@ void SceneTest::Exit()
 	delete revolver;
 	delete shotgun;
 	delete minigun;
+
+	for (Entity* entity : EntityList)
+		delete entity;
+	for (BaseEnemy* enemy : BasicEnemyList)
+		delete enemy;
+	for (Projectile* proj : projectileList)
+		delete proj;
 }

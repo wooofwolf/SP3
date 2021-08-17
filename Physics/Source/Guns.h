@@ -1,21 +1,26 @@
 #pragma once
 
+#include "Projectile.h"
+
 class GunComponent
 {
 
 public:
 	GunComponent* nextGun;
 	GunComponent* prevGun;
+	double fireRate;
+	double fireRateTimer;
 
 	virtual ~GunComponent();
 
-	virtual void FireGun() const = 0;
+	virtual Projectile* FireGun() = 0;
+	void UpdateFireRateTimer(double dt);
 };
 
 class ConcreteGunComponent : public GunComponent
 {
 public:
-	void FireGun() const override;
+	Projectile* FireGun() override;
 };
 
 class GunDecorator : public GunComponent
@@ -26,7 +31,7 @@ protected:
 public:
 	GunDecorator(GunComponent* component);
 
-	void FireGun() const override;
+	Projectile* FireGun() override;
 };
 
 class Revolver : public GunDecorator
@@ -34,7 +39,7 @@ class Revolver : public GunDecorator
 public:
 	Revolver(GunComponent* component);
 
-	void FireGun() const override;
+	Projectile* FireGun() override;
 };
 
 class Shotgun : public GunDecorator
@@ -42,7 +47,7 @@ class Shotgun : public GunDecorator
 public:
 	Shotgun(GunComponent* component);
 
-	void FireGun() const override;
+	Projectile* FireGun() override;
 };
 
 class Minigun : public GunDecorator
@@ -50,5 +55,5 @@ class Minigun : public GunDecorator
 public:
 	Minigun(GunComponent* component);
 
-	void FireGun() const override;
+	Projectile* FireGun() override;
 };

@@ -11,6 +11,8 @@
 
 #include "Renderer.h"
 
+#include "Projectile.h"
+
 class SceneTest : public SceneBase
 {
 private:
@@ -41,6 +43,7 @@ public:
 	std::vector<Entity*> EntityList;
 	std::vector<BaseEnemy*> BasicEnemyList;
 	std::vector <Vector3> activeTileList;
+	std::vector<Projectile*> projectileList;
 
 	Player* player;
 public:

@@ -15,6 +15,7 @@ public:
 	bool GetActive();
 	bool active;
 	void Collisioncheck(std::vector <Vector3> activeTileList);
+	void Exit();
 protected: 
 	enum DIRECTION
 	{

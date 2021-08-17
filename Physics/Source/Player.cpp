@@ -104,6 +104,11 @@ Vector3 Player::GetScale()
 	return scale;
 }
 
+void Player::SetRotate(Vector3 rotate)
+{
+	this->normal = rotate;
+}
+
 void Player::SetPos(Vector3 pos)
 {
 	this->pos = pos;
@@ -123,4 +128,8 @@ void Player::Collisioncheck(std::vector<Vector3> activeTileList)
 			pos = prevpos;
 		}
 	}
+}
+
+void Player::Exit()
+{
 }
