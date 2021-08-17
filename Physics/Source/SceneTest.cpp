@@ -35,8 +35,6 @@ void SceneTest::Init()
 	
 	//baseEnemy = new ConcreteBaseEnemy();
 	//baseEnemy->Init();
-	player = Player::GetInstance();
-	player->Init();
 	
 	//EntityList.push_back(player);
 
@@ -82,9 +80,11 @@ void SceneTest::Update(double dt)
 
 	SceneBase::Update(dt);
 	
-	camera->Update(dt);
+	//camera->Update(dt);
 
 	player->Update(dt);
+	camera->position.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, 2);
+	camera->target.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, player->GetPos().z);
 	//baseEnemy->Update(dt);
 	revolver->UpdateFireRateTimer(dt);
 	shotgun->UpdateFireRateTimer(dt);
