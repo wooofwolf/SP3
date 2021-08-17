@@ -33,8 +33,9 @@ void SceneTest::Init()
 
 	SceneBase::Init();
 
-	player = Player::GetInstance();
-	player->Init();
+
+	//player = Player::GetInstance();
+	//player->Init();
 	baseEnemy = new ConcreteBaseEnemy();
 	baseEnemy->Init();
 	//EntityList.push_back(player);
@@ -48,6 +49,7 @@ void SceneTest::Init()
 
 	// Test map
 	map = Map::GetInstance();
+	map->Init("Maps/TestMap.csv");
 
 	// Test guns
 	simpleGun = new ConcreteGunComponent();
@@ -131,7 +133,6 @@ void SceneTest::Render()
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
 	//map->RenderMap("Maps/TestMap.csv");
-	map->ReadFile("Maps/TestMap.csv");
 	for (int y = 0; y < 200; ++y)
 	{
 		for (int x = 0; x < 200; ++x)
@@ -139,6 +140,7 @@ void SceneTest::Render()
 			switch (map->GetTile(x, y))
 			{
 			case Map::TILES::TILE_WALL:
+			{
 				Vector3 tilePos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
 				float width = (tilePos - Camera::GetInstance()->position).Length();
 				float height = Camera::GetInstance()->position.z - tilePos.z;
@@ -155,6 +157,12 @@ void SceneTest::Render()
 					modelStack.PopMatrix();
 					break;
 				}
+			}
+			//case Map::TILES::TILE_PLAYER:
+			//{
+			//	Player::GetInstance()->SetPos(Vector3(10, 90, 1));
+			//	break;
+			//}
 			}
 		}
 	}
