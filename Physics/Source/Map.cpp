@@ -46,7 +46,7 @@ void Map::RenderMap(std::string fileName)
 				float width = (tilePos - Camera::GetInstance()->position).Length();
 				float height = Camera::GetInstance()->position.z - tilePos.z;
 				float hypotenuse = sqrtf(width * width + height * height);
-				float maxWidth = (Vector3(m_worldWidth + 2, m_worldHeight + 2, 1) - Camera::GetInstance()->position).Length();
+				float maxWidth = (Vector3(m_worldWidth / 2 + 2, 0, 1).Dot(Vector3(m_worldHeight / 2 + 2, 0, 1)) - Camera::GetInstance()->position.Length());
 				float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
 
 				if (hypotenuse <= maxHypotenuse)
