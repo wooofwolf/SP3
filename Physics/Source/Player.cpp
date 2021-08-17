@@ -23,6 +23,7 @@ void Player::Init(int m_worldWidth, int m_worldHeight)
 
 	hp = 1;
 	pos.Set(1, 1, 1);
+	prevpos.Set(1, 1, 1);
 	scale.Set(3, 3, 3);
 	normal.Set(1, 0, 0);
 	active = true;
@@ -33,6 +34,7 @@ void Player::Init(int m_worldWidth, int m_worldHeight)
 
 void Player::Update(double dt)
 {
+	prevpos = pos;
 	// Currently Hold Space to slow time, Change to a timer toggle later
 	if (Application::IsKeyPressed(VK_SPACE))
 	{
@@ -110,4 +112,15 @@ void Player::SetPos(Vector3 pos)
 float Player::GetGameSpeed()
 {
 	return m_speed;
+}
+
+void Player::Collisioncheck(std::vector<Vector3> activeTileList)
+{
+	for (Vector3 tilepos : activeTileList)
+	{
+		if ((pos - tilepos).Length() < scale.x + 2)
+		{
+			pos = prevpos;
+		}
+	}
 }

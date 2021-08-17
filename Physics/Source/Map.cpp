@@ -14,6 +14,7 @@ Map::Map() : mapGrid{TILES::TILE_NONE}
 {
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
+	activeTileList.clear();
 }
 
 Map::~Map()
@@ -27,6 +28,7 @@ void Map::Init(std::string fileName)
 
 void Map::RenderMap(std::string fileName)
 {
+	activeTileList.clear();
 	ReadFile(fileName);
 	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -49,6 +51,7 @@ void Map::RenderMap(std::string fileName)
 
 				if (hypotenuse <= maxHypotenuse)
 				{
+					activeTileList.push_back(tilePos);
 					modelStack.PushMatrix();
 					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
 					modelStack.Scale(2, 2, 2);
@@ -59,6 +62,8 @@ void Map::RenderMap(std::string fileName)
 			}
 		}
 	}
+
+	Player::GetInstance()->Collisioncheck(activeTileList);
 }
 
 Map::TILES Map::GetTile(int x, int y)

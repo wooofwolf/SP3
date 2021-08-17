@@ -69,6 +69,10 @@ bool BaseEnemy::GetActive()
 		return false;
 }
 
+void BaseEnemy::Collisioncheck(std::vector<Vector3> activeTileList)
+{
+}
+
 void ConcreteBaseEnemy::Attack() const
 {
 	std::cout << "ConcreteBaseEnemy Attack!!" << std::endl;

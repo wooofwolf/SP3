@@ -1,10 +1,12 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include "MatrixStack.h"
 #include "SingletonPattern.h"
 #include "MeshList.h"
+#include "Player.h"
 
 class Map: public SingletonPattern<Map>
 {
@@ -41,6 +43,7 @@ public:
 private:
 	// Variables
 	TILES mapGrid[200][200];
+	std::vector <Vector3> activeTileList;
 
 	MS modelStack;
 };

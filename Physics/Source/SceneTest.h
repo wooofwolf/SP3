@@ -40,6 +40,8 @@ public:
 
 	std::vector<Entity*> EntityList;
 	std::vector<BaseEnemy*> BasicEnemyList;
+	std::vector <Vector3> activeTileList;
+
 	Player* player;
 public:
 	// Constructor

@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include "Entity.h"
+#include "Vector3.h"
+#include <vector>
 class BaseEnemy : protected Entity
 {
 public:
@@ -12,6 +14,7 @@ public:
 	Vector3 GetEnemyPos();
 	bool GetActive();
 	bool active;
+	void Collisioncheck(std::vector <Vector3> activeTileList);
 protected: 
 	enum DIRECTION
 	{
