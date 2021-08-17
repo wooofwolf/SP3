@@ -11,9 +11,9 @@ protected:
 	Vector3 vel;
 	Vector3 scale;
 	Vector3 normal;
-	bool active;
 
 public:
+	bool active;
 	// Constructor
 	Entity();
 	// Destructor

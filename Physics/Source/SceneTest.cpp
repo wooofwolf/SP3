@@ -15,6 +15,18 @@ SceneTest::~SceneTest()
 {
 }
 
+BaseEnemy* SceneTest::SpawnEnemies()
+{
+	for (BaseEnemy* enemies : BasicEnemyList)
+	{
+		if (enemies->GetActive() == false)
+		{
+			enemies->active = true;
+		}
+	}
+	return BasicEnemyList.back();
+}
+
 void SceneTest::Init()
 {
 	renderer = new Renderer();
@@ -50,6 +62,8 @@ void SceneTest::Init()
 	shotgun->prevGun = revolver;
 	minigun->nextGun = revolver;
 	minigun->prevGun = shotgun;
+
+	
 }
 
 void SceneTest::Update(double dt)
@@ -88,6 +102,7 @@ void SceneTest::Update(double dt)
 	}
 	else if (bFireButtonState && !Application::IsMousePressed(0))
 		bFireButtonState = false;
+	
 }
 
 void SceneTest::Render()
@@ -157,8 +172,10 @@ void SceneTest::Render()
 	}
 	modelStack.PopMatrix();
 
+	baseEnemy->active = true;
+
 	modelStack.PushMatrix();
-	modelStack.Translate(10,90,0);
+	modelStack.Translate(2 + 4 * baseEnemy->GetEnemyPos().x, m_worldHeight - 2 - 4 * baseEnemy->GetEnemyPos().y, 1);
 	RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
 	modelStack.PopMatrix();
 

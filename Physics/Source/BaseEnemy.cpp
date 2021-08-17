@@ -6,16 +6,17 @@ BaseEnemy::~BaseEnemy()
 
 void BaseEnemy::Init()
 {
-	vel = 0.7;
-	active = true;
-	pos = Vector3(10, 90, 0);
+	active = false;
+	hp = 0;
+	pos.Set(50, 60, 1);
+	vel.Set(0, 0, 0);
+	normal.Set(0, 1, 0);
 }
 
 void BaseEnemy::Update(double dt)
 {
-	if (!active)
-		return;
 	Movement();
+	pos += vel * dt;
 }
 
 void BaseEnemy::Render()
@@ -31,19 +32,19 @@ void BaseEnemy::Movement()
 		directionalCD--;
 		if (direction == 1)
 		{
-			pos.x += 1;
+			vel.x = 1;
 		}
 		else if (direction == 2)
 		{
-			pos.y += 1;
+			vel.y = 1;
 		}
 		else if (direction == 3)
 		{
-			pos.x -= 1;
+			vel.x = -1;
 		}
 		else if (direction == 4)
 		{
-			pos.y -= 1;
+			vel.y = -1;
 		}
 	}
 	else if (directionalCD <= 0)
@@ -56,6 +57,16 @@ void BaseEnemy::Movement()
 Vector3 BaseEnemy::GetEnemyPos()
 {
 	return pos;
+}
+
+bool BaseEnemy::GetActive()
+{
+	if (active == true)
+	{
+		return true;
+	}
+	else
+		return false;
 }
 
 void ConcreteBaseEnemy::Attack() const
