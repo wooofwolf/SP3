@@ -29,14 +29,12 @@ BaseEnemy* SceneTest::SpawnEnemies()
 
 void SceneTest::Init()
 {
-	renderer = new Renderer();
-
 	SceneBase::Init();
 
 
 	
-	baseEnemy = new ConcreteBaseEnemy();
-	baseEnemy->Init();
+	//baseEnemy = new ConcreteBaseEnemy();
+	//baseEnemy->Init();
 	player = Player::GetInstance();
 	player->Init();
 	
@@ -84,8 +82,11 @@ void SceneTest::Update(double dt)
 	//}
 
 	SceneBase::Update(dt);
+	
+	camera->Update(dt);
+
 	player->Update(dt);
-	baseEnemy->Update(dt);
+	//baseEnemy->Update(dt);
 	revolver->UpdateFireRateTimer(dt);
 	shotgun->UpdateFireRateTimer(dt);
 	minigun->UpdateFireRateTimer(dt);
@@ -136,7 +137,7 @@ void SceneTest::Render()
 	int w = Application::GetWindowWidth();
 	int h = Application::GetWindowHeight();
 
-	renderer->Reset();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Projection matrix : Orthographic Projection
 	Mtx44 projection;
@@ -167,7 +168,7 @@ void SceneTest::Render()
 				float width = (tilePos - Camera::GetInstance()->position).Length();
 				float height = Camera::GetInstance()->position.z - tilePos.z;
 				float hypotenuse = sqrtf(width * width + height * height);
-				float maxWidth = (Vector3(m_worldWidth + 2, m_worldHeight + 2, 1) - Camera::GetInstance()->position).Length();
+				float maxWidth = (Vector3(m_worldWidth / 2 + 2, 0, 1).Dot(Vector3(m_worldHeight / 2 + 2, 0, 1)) - Camera::GetInstance()->position.Length());
 				float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
 
 				if (hypotenuse <= maxHypotenuse)
@@ -202,19 +203,19 @@ void SceneTest::Render()
 		modelStack.Translate(player->GetPos().x, player->GetPos().y, 0);
 		modelStack.Rotate(Math::RadianToDegree(atan2f(m_worldHeight - (y / h) * m_worldHeight - player->GetPos().y, (x / w) * m_worldWidth - player->GetPos().x)), 0, 0, 1);
 		player->SetRotate(Vector3((x / w) * m_worldWidth - player->GetPos().x, m_worldHeight - (y / h) * m_worldHeight - player->GetPos().y, 0));
-		modelStack.Scale(player->GetScale().x, player->GetScale().y * 0.5, player->GetScale().z);
+		modelStack.Scale(player->GetScale().x, player->GetScale().y, player->GetScale().z);
 		RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE_RED), false);
 	}
 	modelStack.PopMatrix();
 
-	baseEnemy->active = true;
+	//baseEnemy->active = true;
 
 
-	modelStack.PushMatrix();
+	/*modelStack.PushMatrix();
 	modelStack.Translate(baseEnemy->GetEnemyPos().x, baseEnemy->GetEnemyPos().y, 1);
 	modelStack.Scale(10, 10, 10);
 	RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
-	modelStack.PopMatrix();
+	modelStack.PopMatrix();*/
 
 	//modelStack.PushMatrix();
 	//modelStack.Translate(2 + 4 * baseEnemy->GetEnemyPos().x, m_worldHeight - 2 - 4 * baseEnemy->GetEnemyPos().y, 1);
@@ -239,16 +240,7 @@ void SceneTest::Render()
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(MeshList::GetInstance()->GetMesh(MeshList::GEO_TEXT), ss.str(), Color(0, 1, 0), 3, 0, 3);
 
-	modelStack.PushMatrix();
-	{
-		modelStack.Translate(20, 50, 0);
-		modelStack.Rotate(0, 0, 0, 1);
-		modelStack.Scale(5, 5, 5);
-		renderer->RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE), true);
-	}
-	modelStack.PopMatrix();
-
-	///renderer->RenderTextOnScreen(MeshList::GetInstance()->GetMesh(MeshList::GEO_TEXT), "Test", Color(0, 1, 0), 3, 0, 6);
+	//RenderTextOnScreen(MeshList::GetInstance()->GetMesh(MeshList::GEO_TEXT), "Test", Color(0, 1, 0), 3, 0, 6);
 }
 
 void SceneTest::Exit()

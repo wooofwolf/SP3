@@ -22,7 +22,7 @@ private:
 	Map* map;
 
 public:
-	Renderer* renderer;
+	//Renderer* renderer;
 
 	MeshList* meshlist;
 	

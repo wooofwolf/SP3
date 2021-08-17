@@ -84,6 +84,11 @@ void Player::Render()
 	modelStack.PopMatrix();
 }
 
+void Player::Exit()
+{
+
+}
+
 void Player::Movement()
 {
 
@@ -128,8 +133,4 @@ void Player::Collisioncheck(std::vector<Vector3> activeTileList)
 			pos = prevpos;
 		}
 	}
-}
-
-void Player::Exit()
-{
 }

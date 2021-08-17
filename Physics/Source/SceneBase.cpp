@@ -232,6 +232,6 @@ void SceneBase::Render()
 
 void SceneBase::Exit()
 {
-	glDeleteProgram(m_programID);
 	glDeleteVertexArrays(1, &m_vertexArrayID);
+	glDeleteProgram(m_programID);
 }
