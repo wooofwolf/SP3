@@ -31,11 +31,16 @@ void SceneTest::Init()
 {
 	SceneBase::Init();
 
+
 	baseEnemy = new ConcreteBaseEnemy();
 	baseEnemy->Init();
 	player = Player::GetInstance();
 	player->Init();
+
+
 	
+	//baseEnemy = new ConcreteBaseEnemy();
+	//baseEnemy->Init();	
 	//EntityList.push_back(player);
 
 	// Calculating aspect ratio
@@ -90,7 +95,10 @@ void SceneTest::Update(double dt)
 	//camera->Update(dt);
 
 	player->Update(dt);
-
+	for (CavemenMelee* CaveMelee : CaveManMeleeList)
+	{
+		CaveMelee->Movement(dt);
+	}
 	// yes i hard found the values where the outside of the map starts to show
 	// theres probably a better way to find these values but i cant be bothered lol -yh
 	if ((player->GetPos().x > 90 && player->GetPos().x < 714))
@@ -124,10 +132,6 @@ void SceneTest::Update(double dt)
 	revolver->UpdateFireRateTimer(dt);
 	shotgun->UpdateFireRateTimer(dt);
 	minigun->UpdateFireRateTimer(dt);
-	for (CavemenMelee* CaveMelee : CaveManMeleeList)
-	{
-		CaveMelee->Movement(dt);
-	}
 	static bool bQButtonState = false;
 	if (!bQButtonState && Application::IsKeyPressed('Q'))
 	{
@@ -305,6 +309,16 @@ void SceneTest::Render()
 		CaveMelee->Collisioncheck(activeTileList);
 	}
 	
+	//std::cout << (x / w) * m_worldWidth << ' ' << m_worldHeight - (y / h) * m_worldHeight << std::endl;
+
+	//baseEnemy->active = true;
+
+
+	/*modelStack.PushMatrix();
+	modelStack.Translate(baseEnemy->GetEnemyPos().x, baseEnemy->GetEnemyPos().y, 1);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
+	modelStack.PopMatrix();*/
 
 	
 	//modelStack.PushMatrix();
@@ -364,7 +378,7 @@ void SceneTest::Exit()
 
 	for (Entity* entity : EntityList)
 		delete entity;
-	for (BaseEnemy* enemy : BasicEnemyList)
+	for (BaseEnemy* enemy : CaveManMeleeList)
 		delete enemy;
 	for (Projectile* proj : projectileList)
 		delete proj;

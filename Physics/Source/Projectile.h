@@ -25,7 +25,7 @@ struct Projectile: public Entity
 	void Update(double dt);
 	void Render();
 	void Exit();
-	void Movement();
+	void Movement(double dt);
 	void Collisioncheck(std::vector <Vector3> activeTileList);
 
 	Vector3 GetPos();

@@ -80,7 +80,7 @@ void Projectile::Init(int shotgunID)
 	damage = 10;
 }
 
-void Projectile::Movement()
+void Projectile::Movement(double dt)
 {
 }
 

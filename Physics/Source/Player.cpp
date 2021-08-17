@@ -86,6 +86,10 @@ void Player::Render()
 	modelStack.PopMatrix();
 }
 
+void Player::Exit()
+{
+}
+
 void Player::Movement(double dt)
 {
 
