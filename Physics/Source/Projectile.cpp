@@ -29,6 +29,14 @@ void Projectile::Init()
 		vel = normal * 50;
 		damage = 10;
 		break;
+	case PROJECTILE_TYPE::PROJECTILE_SHOTGUN:
+		vel = normal * 30;
+		damage = 10;
+		break;
+	case PROJECTILE_TYPE::PROJECTILE_MINIGUN:
+		vel = normal * 40;
+		damage = 5;
+		break;
 	}
 }
 

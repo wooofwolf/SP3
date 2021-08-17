@@ -68,7 +68,7 @@ void SceneTest::Init()
 	shotgun->fireRateTimer = 0;
 	minigun->nextGun = revolver;
 	minigun->prevGun = shotgun;
-	minigun->fireRate = 0.5;
+	minigun->fireRate = 0.1;
 	minigun->fireRateTimer = 0;
 
 	activeTileList.clear();
@@ -117,7 +117,8 @@ void SceneTest::Update(double dt)
 			proj->Init();
 			projectileList.push_back(proj);
 		}
-		bFireButtonState = true;
+		if (activeGun != minigun)
+			bFireButtonState = true;
 	}
 	else if (bFireButtonState && !Application::IsMousePressed(0))
 		bFireButtonState = false;
