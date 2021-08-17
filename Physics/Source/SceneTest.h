@@ -39,6 +39,7 @@ public:
 	BaseEnemy* Sniper;
 
 	std::vector<Entity*> EntityList;
+	std::vector <Vector3> activeTileList;
 
 	Player* player;
 public:

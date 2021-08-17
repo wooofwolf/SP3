@@ -23,8 +23,8 @@ void SceneTest::Init()
 
 	player = Player::GetInstance();
 	player->Init();
-	baseEnemy = new ConcreteBaseEnemy();
-	baseEnemy->Init();
+	/*baseEnemy = new ConcreteBaseEnemy();
+	baseEnemy->Init();*/
 	//EntityList.push_back(player);
 
 	// Calculating aspect ratio
@@ -50,6 +50,8 @@ void SceneTest::Init()
 	shotgun->prevGun = revolver;
 	minigun->nextGun = revolver;
 	minigun->prevGun = shotgun;
+
+	activeTileList.clear();
 }
 
 void SceneTest::Update(double dt)
@@ -61,7 +63,7 @@ void SceneTest::Update(double dt)
 
 	SceneBase::Update(dt);
 	player->Update(dt);
-	baseEnemy->Update(dt);
+	//baseEnemy->Update(dt);
 	static bool bQButtonState = false;
 	if (!bQButtonState && Application::IsKeyPressed('Q'))
 	{
@@ -92,6 +94,8 @@ void SceneTest::Update(double dt)
 
 void SceneTest::Render()
 {
+	activeTileList.clear();
+
 	double x, y;
 	Application::GetCursorPos(&x, &y);
 	int w = Application::GetWindowWidth();
@@ -133,16 +137,20 @@ void SceneTest::Render()
 
 				if (hypotenuse <= maxHypotenuse)
 				{
+					activeTileList.push_back(tilePos);
 					modelStack.PushMatrix();
 					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
 					modelStack.Scale(2, 2, 2);
 					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE), true);
 					modelStack.PopMatrix();
 					break;
+
 				}
 			}
 		}
 	}
+	Player::GetInstance()->Collisioncheck(activeTileList);
+
 
 	//modelStack.PushMatrix();
 	//player->Render();

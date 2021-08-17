@@ -168,6 +168,7 @@
     <ClCompile Include="Source\MeshBuilder.cpp" />
     <ClCompile Include="Source\MeshList.cpp" />
     <ClCompile Include="Source\Player.cpp" />
+    <ClCompile Include="Source\Renderer.cpp" />
     <ClCompile Include="Source\SceneAssignment2.cpp" />
     <ClCompile Include="Source\SceneAssignment2_Menu.cpp" />
     <ClCompile Include="Source\SceneBase.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="Source\MeshBuilder.h" />
     <ClInclude Include="Source\MeshList.h" />
     <ClInclude Include="Source\Player.h" />
+    <ClInclude Include="Source\Renderer.h" />
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\SceneAssignment2.h" />
     <ClInclude Include="Source\SceneAssignment2_Menu.h" />

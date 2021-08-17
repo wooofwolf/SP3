@@ -1,9 +1,13 @@
 #pragma once
 
+#include <vector>
+
 #include "Vector3.h"
 #include "Entity.h"
 #include "SceneBase.h"
 #include "SingletonPattern.h"
+#include "Map.h"
+
 
 class Player : public Entity, public SingletonPattern<Player>
 {
@@ -20,7 +24,6 @@ protected:
 	int m_worldWidth;
 	int m_worldHeight;
 
-
 public:
 	// Constructor
 	Player();
@@ -31,6 +34,7 @@ public:
 	void Init(int m_worldWidth, int m_worldHeight);
 	void Update(double dt);
 	void Render();
+	void Collisioncheck(std::vector<Vector3> activeTileList);
 
 	void Movement();
 

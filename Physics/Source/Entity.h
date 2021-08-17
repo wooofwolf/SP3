@@ -1,6 +1,8 @@
 #pragma once
+#include <vector>
 
 #include "Vector3.h"
+
 
 class Entity
 {
@@ -8,6 +10,7 @@ protected:
 	// Variables
 	int hp;
 	Vector3 pos;
+	Vector3 prevpos;
 	Vector3 vel;
 	Vector3 scale;
 	Vector3 normal;
@@ -24,5 +27,6 @@ public:
 	virtual void Render() = 0;
 
 	virtual void Movement() = 0;
+	virtual void Collisioncheck(std::vector <Vector3> activeTileList) = 0;
 };
 
