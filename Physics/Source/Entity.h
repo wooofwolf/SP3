@@ -26,7 +26,7 @@ public:
 	virtual void Update(double dt) = 0;
 	virtual void Render() = 0;
 
-	virtual void Movement() = 0;
+	virtual void Movement(double dt) = 0;
 	virtual void Collisioncheck(std::vector <Vector3> activeTileList) = 0;
 };
 

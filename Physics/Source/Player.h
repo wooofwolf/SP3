@@ -36,7 +36,7 @@ public:
 	void Render();
 	void Collisioncheck(std::vector<Vector3> activeTileList);
 
-	void Movement();
+	void Movement(double dt);
 
 	Vector3 GetPos();
 	Vector3 GetRotate();

@@ -14,18 +14,18 @@ SceneTest::SceneTest():map(nullptr)
 SceneTest::~SceneTest()
 {
 }
-
-BaseEnemy* SceneTest::SpawnEnemies()
-{
-	for (BaseEnemy* enemies : BasicEnemyList)
-	{
-		if (enemies->GetActive() == false)
-		{
-			enemies->active = true;
-		}
-	}
-	return BasicEnemyList.back();
-}
+//
+//BaseEnemy* SceneTest::SpawnEnemies()
+//{
+//	for (BaseEnemy* enemies : BasicEnemyList)
+//	{
+//		if (enemies->GetActive() == false)
+//		{
+//			enemies->active = true;
+//		}
+//	}
+//	return BasicEnemyList.back();
+//}
 
 void SceneTest::Init()
 {
@@ -33,8 +33,6 @@ void SceneTest::Init()
 
 	SceneBase::Init();
 
-
-	
 	baseEnemy = new ConcreteBaseEnemy();
 	baseEnemy->Init();
 	player = Player::GetInstance();
@@ -68,6 +66,13 @@ void SceneTest::Init()
 	minigun->prevGun = shotgun;
 
 	activeTileList.clear();
+
+	for (int i = 0; i < 2; ++i)
+	{
+		CavemenMelee* CavemanMelee = new CavemenMelee(baseEnemy);
+		CavemanMelee->Init();
+		CaveManMeleeList.push_back(CavemanMelee);
+	}
 }
 
 void SceneTest::Update(double dt)
@@ -79,7 +84,10 @@ void SceneTest::Update(double dt)
 
 	SceneBase::Update(dt);
 	player->Update(dt);
-	baseEnemy->Update(dt);
+	for (CavemenMelee* CaveMelee : CaveManMeleeList)
+	{
+		CaveMelee->Movement(dt);
+	}
 	static bool bQButtonState = false;
 	if (!bQButtonState && Application::IsKeyPressed('Q'))
 	{
@@ -174,7 +182,6 @@ void SceneTest::Render()
 	}
 	Player::GetInstance()->Collisioncheck(activeTileList);
 
-
 	//modelStack.PushMatrix();
 	//player->Render();
 	//modelStack.PopMatrix();
@@ -188,15 +195,30 @@ void SceneTest::Render()
 	}
 	modelStack.PopMatrix();
 
-	baseEnemy->active = true;
+	for (std::vector<CavemenMelee*>::iterator it = CaveManMeleeList.begin(); it != CaveManMeleeList.end(); ++it)
+	{
+		CavemenMelee* Cavemen = (CavemenMelee*)*it;
+		if (Cavemen->active != true)
+		{
+			Cavemen->active = true;
+		}
+		if (Cavemen->active == true)
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(Cavemen->GetEnemyPos().x, Cavemen->GetEnemyPos().y, 1);
+			modelStack.Scale(10, 10, 10);
+			RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
+			modelStack.PopMatrix();
+		}
+	}
 
+	for (CavemenMelee* CaveMelee : CaveManMeleeList)
+	{
+		CaveMelee->Collisioncheck(activeTileList);
+	}
+	
 
-	modelStack.PushMatrix();
-	modelStack.Translate(baseEnemy->GetEnemyPos().x, baseEnemy->GetEnemyPos().y, 1);
-	modelStack.Scale(10, 10, 10);
-	RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
-	modelStack.PopMatrix();
-
+	
 	//modelStack.PushMatrix();
 	//modelStack.Translate(2 + 4 * baseEnemy->GetEnemyPos().x, m_worldHeight - 2 - 4 * baseEnemy->GetEnemyPos().y, 1);
 	//RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);

@@ -3,18 +3,24 @@
 #include "Entity.h"
 #include "Vector3.h"
 #include <vector>
+#include "Map.h"
 class BaseEnemy : protected Entity
 {
 public:
+	std::vector<BaseEnemy*> BasicEnemyList;
 	~BaseEnemy();
-	void Init();
-	void Update(double dt);
+	virtual void Init();
 	void Render();
-	void Movement();
+	void Movement(double dt);
 	Vector3 GetEnemyPos();
 	bool GetActive();
 	bool active;
 	void Collisioncheck(std::vector <Vector3> activeTileList);
+	void Exit();
+	int direction;
+	float directionalCD;
+	virtual void Update(double dt);
+	bool collided;
 protected: 
 	enum DIRECTION
 	{
@@ -24,8 +30,7 @@ protected:
 		DOWN = 3,
 		NUM_DIRECTIONS
 	};
-	int direction;
-	float directionalCD;
+	void CheckCollidedSide(DIRECTION direction , double dt);
 	virtual void Attack() const = 0;
 };
 
@@ -33,6 +38,8 @@ class ConcreteBaseEnemy : public BaseEnemy
 {
 public:
 	void Attack() const override;
+	void Update(double dt) override;
+	void Init() override; 
 };
 
 class EnemyDecorator : public BaseEnemy
@@ -44,6 +51,8 @@ public:
 	EnemyDecorator(BaseEnemy* baseEnemy);
 
 	void Attack() const override;
+	void Update(double dt) override;
+	void Init() override;
 };
 
 class CavemenMelee:public EnemyDecorator
@@ -52,6 +61,8 @@ public:
 	CavemenMelee(BaseEnemy* baseEnemy);
 
 	void Attack() const override;
+	void Update(double dt) override;
+	void Init() override;
 };
 class CavemenRanged :public EnemyDecorator
 {
@@ -59,6 +70,8 @@ public:
 	CavemenRanged(BaseEnemy* baseEnemy);
 
 	void Attack() const override;
+	void Update(double dt) override;
+	void Init() override;
 };
 class Knights : public EnemyDecorator
 {
@@ -66,6 +79,8 @@ public:
 	Knights(BaseEnemy* baseEnemy);
 
 	void Attack() const override;
+	void Update(double dt) override;
+	void Init() override;
 };
 class Archer : public EnemyDecorator
 {
@@ -73,6 +88,8 @@ public:
 	Archer(BaseEnemy* baseEnemy);
 
 	void Attack() const override;
+	void Update(double dt) override;
+	void Init() override;
 };
 class Cyborg : public EnemyDecorator
 {
@@ -80,6 +97,8 @@ public:
 	Cyborg(BaseEnemy* baseEnemy);
 
 	void Attack() const override;
+	void Update(double dt) override;
+	void Init() override;
 };
 
 class Sniper : public EnemyDecorator
@@ -88,5 +107,7 @@ public:
 	Sniper(BaseEnemy* baseEnemy);
 
 	void Attack() const override;
+	void Update(double dt) override;
+	void Init() override;
 };
 
