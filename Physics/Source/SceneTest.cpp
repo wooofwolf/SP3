@@ -29,8 +29,6 @@ SceneTest::~SceneTest()
 
 void SceneTest::Init()
 {
-	renderer = new Renderer();
-
 	SceneBase::Init();
 
 	baseEnemy = new ConcreteBaseEnemy();
@@ -44,26 +42,31 @@ void SceneTest::Init()
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 	
-	player = Player::GetInstance();
-	player->Init(m_worldWidth, m_worldHeight);
-
-	// Test map
-	map = Map::GetInstance();
-	map->Init("Maps/TestMap.csv");
-
 	// Test guns
 	simpleGun = new ConcreteGunComponent();
 	revolver = new Revolver(simpleGun);
 	shotgun = new Shotgun(simpleGun);
 	minigun = new Minigun(simpleGun);
-	activeGun = revolver;
+
+	player = Player::GetInstance();
+	player->Init(m_worldWidth, m_worldHeight, revolver);
+
+	// Test map
+	map = Map::GetInstance();
+	map->Init("Maps/TestMap.csv");
 
 	revolver->nextGun = shotgun;
 	revolver->prevGun = minigun;
+	revolver->fireRate = 1;
+	revolver->fireRateTimer = 0;
 	shotgun->nextGun = minigun;
 	shotgun->prevGun = revolver;
+	shotgun->fireRate = 2;
+	shotgun->fireRateTimer = 0;
 	minigun->nextGun = revolver;
 	minigun->prevGun = shotgun;
+	minigun->fireRate = 0.1;
+	minigun->fireRateTimer = 0;
 
 	activeTileList.clear();
 
@@ -83,7 +86,44 @@ void SceneTest::Update(double dt)
 	//}
 
 	SceneBase::Update(dt);
+	
+	//camera->Update(dt);
+
 	player->Update(dt);
+
+	// yes i hard found the values where the outside of the map starts to show
+	// theres probably a better way to find these values but i cant be bothered lol -yh
+	if ((player->GetPos().x > 90 && player->GetPos().x < 714))
+	{
+		NearXEdge = false;
+
+		camera->position.x = player->GetPos().x - m_worldWidth / 2;
+		camera->target.x = player->GetPos().x - m_worldWidth / 2;
+		//camera->position.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, 2);
+		//camera->target.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, player->GetPos().z);
+	}
+	else
+	{
+		NearXEdge = true;
+	}
+	if ((player->GetPos().y < 50 && player->GetPos().y > -653))
+	{
+		NearYEdge = false;
+
+		camera->position.y = player->GetPos().y - m_worldHeight / 2;
+		camera->target.y = player->GetPos().y - m_worldHeight / 2;
+		//camera->position.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, 2);
+		//camera->target.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, player->GetPos().z);
+	}
+	else
+	{
+		NearYEdge = true;
+	}
+
+	//baseEnemy->Update(dt);
+	revolver->UpdateFireRateTimer(dt);
+	shotgun->UpdateFireRateTimer(dt);
+	minigun->UpdateFireRateTimer(dt);
 	for (CavemenMelee* CaveMelee : CaveManMeleeList)
 	{
 		CaveMelee->Movement(dt);
@@ -91,7 +131,7 @@ void SceneTest::Update(double dt)
 	static bool bQButtonState = false;
 	if (!bQButtonState && Application::IsKeyPressed('Q'))
 	{
-		activeGun = activeGun->prevGun;
+		player->SetActiveGun(player->GetActiveGun()->prevGun);
 		bQButtonState = true;
 	}
 	else if (bQButtonState && !Application::IsKeyPressed('Q'))
@@ -100,7 +140,7 @@ void SceneTest::Update(double dt)
 	static bool bEButtonState = false;
 	if (!bEButtonState && Application::IsKeyPressed('E'))
 	{
-		activeGun = activeGun->nextGun;
+		player->SetActiveGun(player->GetActiveGun()->nextGun);
 		bEButtonState = true;
 	}
 	else if (bEButtonState && !Application::IsKeyPressed('E'))
@@ -109,12 +149,42 @@ void SceneTest::Update(double dt)
 	static bool bFireButtonState = false;
 	if (!bFireButtonState && Application::IsMousePressed(0))
 	{
-		activeGun->FireGun();
-		bFireButtonState = true;
+		if (player->GetActiveGun() == revolver || player->GetActiveGun() == minigun)
+		{
+			Projectile* proj = player->GetActiveGun()->FireGun();
+			if (proj != nullptr)
+			{
+				proj->Init();
+				projectileList.push_back(proj);
+			}
+		}
+		else
+		{
+			if (player->GetActiveGun()->fireRateTimer >= player->GetActiveGun()->fireRate)
+			{
+				for (int i = 1; i < 6; ++i)
+				{
+					Projectile* proj = player->GetActiveGun()->FireGun();
+					if (proj != nullptr)
+					{
+						proj->Init(i);
+						projectileList.push_back(proj);
+					}
+				}
+				player->GetActiveGun()->fireRateTimer = 0;
+			}
+		}
+
+		if (player->GetActiveGun() != minigun)
+			bFireButtonState = true;
 	}
 	else if (bFireButtonState && !Application::IsMousePressed(0))
 		bFireButtonState = false;
 	
+	for (Projectile* proj : projectileList)
+	{
+		proj->Update(dt);
+	}
 }
 
 void SceneTest::Render()
@@ -126,7 +196,7 @@ void SceneTest::Render()
 	int w = Application::GetWindowWidth();
 	int h = Application::GetWindowHeight();
 
-	renderer->Reset();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Projection matrix : Orthographic Projection
 	Mtx44 projection;
@@ -157,7 +227,7 @@ void SceneTest::Render()
 				float width = (tilePos - Camera::GetInstance()->position).Length();
 				float height = Camera::GetInstance()->position.z - tilePos.z;
 				float hypotenuse = sqrtf(width * width + height * height);
-				float maxWidth = (Vector3(m_worldWidth + 2, m_worldHeight + 2, 1) - Camera::GetInstance()->position).Length();
+				float maxWidth = (Vector3(m_worldWidth / 2 + 2, 0, 1).Dot(Vector3(m_worldHeight / 2 + 2, 0, 1)) - Camera::GetInstance()->position.Length());
 				float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
 
 				if (hypotenuse <= maxHypotenuse)
@@ -186,11 +256,29 @@ void SceneTest::Render()
 	//player->Render();
 	//modelStack.PopMatrix();
 
+	//done for now
+
+	Vector3 playerpos;
+
+	if (NearXEdge == true || NearYEdge == true)
+	{
+		// make code the do pls thank
+
+		playerpos = player->GetPos();
+	}
+	else
+	{
+		playerpos.Set(m_worldWidth * 0.5, m_worldHeight * 0.5);
+	}
+
+	Vector3 dir = Vector3((x / w) * m_worldWidth - playerpos.x, m_worldHeight - (y / h) * m_worldHeight - playerpos.y, 0);
+	player->SetRotate(dir);
+
 	modelStack.PushMatrix();
 	{
 		modelStack.Translate(player->GetPos().x, player->GetPos().y, 0);
-		modelStack.Rotate(Math::RadianToDegree(atan2f(m_worldHeight - (y / h) * m_worldHeight - player->GetPos().y, (x / w) * m_worldWidth - player->GetPos().x)), 0, 0, 1);
-		modelStack.Scale(player->GetScale().x, player->GetScale().y * 0.5, player->GetScale().z);
+		modelStack.Rotate(Math::RadianToDegree(atan2f(dir.y, dir.x)), 0, 0, 1);
+		modelStack.Scale(player->GetScale().x, player->GetScale().y, player->GetScale().z);
 		RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE_RED), false);
 	}
 	modelStack.PopMatrix();
@@ -224,22 +312,41 @@ void SceneTest::Render()
 	//RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
 	//modelStack.PopMatrix();
 
+	std::vector<Projectile*>::iterator it = projectileList.begin();
+	for ( ; it != projectileList.end(); )
+	{
+		Projectile* projectile = (Projectile*)*it;
+		projectile->Collisioncheck(activeTileList);
+		if (!projectile->active)
+		{
+			it = projectileList.erase(it);
+		}
+		else
+		{
+			float width = (projectile->GetPos() - Camera::GetInstance()->position).Length();
+			float height = Camera::GetInstance()->position.z - projectile->GetPos().z;
+			float hypotenuse = sqrtf(width * width + height * height);
+			float maxWidth = (Vector3(m_worldWidth / 2 + 2, 0, 1).Dot(Vector3(m_worldHeight / 2 + 2, 0, 1)) - Camera::GetInstance()->position.Length());
+			float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
+
+			if (hypotenuse <= maxHypotenuse)
+			{
+				modelStack.PushMatrix();
+					modelStack.Translate(projectile->GetPos().x, projectile->GetPos().y, projectile->GetPos().z);
+					modelStack.Scale(projectile->GetScale().x, projectile->GetScale().y, projectile->GetScale().z);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BALL), false);
+				modelStack.PopMatrix();
+			}
+			++it;
+		}
+	}
 
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(MeshList::GetInstance()->GetMesh(MeshList::GEO_TEXT), ss.str(), Color(0, 1, 0), 3, 0, 3);
 
-	modelStack.PushMatrix();
-	{
-		modelStack.Translate(20, 50, 0);
-		modelStack.Rotate(0, 0, 0, 1);
-		modelStack.Scale(5, 5, 5);
-		renderer->RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE), true);
-	}
-	modelStack.PopMatrix();
-
-	///renderer->RenderTextOnScreen(MeshList::GetInstance()->GetMesh(MeshList::GEO_TEXT), "Test", Color(0, 1, 0), 3, 0, 6);
+	//RenderTextOnScreen(MeshList::GetInstance()->GetMesh(MeshList::GEO_TEXT), "Test", Color(0, 1, 0), 3, 0, 6);
 }
 
 void SceneTest::Exit()
@@ -254,4 +361,11 @@ void SceneTest::Exit()
 	delete revolver;
 	delete shotgun;
 	delete minigun;
+
+	for (Entity* entity : EntityList)
+		delete entity;
+	for (BaseEnemy* enemy : BasicEnemyList)
+		delete enemy;
+	for (Projectile* proj : projectileList)
+		delete proj;
 }

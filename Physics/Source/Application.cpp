@@ -11,8 +11,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "SceneAssignment2_Menu.h"
-#include "SceneAssignment2.h"
 #include "SceneTest.h"
 
 GLFWwindow* m_window;

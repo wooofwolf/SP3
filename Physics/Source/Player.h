@@ -7,6 +7,7 @@
 #include "SceneBase.h"
 #include "SingletonPattern.h"
 #include "Map.h"
+#include "Guns.h"
 
 
 class Player : public Entity, public SingletonPattern<Player>
@@ -24,6 +25,8 @@ protected:
 	int m_worldWidth;
 	int m_worldHeight;
 
+	GunComponent* activeGun;
+
 public:
 	// Constructor
 	Player();
@@ -31,9 +34,11 @@ public:
 	~Player();
 
 	void Init();
-	void Init(int m_worldWidth, int m_worldHeight);
+	void Init(int m_worldWidth, int m_worldHeight, GunComponent* activeGun);
 	void Update(double dt);
 	void Render();
+	void Exit();
+
 	void Collisioncheck(std::vector<Vector3> activeTileList);
 
 	void Movement(double dt);
@@ -42,8 +47,12 @@ public:
 	Vector3 GetRotate();
 	Vector3 GetScale();
 
+	void SetRotate(Vector3 rotate);
 	void SetPos(Vector3 pos);
 
 	float GetGameSpeed();
+
+	GunComponent* GetActiveGun();
+	void SetActiveGun(GunComponent* activeGun);
 };
 

@@ -154,10 +154,8 @@
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\BaseEnemy.cpp" />
-    <ClCompile Include="Source\Brick.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\Entity.cpp" />
-    <ClCompile Include="Source\Flipper.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\Guns.cpp" />
     <ClCompile Include="Source\LoadOBJ.cpp" />
@@ -168,9 +166,8 @@
     <ClCompile Include="Source\MeshBuilder.cpp" />
     <ClCompile Include="Source\MeshList.cpp" />
     <ClCompile Include="Source\Player.cpp" />
+    <ClCompile Include="Source\Projectile.cpp" />
     <ClCompile Include="Source\Renderer.cpp" />
-    <ClCompile Include="Source\SceneAssignment2.cpp" />
-    <ClCompile Include="Source\SceneAssignment2_Menu.cpp" />
     <ClCompile Include="Source\SceneBase.cpp" />
     <ClCompile Include="Source\SceneTest.cpp" />
     <ClCompile Include="Source\shader.cpp" />
@@ -179,10 +176,8 @@
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\BaseEnemy.h" />
-    <ClInclude Include="Source\Brick.h" />
     <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\Entity.h" />
-    <ClInclude Include="Source\Flipper.h" />
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\Guns.h" />
     <ClInclude Include="Source\Light.h" />
@@ -194,10 +189,9 @@
     <ClInclude Include="Source\MeshBuilder.h" />
     <ClInclude Include="Source\MeshList.h" />
     <ClInclude Include="Source\Player.h" />
+    <ClInclude Include="Source\Projectile.h" />
     <ClInclude Include="Source\Renderer.h" />
     <ClInclude Include="Source\Scene.h" />
-    <ClInclude Include="Source\SceneAssignment2.h" />
-    <ClInclude Include="Source\SceneAssignment2_Menu.h" />
     <ClInclude Include="Source\SceneBase.h" />
     <ClInclude Include="Source\SceneTest.h" />
     <ClInclude Include="Source\shader.hpp" />

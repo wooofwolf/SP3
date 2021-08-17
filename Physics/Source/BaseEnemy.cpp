@@ -113,6 +113,10 @@ void BaseEnemy::Collisioncheck(std::vector<Vector3> activeTileList)
 	}
 }
 
+void BaseEnemy::Exit()
+{
+}
+
 void ConcreteBaseEnemy::Attack() const
 {
 	std::cout << "ConcreteBaseEnemy Attack!!" << std::endl;

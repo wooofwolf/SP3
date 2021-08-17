@@ -11,6 +11,8 @@
 
 #include "Renderer.h"
 
+#include "Projectile.h"
+
 class SceneTest : public SceneBase
 {
 private:
@@ -19,8 +21,11 @@ private:
 	float m_worldHeight;
 	Map* map;
 
+	bool NearXEdge = false;
+	bool NearYEdge = false;
+
 public:
-	Renderer* renderer;
+	//Renderer* renderer;
 
 	MeshList* meshlist;
 	
@@ -28,7 +33,6 @@ public:
 	GunComponent* revolver;
 	GunComponent* shotgun;
 	GunComponent* minigun;
-	GunComponent* activeGun;
 
 	BaseEnemy* baseEnemy;
 	BaseEnemy* cavemanMelee;
@@ -41,6 +45,7 @@ public:
 	std::vector<Entity*> EntityList;
 	std::vector<CavemenMelee*> CaveManMeleeList;
 	std::vector <Vector3> activeTileList;
+	std::vector<Projectile*> projectileList;
 
 	Player* player;
 public:
