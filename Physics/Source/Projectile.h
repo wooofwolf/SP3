@@ -21,6 +21,7 @@ struct Projectile: public Entity
 	~Projectile();
 
 	void Init();
+	void Init(int shotgunID);
 	void Update(double dt);
 	void Render();
 	void Exit();

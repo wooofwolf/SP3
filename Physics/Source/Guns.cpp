@@ -55,12 +55,7 @@ Projectile* Shotgun::FireGun()
 {
 	std::cout << "Firing from Shotgun" << std::endl;
 
-	if (fireRateTimer >= fireRate)
-	{
-		fireRateTimer = 0;
-		return new Projectile(Projectile::PROJECTILE_TYPE::PROJECTILE_SHOTGUN);
-	}
-	return nullptr;
+	return new Projectile(Projectile::PROJECTILE_TYPE::PROJECTILE_SHOTGUN);
 }
 
 Minigun::Minigun(GunComponent* component) : GunDecorator(component)

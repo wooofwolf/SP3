@@ -111,12 +111,32 @@ void SceneTest::Update(double dt)
 	static bool bFireButtonState = false;
 	if (!bFireButtonState && Application::IsMousePressed(0))
 	{
-		Projectile* proj = activeGun->FireGun();
-		if (proj != nullptr)
+		if (activeGun == revolver || activeGun == minigun)
 		{
-			proj->Init();
-			projectileList.push_back(proj);
+			Projectile* proj = activeGun->FireGun();
+			if (proj != nullptr)
+			{
+				proj->Init();
+				projectileList.push_back(proj);
+			}
 		}
+		else
+		{
+			if (activeGun->fireRateTimer >= activeGun->fireRate)
+			{
+				for (int i = 1; i < 6; ++i)
+				{
+					Projectile* proj = activeGun->FireGun();
+					if (proj != nullptr)
+					{
+						proj->Init(i);
+						projectileList.push_back(proj);
+					}
+				}
+				activeGun->fireRateTimer = 0;
+			}
+		}
+
 		if (activeGun != minigun)
 			bFireButtonState = true;
 	}

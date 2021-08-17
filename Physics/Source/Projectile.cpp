@@ -58,6 +58,28 @@ void Projectile::Exit()
 {
 }
 
+void Projectile::Init(int shotgunID)
+{
+	hp = 1;
+	prevpos = pos;
+	scale.Set(1.f, 1.f, 1.f);
+	normal = Player::GetInstance()->GetRotate().Normalized();
+	if (shotgunID == 1 || shotgunID == 2)
+	{
+		normal.Set(normal.x * cos(Math::DegreeToRadian(shotgunID * 10)) - normal.y * sin(Math::DegreeToRadian(shotgunID * 10)),
+			normal.x * sin(Math::DegreeToRadian(shotgunID * 10)) + normal.y * cos(Math::DegreeToRadian(shotgunID * 10)));
+	}
+	else if (shotgunID == 4 || shotgunID == 5)
+	{
+		normal.Set(normal.x * cos(Math::DegreeToRadian((shotgunID - 3) * -10)) - normal.y * sin(Math::DegreeToRadian((shotgunID - 3) * -10)),
+			normal.x * sin(Math::DegreeToRadian((shotgunID - 3) * -10)) + normal.y * cos(Math::DegreeToRadian((shotgunID - 3) * -10)));
+	}
+	pos = Player::GetInstance()->GetPos() + normal * 2;
+	active = true;
+	vel = normal * 30;
+	damage = 10;
+}
+
 void Projectile::Movement()
 {
 }
