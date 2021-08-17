@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include "Entity.h"
-class BaseEnemy : public Entity
+class BaseEnemy : protected Entity
 {
 public:
 	~BaseEnemy();
@@ -10,6 +10,8 @@ public:
 	void Render();
 	void Movement();
 	Vector3 GetEnemyPos();
+	bool GetActive();
+	bool active;
 protected: 
 	enum DIRECTION
 	{

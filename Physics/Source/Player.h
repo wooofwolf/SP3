@@ -42,6 +42,8 @@ public:
 	Vector3 GetRotate();
 	Vector3 GetScale();
 
+	void SetPos(Vector3 pos);
+
 	float GetGameSpeed();
 };
 

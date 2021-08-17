@@ -15,16 +15,31 @@ SceneTest::~SceneTest()
 {
 }
 
+BaseEnemy* SceneTest::SpawnEnemies()
+{
+	for (BaseEnemy* enemies : BasicEnemyList)
+	{
+		if (enemies->GetActive() == false)
+		{
+			enemies->active = true;
+		}
+	}
+	return BasicEnemyList.back();
+}
+
 void SceneTest::Init()
 {
 	renderer = new Renderer();
 
 	SceneBase::Init();
 
+
+	
+	baseEnemy = new ConcreteBaseEnemy();
+	baseEnemy->Init();
 	player = Player::GetInstance();
 	player->Init();
-	/*baseEnemy = new ConcreteBaseEnemy();
-	baseEnemy->Init();*/
+	
 	//EntityList.push_back(player);
 
 	// Calculating aspect ratio
@@ -36,6 +51,7 @@ void SceneTest::Init()
 
 	// Test map
 	map = Map::GetInstance();
+	map->Init("Maps/TestMap.csv");
 
 	// Test guns
 	simpleGun = new ConcreteGunComponent();
@@ -90,6 +106,7 @@ void SceneTest::Update(double dt)
 	}
 	else if (bFireButtonState && !Application::IsMousePressed(0))
 		bFireButtonState = false;
+	
 }
 
 void SceneTest::Render()
@@ -120,7 +137,6 @@ void SceneTest::Render()
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
 	//map->RenderMap("Maps/TestMap.csv");
-	map->ReadFile("Maps/TestMap.csv");
 	for (int y = 0; y < 200; ++y)
 	{
 		for (int x = 0; x < 200; ++x)
@@ -128,6 +144,7 @@ void SceneTest::Render()
 			switch (map->GetTile(x, y))
 			{
 			case Map::TILES::TILE_WALL:
+			{
 				Vector3 tilePos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
 				float width = (tilePos - Camera::GetInstance()->position).Length();
 				float height = Camera::GetInstance()->position.z - tilePos.z;
@@ -147,6 +164,12 @@ void SceneTest::Render()
 
 				}
 			}
+			//case Map::TILES::TILE_PLAYER:
+			//{
+			//	Player::GetInstance()->SetPos(Vector3(10, 90, 1));
+			//	break;
+			//}
+			}
 		}
 	}
 	Player::GetInstance()->Collisioncheck(activeTileList);
@@ -165,8 +188,10 @@ void SceneTest::Render()
 	}
 	modelStack.PopMatrix();
 
+	baseEnemy->active = true;
+
 	modelStack.PushMatrix();
-	modelStack.Translate(10,90,0);
+	modelStack.Translate(2 + 4 * baseEnemy->GetEnemyPos().x, m_worldHeight - 2 - 4 * baseEnemy->GetEnemyPos().y, 1);
 	RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
 	modelStack.PopMatrix();
 

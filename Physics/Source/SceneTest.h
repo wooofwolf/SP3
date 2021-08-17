@@ -39,6 +39,7 @@ public:
 	BaseEnemy* Sniper;
 
 	std::vector<Entity*> EntityList;
+	std::vector<BaseEnemy*> BasicEnemyList;
 	std::vector <Vector3> activeTileList;
 
 	Player* player;
@@ -48,7 +49,7 @@ public:
 	// Destructor
 	~SceneTest();
 
-
+	BaseEnemy* SpawnEnemies();
 	virtual void Init();
 	virtual void Update(double dt);
 	virtual void Render();
