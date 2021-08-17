@@ -183,7 +183,8 @@ void SceneTest::Render()
 	baseEnemy->active = true;
 
 	modelStack.PushMatrix();
-	modelStack.Translate(2 + 4 * baseEnemy->GetEnemyPos().x, m_worldHeight - 2 - 4 * baseEnemy->GetEnemyPos().y, 1);
+	modelStack.Translate(baseEnemy->GetEnemyPos().x, baseEnemy->GetEnemyPos().y, 1);
+	modelStack.Scale(10, 10, 10);
 	RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
 	modelStack.PopMatrix();
 
