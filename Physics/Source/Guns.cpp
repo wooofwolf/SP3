@@ -37,8 +37,6 @@ Revolver::Revolver(GunComponent* component) : GunDecorator(component)
 
 Projectile* Revolver::FireGun()
 {
-	std::cout << "Firing from Revolver" << std::endl;
-
 	if (fireRateTimer >= fireRate)
 	{
 		fireRateTimer = 0;
@@ -53,8 +51,6 @@ Shotgun::Shotgun(GunComponent* component) : GunDecorator(component)
 
 Projectile* Shotgun::FireGun()
 {
-	std::cout << "Firing from Shotgun" << std::endl;
-
 	return new Projectile(Projectile::PROJECTILE_TYPE::PROJECTILE_SHOTGUN);
 }
 
@@ -64,8 +60,6 @@ Minigun::Minigun(GunComponent* component) : GunDecorator(component)
 
 Projectile* Minigun::FireGun()
 {
-	std::cout << "Firing from Minigun" << std::endl;
-
 	if (fireRateTimer >= fireRate)
 	{
 		fireRateTimer = 0;

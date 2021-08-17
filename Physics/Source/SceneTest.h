@@ -30,7 +30,6 @@ public:
 	GunComponent* revolver;
 	GunComponent* shotgun;
 	GunComponent* minigun;
-	GunComponent* activeGun;
 
 	BaseEnemy* baseEnemy;
 	BaseEnemy* cavemanMelee;

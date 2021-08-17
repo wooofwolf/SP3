@@ -44,19 +44,18 @@ void SceneTest::Init()
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 	
-	player = Player::GetInstance();
-	player->Init(m_worldWidth, m_worldHeight);
-
-	// Test map
-	map = Map::GetInstance();
-	map->Init("Maps/TestMap.csv");
-
 	// Test guns
 	simpleGun = new ConcreteGunComponent();
 	revolver = new Revolver(simpleGun);
 	shotgun = new Shotgun(simpleGun);
 	minigun = new Minigun(simpleGun);
-	activeGun = revolver;
+
+	player = Player::GetInstance();
+	player->Init(m_worldWidth, m_worldHeight, revolver);
+
+	// Test map
+	map = Map::GetInstance();
+	map->Init("Maps/TestMap.csv");
 
 	revolver->nextGun = shotgun;
 	revolver->prevGun = minigun;
@@ -93,7 +92,7 @@ void SceneTest::Update(double dt)
 	static bool bQButtonState = false;
 	if (!bQButtonState && Application::IsKeyPressed('Q'))
 	{
-		activeGun = activeGun->prevGun;
+		player->SetActiveGun(player->GetActiveGun()->prevGun);
 		bQButtonState = true;
 	}
 	else if (bQButtonState && !Application::IsKeyPressed('Q'))
@@ -102,7 +101,7 @@ void SceneTest::Update(double dt)
 	static bool bEButtonState = false;
 	if (!bEButtonState && Application::IsKeyPressed('E'))
 	{
-		activeGun = activeGun->nextGun;
+		player->SetActiveGun(player->GetActiveGun()->nextGun);
 		bEButtonState = true;
 	}
 	else if (bEButtonState && !Application::IsKeyPressed('E'))
@@ -111,9 +110,9 @@ void SceneTest::Update(double dt)
 	static bool bFireButtonState = false;
 	if (!bFireButtonState && Application::IsMousePressed(0))
 	{
-		if (activeGun == revolver || activeGun == minigun)
+		if (player->GetActiveGun() == revolver || player->GetActiveGun() == minigun)
 		{
-			Projectile* proj = activeGun->FireGun();
+			Projectile* proj = player->GetActiveGun()->FireGun();
 			if (proj != nullptr)
 			{
 				proj->Init();
@@ -122,22 +121,22 @@ void SceneTest::Update(double dt)
 		}
 		else
 		{
-			if (activeGun->fireRateTimer >= activeGun->fireRate)
+			if (player->GetActiveGun()->fireRateTimer >= player->GetActiveGun()->fireRate)
 			{
 				for (int i = 1; i < 6; ++i)
 				{
-					Projectile* proj = activeGun->FireGun();
+					Projectile* proj = player->GetActiveGun()->FireGun();
 					if (proj != nullptr)
 					{
 						proj->Init(i);
 						projectileList.push_back(proj);
 					}
 				}
-				activeGun->fireRateTimer = 0;
+				player->GetActiveGun()->fireRateTimer = 0;
 			}
 		}
 
-		if (activeGun != minigun)
+		if (player->GetActiveGun() != minigun)
 			bFireButtonState = true;
 	}
 	else if (bFireButtonState && !Application::IsMousePressed(0))

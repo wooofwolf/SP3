@@ -16,7 +16,7 @@ void Player::Init()
 
 }
 
-void Player::Init(int m_worldWidth, int m_worldHeight)
+void Player::Init(int m_worldWidth, int m_worldHeight, GunComponent* activeGun)
 {
 	this->m_worldWidth = m_worldWidth;
 	this->m_worldHeight = m_worldHeight;
@@ -30,6 +30,8 @@ void Player::Init(int m_worldWidth, int m_worldHeight)
 
 	m_speed = 1.f;
 	SprintSpeed = 1.f;
+
+	this->activeGun = activeGun;
 }
 
 void Player::Update(double dt)
@@ -122,6 +124,16 @@ void Player::SetPos(Vector3 pos)
 float Player::GetGameSpeed()
 {
 	return m_speed;
+}
+
+GunComponent* Player::GetActiveGun()
+{
+	return activeGun;
+}
+
+void Player::SetActiveGun(GunComponent* activeGun)
+{
+	this->activeGun = activeGun;
 }
 
 void Player::Collisioncheck(std::vector<Vector3> activeTileList)
