@@ -8,6 +8,7 @@
 #include "GL/glew.h"
 #include "Camera.h"
 #include "SceneBase.h"
+#include "Player.h"
 
 Map::Map() : mapGrid{TILES::TILE_NONE}
 {
@@ -17,6 +18,11 @@ Map::Map() : mapGrid{TILES::TILE_NONE}
 
 Map::~Map()
 {
+}
+
+void Map::Init(std::string fileName)
+{
+	Map::GetInstance()->ReadFile(fileName);
 }
 
 void Map::RenderMap(std::string fileName)
@@ -60,6 +66,11 @@ Map::TILES Map::GetTile(int x, int y)
 	return mapGrid[x][y];
 }
 
+void Map::SetTile(int x, int y, Map::TILES tile)
+{
+	this->mapGrid[x][y] = tile;
+}
+
 void Map::ReadFile(std::string fileName)
 {
 	std::fstream fin;
@@ -74,6 +85,11 @@ void Map::ReadFile(std::string fileName)
 			{
 				++y;
 				x = 0;
+			}
+			else if (c == '2')
+			{
+				Player::GetInstance()->SetPos(Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1));
+				SetTile(x, y, TILES::TILE_NONE);
 			}
 			else if (c - '0' >= static_cast<int>(TILES::TILE_NONE) && c - '0' <= static_cast<int>(TILES::TILE_TOTAL))
 			{

@@ -15,6 +15,9 @@ public:
 	{
 		TILE_NONE = 0,
 		TILE_WALL,
+
+		TILE_PLAYER,
+
 		TILE_TOTAL
 	};
 
@@ -25,9 +28,13 @@ public:
 	Map();
 	// Destructor
 	~Map();
+
+	void Init(std::string fileName);
+
 	void RenderMap(std::string fileName);
 	// Accessors
 	TILES GetTile(int x, int y);
+	void SetTile(int x, int y, TILES tile);
 	// Mutators
 	void ReadFile(std::string fileName);
 

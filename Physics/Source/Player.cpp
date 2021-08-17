@@ -22,7 +22,7 @@ void Player::Init(int m_worldWidth, int m_worldHeight)
 	this->m_worldHeight = m_worldHeight;
 
 	hp = 1;
-	pos.Set(10, 90, 1);
+	pos.Set(1, 1, 1);
 	scale.Set(3, 3, 3);
 	normal.Set(1, 0, 0);
 	active = true;
@@ -100,6 +100,11 @@ Vector3 Player::GetRotate()
 Vector3 Player::GetScale()
 {
 	return scale;
+}
+
+void Player::SetPos(Vector3 pos)
+{
+	this->pos = pos;
 }
 
 float Player::GetGameSpeed()
