@@ -234,12 +234,20 @@ void SceneTest::Render()
 		}
 		else
 		{
-			modelStack.PushMatrix();
-				modelStack.Translate(projectile->GetPos().x, projectile->GetPos().y, projectile->GetPos().z);
-				modelStack.Scale(projectile->GetScale().x, projectile->GetScale().y, projectile->GetScale().z);
-				RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BALL), false);
-			modelStack.PopMatrix();
+			float width = (projectile->GetPos() - Camera::GetInstance()->position).Length();
+			float height = Camera::GetInstance()->position.z - projectile->GetPos().z;
+			float hypotenuse = sqrtf(width * width + height * height);
+			float maxWidth = (Vector3(m_worldWidth / 2 + 2, 0, 1).Dot(Vector3(m_worldHeight / 2 + 2, 0, 1)) - Camera::GetInstance()->position.Length());
+			float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
 
+			if (hypotenuse <= maxHypotenuse)
+			{
+				modelStack.PushMatrix();
+					modelStack.Translate(projectile->GetPos().x, projectile->GetPos().y, projectile->GetPos().z);
+					modelStack.Scale(projectile->GetScale().x, projectile->GetScale().y, projectile->GetScale().z);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BALL), false);
+				modelStack.PopMatrix();
+			}
 			++it;
 		}
 	}
