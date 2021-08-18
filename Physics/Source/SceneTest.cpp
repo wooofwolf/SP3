@@ -298,7 +298,7 @@ void SceneTest::Render()
 		{
 			modelStack.PushMatrix();
 			modelStack.Translate(Cavemen->GetEnemyPos().x, Cavemen->GetEnemyPos().y, 1);
-			modelStack.Scale(10, 10, 10);
+			modelStack.Scale(3, 3, 3);
 			RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
 			modelStack.PopMatrix();
 		}
