@@ -163,5 +163,8 @@
     <ClInclude Include="Source\Collectible.h">
       <Filter>Entities</Filter>
     </ClInclude>
+    <ClInclude Include="Source\SoundController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

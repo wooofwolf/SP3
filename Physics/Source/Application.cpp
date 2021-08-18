@@ -127,6 +127,11 @@ void Application::Init()
 	sceneManager->AddScene("TestScene", new SceneTest());
 
 	sceneManager->SetActiveScene("MenuScene");
+
+	soundController = SoundController::GetInstance();
+	soundController->Init();
+	// Test sound
+	//soundController->PlaySoundFile("Sounds/Sound_Explosion.ogg");
 }
 
 void Application::Run()
@@ -151,4 +156,6 @@ void Application::Exit()
 	glfwDestroyWindow(m_window);
 	//Finalize and clean up GLFW
 	glfwTerminate();
+	soundController->Exit();
+	soundController->Destroy();
 }

@@ -2,6 +2,9 @@
 
 #include "SceneBase.h"
 
+#include "../includes/irrKlang.h"
+
+
 class MenuScene : public SceneBase
 {
 private:

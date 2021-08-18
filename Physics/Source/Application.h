@@ -4,6 +4,7 @@
 
 #include "timer.h"
 #include "SceneManager.h"
+#include "SoundController.h"
 
 class Application
 {
@@ -28,6 +29,7 @@ private:
 	//Declare a window object
 	StopWatch m_timer;
 	SceneManager* sceneManager;
+	SoundController* soundController;
 };
 
 #endif
