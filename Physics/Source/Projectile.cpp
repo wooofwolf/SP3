@@ -26,15 +26,15 @@ void Projectile::Init()
 	switch (type)
 	{
 	case PROJECTILE_TYPE::PROJECTILE_REVOLVER:
-		vel = normal * 50;
+		vel = normal * 200;
 		damage = 10;
 		break;
 	case PROJECTILE_TYPE::PROJECTILE_SHOTGUN:
-		vel = normal * 30;
+		vel = normal * 130;
 		damage = 10;
 		break;
 	case PROJECTILE_TYPE::PROJECTILE_MINIGUN:
-		vel = normal * 40;
+		vel = normal * 150;
 		damage = 5;
 		break;
 	}
@@ -76,7 +76,7 @@ void Projectile::Init(int shotgunID)
 	}
 	pos = Player::GetInstance()->GetPos() + normal * 2;
 	active = true;
-	vel = normal * 30;
+	vel = normal * 130;
 	damage = 10;
 }
 
