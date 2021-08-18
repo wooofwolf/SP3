@@ -21,7 +21,7 @@ void Player::Init(int m_worldWidth, int m_worldHeight, GunComponent* activeGun)
 	this->m_worldWidth = m_worldWidth;
 	this->m_worldHeight = m_worldHeight;
 
-	hp = 1;
+	hp = 100;
 	pos.Set(1, 1, 1);
 	prevpos.Set(1, 1, 1);
 	scale.Set(3, 3, 3);
@@ -29,7 +29,7 @@ void Player::Init(int m_worldWidth, int m_worldHeight, GunComponent* activeGun)
 	active = true;
 
 	m_speed = 1.f;
-	SprintSpeed = 1.f;
+	SprintSpeed = 2.f;
 
 	this->activeGun = activeGun;
 }
@@ -45,6 +45,15 @@ void Player::Update(double dt)
 	else
 	{
 		m_speed = 1.f;
+	}	
+	
+	if (Application::IsKeyPressed(VK_SHIFT))
+	{
+		SprintSpeed = 4.f;
+	}
+	else
+	{
+		SprintSpeed = 2.f;
 	}
 
 	if (Application::IsKeyPressed('W'))
@@ -142,6 +151,17 @@ void Player::Collisioncheck(std::vector<Vector3> activeTileList)
 		if ((pos - tilepos).Length() < scale.x + 2)
 		{
 			pos = prevpos;
+		}
+	}
+}
+
+void Player::Pickupcheck(std::vector<Vector3> pickupList)
+{
+	for (Vector3 Ppos : pickupList)
+	{
+		if ((pos - Ppos).Length() < scale.x + 2)
+		{
+			std::cout << "PICKUP DETECTED" << std::endl;
 		}
 	}
 }

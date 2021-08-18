@@ -86,15 +86,15 @@ void Map::ReadFile(std::string fileName)
 		char c;
 		while (fin.get(c))
 		{
+			if (c == '2')
+			{
+				Player::GetInstance()->SetPos(Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1));
+				c = '0';
+			}
 			if (c == '\n')
 			{
 				++y;
 				x = 0;
-			}
-			else if (c == '2')
-			{
-				Player::GetInstance()->SetPos(Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1));
-				SetTile(x, y, TILES::TILE_NONE);
 			}
 			else if (c - '0' >= static_cast<int>(TILES::TILE_NONE) && c - '0' <= static_cast<int>(TILES::TILE_TOTAL))
 			{

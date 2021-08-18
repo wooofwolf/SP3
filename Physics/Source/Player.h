@@ -40,6 +40,7 @@ public:
 	void Exit();
 
 	void Collisioncheck(std::vector<Vector3> activeTileList);
+	void Pickupcheck(std::vector<Vector3> powerupList);
 
 	void Movement(double dt);
 

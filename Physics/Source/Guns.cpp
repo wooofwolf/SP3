@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Projectile.h"
+#include "Player.h"
 
 GunComponent::~GunComponent()
 {
@@ -10,7 +11,7 @@ GunComponent::~GunComponent()
 
 void GunComponent::UpdateFireRateTimer(double dt)
 {
-	fireRateTimer += dt;
+	fireRateTimer += dt * Player::GetInstance()->GetGameSpeed();
 }
 
 Projectile* ConcreteGunComponent::FireGun()
