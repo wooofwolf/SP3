@@ -20,6 +20,8 @@ public:
 
 		TILE_PLAYER,
 
+		TILE_PICKUP,
+
 		TILE_TOTAL
 	};
 

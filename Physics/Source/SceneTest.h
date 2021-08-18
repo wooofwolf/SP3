@@ -46,6 +46,7 @@ public:
 	std::vector<CavemenMelee*> CaveManMeleeList;
 	std::vector <Vector3> activeTileList;
 	std::vector<Projectile*> projectileList;
+	std::vector<Vector3> powerupList;
 
 	Player* player;
 public:

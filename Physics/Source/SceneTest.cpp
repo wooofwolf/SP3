@@ -74,6 +74,8 @@ void SceneTest::Init()
 	minigun->fireRateTimer = 0;
 
 	activeTileList.clear();
+	powerupList.clear();
+
 
 	for (int i = 0; i < 2; ++i)
 	{
@@ -189,11 +191,14 @@ void SceneTest::Update(double dt)
 	{
 		proj->Update(dt);
 	}
+
+
 }
 
 void SceneTest::Render()
 {
 	activeTileList.clear();
+	powerupList.clear();
 
 	double x, y;
 	Application::GetCursorPos(&x, &y);
@@ -225,27 +230,47 @@ void SceneTest::Render()
 		{
 			switch (map->GetTile(x, y))
 			{
-			case Map::TILES::TILE_WALL:
-			{
-				Vector3 tilePos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
-				float width = (tilePos - Camera::GetInstance()->position).Length();
-				float height = Camera::GetInstance()->position.z - tilePos.z;
-				float hypotenuse = sqrtf(width * width + height * height);
-				float maxWidth = (Vector3(m_worldWidth / 2 + 2, 0, 1).Dot(Vector3(m_worldHeight / 2 + 2, 0, 1)) - Camera::GetInstance()->position.Length());
-				float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
-
-				if (hypotenuse <= maxHypotenuse)
+				case Map::TILES::TILE_WALL:
 				{
-					activeTileList.push_back(tilePos);
-					modelStack.PushMatrix();
-					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
-					modelStack.Scale(2, 2, 2);
-					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE), true);
-					modelStack.PopMatrix();
-					break;
+					Vector3 tilePos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
+					float width = (tilePos - Camera::GetInstance()->position).Length();
+					float height = Camera::GetInstance()->position.z - tilePos.z;
+					float hypotenuse = sqrtf(width * width + height * height);
+					float maxWidth = (Vector3(m_worldWidth / 2 + 2, 0, 1).Dot(Vector3(m_worldHeight / 2 + 2, 0, 1)) - Camera::GetInstance()->position.Length());
+					float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
 
+					if (hypotenuse <= maxHypotenuse)
+					{
+						activeTileList.push_back(tilePos);
+						modelStack.PushMatrix();
+						modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
+						modelStack.Scale(2, 2, 2);
+						RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE), true);
+						modelStack.PopMatrix();
+						break;
+
+					}
 				}
-			}
+				case Map::TILES::TILE_PICKUP:
+				{
+					Vector3 Ppos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
+					float width = (Ppos - Camera::GetInstance()->position).Length();
+					float height = Camera::GetInstance()->position.z - Ppos.z;
+					float hypotenuse = sqrtf(width * width + height * height);
+					float maxWidth = (Vector3(m_worldWidth / 2 + 2, 0, 1).Dot(Vector3(m_worldHeight / 2 + 2, 0, 1)) - Camera::GetInstance()->position.Length());
+					float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
+
+					if (hypotenuse <= maxHypotenuse)
+					{
+						powerupList.push_back(Ppos);
+						modelStack.PushMatrix();
+						modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
+						modelStack.Scale(2, 2, 2);
+						RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE_GREEN), true);
+						modelStack.PopMatrix();
+						break;
+					}
+				}
 			//case Map::TILES::TILE_PLAYER:
 			//{
 			//	Player::GetInstance()->SetPos(Vector3(10, 90, 1));
@@ -255,6 +280,8 @@ void SceneTest::Render()
 		}
 	}
 	Player::GetInstance()->Collisioncheck(activeTileList);
+	Player::GetInstance()->Pickupcheck(powerupList);
+
 
 	//modelStack.PushMatrix();
 	//player->Render();
