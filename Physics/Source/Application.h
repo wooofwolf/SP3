@@ -3,6 +3,7 @@
 #define APPLICATION_H
 
 #include "timer.h"
+#include "SceneManager.h"
 
 class Application
 {
@@ -20,14 +21,13 @@ public:
 	static void GetCursorPos(double *xpos, double *ypos);
 	static int GetWindowWidth();
 	static int GetWindowHeight();
-
-	static int sceneNo;
 private:
 	Application();
 	~Application();
 
 	//Declare a window object
 	StopWatch m_timer;
+	SceneManager* sceneManager;
 };
 
 #endif
