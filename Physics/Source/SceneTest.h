@@ -13,6 +13,8 @@
 
 #include "Projectile.h"
 
+#include "Collectible.h"
+
 class SceneTest : public SceneBase
 {
 private:
@@ -46,7 +48,8 @@ public:
 	std::vector<CavemenMelee*> CaveManMeleeList;
 	std::vector <Vector3> activeTileList;
 	std::vector<Projectile*> projectileList;
-	std::vector<Vector3> powerupList;
+
+	Collectible* collectible;
 
 	Player* player;
 public:

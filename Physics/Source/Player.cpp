@@ -154,14 +154,3 @@ void Player::Collisioncheck(std::vector<Vector3> activeTileList)
 		}
 	}
 }
-
-void Player::Pickupcheck(std::vector<Vector3> pickupList)
-{
-	for (Vector3 Ppos : pickupList)
-	{
-		if ((pos - Ppos).Length() < scale.x + 2)
-		{
-			std::cout << "PICKUP DETECTED" << std::endl;
-		}
-	}
-}
