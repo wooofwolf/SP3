@@ -16,6 +16,7 @@ MeshList::MeshList()
 	meshlist[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(1, 1, 0), 10, 10, 1.f);
 	meshlist[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 1, 1), 2.f);
 	meshlist[GEO_CUBE_RED] = MeshBuilder::GenerateCube("cube2", Color(1, 0, 0), 2.f);
+	meshlist[GEO_CUBE_GREEN] = MeshBuilder::GenerateCube("cube3", Color(0, 1, 0), 2.f);
 	meshlist[GEO_CYLINDER] = MeshBuilder::GenerateCylinder("cylinder", Color(1, 1, 1), 8, 1.f, 1.f);
 	meshlist[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshlist[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
@@ -26,7 +27,7 @@ MeshList::MeshList()
 	//meshlist[GEO_WIN_1]->textureID = LoadTGA("Image//left-wins.tga");
 	meshlist[GEO_WIN_2] = MeshBuilder::GenerateQuad("win-2", Color(1, 1, 1), 200.f);
 	//meshlist[GEO_WIN_2]->textureID = LoadTGA("Image//right-wins.tga");
-	meshlist[GEO_BASEENEMY] = MeshBuilder::GenerateCube("BaseEnemy/Caveman", Color(0, 0, 1), 1.f);
+	meshlist[GEO_BASEENEMY] = MeshBuilder::GenerateCube("BaseEnemy/Caveman", Color(0, 0, 1), 2.f);
 }
 
 MeshList::~MeshList()

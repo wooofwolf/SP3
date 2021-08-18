@@ -1,5 +1,6 @@
 #include "BaseEnemy.h"
 #include <MyMath.h>
+#include "Application.h"
 BaseEnemy::~BaseEnemy()
 {
 }
@@ -8,10 +9,11 @@ void BaseEnemy::Init()
 {
 	active = false;
 	hp = 0;
-	pos.Set(50, 60, 1);
+	pos.Set(70, 60, 1);
 	vel.Set(0, 0, 0);
 	normal.Set(0, 1, 0);
 	prevpos = pos;
+	Math::InitRNG();
 }
 
 void BaseEnemy::Update(double dt)
@@ -25,27 +27,36 @@ void BaseEnemy::CheckCollidedSide(DIRECTION direction , double dt)
 	{
 		switch (direction)
 		{
-		case LEFT:
-		{
-			pos = prevpos;
-			pos.x -= 10 * dt;	
+			case LEFT:
+			{
+				pos = prevpos;
+				pos.x += 10 * dt;
+				direction = RIGHT;
+				break;
+			}
+			case RIGHT:
+			{
+				pos = prevpos;
+				pos.x -= 10 * dt;
+				direction = LEFT;
+				break;
+			}
+			case UP:
+			{
+				pos = prevpos;
+				pos.y -= 10 * dt;
+				direction = DOWN;
+				break;
+			}
+			case DOWN:
+			{
+				pos = prevpos;
+				pos.y += 10 * dt;
+				direction = UP;
+				break;
+			}
 		}
-		case RIGHT:
-		{
-			pos = prevpos;
-			pos.x += 10 * dt;
-		}
-		case UP:
-		{
-			pos = prevpos;
-			pos.y += 10 * dt;
-		}
-		case DOWN:
-		{
-			pos = prevpos;
-			pos.y -= 10 * dt;
-		}
-		}
+		collided = false;
 	}
 }
 
@@ -59,32 +70,60 @@ void BaseEnemy::Movement(double dt)
 	if (directionalCD > 0)
 	{
 		directionalCD-= dt;
-		if (direction == 1)
+		
+		switch (direction)
 		{
-			pos.x += 10 * dt;
-			CheckCollidedSide(LEFT, dt);
-		}
-		else if (direction == 2)
-		{
-			pos.y += 10 * dt;
-			CheckCollidedSide(UP, dt);
-		}
-		else if (direction == 3)
-		{
-			pos.x += -10 * dt;
-			CheckCollidedSide(RIGHT, dt);
-		}
-		else if (direction == 4)
-		{
-			pos.y += -10 * dt;
-			CheckCollidedSide(DOWN, dt);
+			case LEFT:
+			{
+				pos.x -= 10 * dt;
+				CheckCollidedSide(LEFT, dt);
+				break;
+			}
+			case UP:
+			{
+				pos.y += 10 * dt;
+				CheckCollidedSide(UP, dt);
+				break;
+			}
+			case RIGHT:
+			{
+				pos.x += 10 * dt;
+				CheckCollidedSide(RIGHT, dt);
+				break;
+			}
+			case DOWN:
+			{
+				pos.y -= 10 * dt;
+				CheckCollidedSide(DOWN, dt);
+				break;
+			}
 		}
 	}
 	else if (directionalCD <= 0)
 	{
-		direction = Math::RandIntMinMax(1, 4);
+		this->direction = static_cast<DIRECTION>(Math::RandIntMinMax(0, 3));
 		directionalCD = 3;
 	}
+	/*if (Application::IsKeyPressed(0x25))
+	{
+		pos.x -= 10 * dt;
+		CheckCollidedSide(LEFT, dt);
+	}
+	else if (Application::IsKeyPressed(0x27))
+	{
+		pos.x += 10 * dt;
+		CheckCollidedSide(RIGHT, dt);
+	}
+	else if (Application::IsKeyPressed(0x26))
+	{
+		pos.y += 10 * dt;
+		CheckCollidedSide(UP, dt);
+	}
+	else if (Application::IsKeyPressed(0x28))
+	{
+		pos.y -= 10 * dt;
+		CheckCollidedSide(DOWN, dt);
+	}*/
 }
 
 Vector3 BaseEnemy::GetEnemyPos()
@@ -106,7 +145,7 @@ void BaseEnemy::Collisioncheck(std::vector<Vector3> activeTileList)
 {
 	for (Vector3 tilePos : activeTileList)
 	{
-		if ((pos - tilePos).Length() < scale.x + 2)
+		if ((pos - tilePos).Length() < scale.x + 5)
 		{
 			collided = true;
 		}
@@ -158,36 +197,6 @@ void CavemenMelee::Attack() const
 
 void CavemenMelee::Update(double dt)
 {
-	prevpos.Set(pos.x,pos.y,pos.z);
-	if (directionalCD > 0)
-	{
-		baseEnemy->directionalCD-= dt;
-		if (direction == 1)
-		{
-			pos.x += 10 * dt;
-			CheckCollidedSide(LEFT, dt);
-		}
-		else if (direction == 2)
-		{
-			pos.y += 10 * dt;
-			CheckCollidedSide(UP, dt);
-		}
-		else if (direction == 3)
-		{
-			pos.x += -10 * dt;
-			CheckCollidedSide(RIGHT, dt);
-		}
-		else if (direction == 4)
-		{
-			pos.y += -10 * dt;
-			CheckCollidedSide(DOWN, dt);
-		}
-	}
-	else if (directionalCD <= 0)
-	{
-		direction = Math::RandIntMinMax(1, 4);
-		directionalCD = 3;
-	}
 }
 
 void CavemenMelee::Init()

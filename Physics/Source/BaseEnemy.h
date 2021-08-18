@@ -6,21 +6,6 @@
 #include "Map.h"
 class BaseEnemy : protected Entity
 {
-public:
-	std::vector<BaseEnemy*> BasicEnemyList;
-	~BaseEnemy();
-	virtual void Init();
-	void Render();
-	void Movement(double dt);
-	Vector3 GetEnemyPos();
-	bool GetActive();
-	bool active;
-	void Collisioncheck(std::vector <Vector3> activeTileList);
-	void Exit();
-	int direction;
-	float directionalCD;
-	virtual void Update(double dt);
-	bool collided;
 protected: 
 	enum DIRECTION
 	{
@@ -32,6 +17,23 @@ protected:
 	};
 	void CheckCollidedSide(DIRECTION direction , double dt);
 	virtual void Attack() const = 0;
+public:
+	std::vector<BaseEnemy*> BasicEnemyList;
+	~BaseEnemy();
+	virtual void Init();
+	void Render();
+	Vector3 GetEnemyPos();
+	bool GetActive();
+	bool active;
+	void Collisioncheck(std::vector <Vector3> activeTileList);
+	void Exit();
+	float directionalCD;
+	virtual void Update(double dt);
+	bool collided;
+	bool changeDir;
+	void Movement(double dt);
+	DIRECTION direction;
+	Map* map;
 };
 
 class ConcreteBaseEnemy : public BaseEnemy
