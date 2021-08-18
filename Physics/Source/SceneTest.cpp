@@ -83,6 +83,9 @@ void SceneTest::Init()
 		CavemanMelee->Init();
 		CaveManMeleeList.push_back(CavemanMelee);
 	}
+
+	camera->position.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, 2);
+	camera->target.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, player->GetPos().z);
 }
 
 void SceneTest::Update(double dt)
@@ -103,7 +106,8 @@ void SceneTest::Update(double dt)
 	}
 	// yes i hard found the values where the outside of the map starts to show
 	// theres probably a better way to find these values but i cant be bothered lol -yh
-	if ((player->GetPos().x > 90 && player->GetPos().x < 714))
+
+	if ((player->GetPos().x > 89 && player->GetPos().x < 712))
 	{
 		NearXEdge = false;
 
@@ -295,14 +299,22 @@ void SceneTest::Render()
 	{
 		// make code the do pls thank
 
-		playerpos = player->GetPos();
+		playerpos = player->GetPos() - camera->position;
+		//playerpos.Set((w * player->GetPos().x) / m_worldWidth, h - (h * player->GetPos().y) / m_worldHeight);
 	}
 	else
 	{
 		playerpos.Set(m_worldWidth * 0.5, m_worldHeight * 0.5);
 	}
 
-	Vector3 dir = Vector3((x / w) * m_worldWidth - playerpos.x, m_worldHeight - (y / h) * m_worldHeight - playerpos.y, 0);
+	//std::cout << player->GetPos().x << ' ' << player->GetPos().y << std::endl;
+
+	float mousePosX = (x / w) * m_worldWidth;
+	float mousePosY = m_worldHeight - (y / h) * m_worldHeight;
+	
+	std::cout << player->GetPos().x << ' ' << player->GetPos().y << ' ' << mousePosX << ' ' << mousePosY << std::endl;
+
+	Vector3 dir = Vector3(mousePosX - playerpos.x, mousePosY - playerpos.y, 0);
 	player->SetRotate(dir);
 
 	modelStack.PushMatrix();

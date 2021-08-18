@@ -29,7 +29,7 @@ void Player::Init(int m_worldWidth, int m_worldHeight, GunComponent* activeGun)
 	active = true;
 
 	m_speed = 1.f;
-	SprintSpeed = 1.f;
+	SprintSpeed = 2.f;
 
 	this->activeGun = activeGun;
 }
@@ -45,6 +45,15 @@ void Player::Update(double dt)
 	else
 	{
 		m_speed = 1.f;
+	}	
+	
+	if (Application::IsKeyPressed(VK_SHIFT))
+	{
+		SprintSpeed = 4.f;
+	}
+	else
+	{
+		SprintSpeed = 2.f;
 	}
 
 	if (Application::IsKeyPressed('W'))
