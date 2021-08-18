@@ -6,6 +6,8 @@
 #include "Application.h"
 #include "MeshList.h"
 
+#include "../includes/irrKlang.h"
+
 MenuScene::MenuScene()
 {
 }
