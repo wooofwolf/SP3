@@ -6,6 +6,12 @@
 #include "SceneManager.h"
 #include "SoundController.h"
 
+//Include GLEW
+#include <GL/glew.h>
+
+//Include GLFW
+#include <GLFW/glfw3.h>
+
 class Application
 {
 public:
@@ -22,6 +28,7 @@ public:
 	static void GetCursorPos(double *xpos, double *ypos);
 	static int GetWindowWidth();
 	static int GetWindowHeight();
+	static GLFWwindow* GetWindow();
 private:
 	Application();
 	~Application();

@@ -3,17 +3,13 @@
 #include "SceneBase.h"
 #include "Map.h"
 #include "Guns.h"
-
 #include "BaseEnemy.h"
 #include "Player.h"
-
 #include "MeshList.h"
-
 #include "Renderer.h"
-
 #include "Projectile.h"
-
 #include "Collectible.h"
+#include "SceneGUI.h"
 
 class SceneTest : public SceneBase
 {
@@ -25,6 +21,8 @@ private:
 
 	bool NearXEdge = false;
 	bool NearYEdge = false;
+
+	SceneGUI* sceneGUI;
 
 public:
 	//Renderer* renderer;

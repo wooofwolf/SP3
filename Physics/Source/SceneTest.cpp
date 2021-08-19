@@ -88,6 +88,9 @@ void SceneTest::Init()
 
 	camera->position.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, 2);
 	camera->target.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, player->GetPos().z);
+
+	sceneGUI = SceneGUI::GetInstance();
+	sceneGUI->Init();
 }
 
 void SceneTest::Update(double dt)
@@ -196,7 +199,7 @@ void SceneTest::Update(double dt)
 		proj->Update(dt);
 	}
 
-
+	sceneGUI->Update(dt);
 }
 
 void SceneTest::Render()
@@ -443,12 +446,7 @@ void SceneTest::Render()
 		}*/
 	//}
 
-	std::ostringstream ss;
-	ss.precision(5);
-	ss << "FPS: " << fps;
-	RenderTextOnScreen(MeshList::GetInstance()->GetMesh(MeshList::GEO_TEXT), ss.str(), Color(0, 1, 0), 3, 0, 3);
-
-	//RenderTextOnScreen(MeshList::GetInstance()->GetMesh(MeshList::GEO_TEXT), "Test", Color(0, 1, 0), 3, 0, 6);
+	sceneGUI->Render();
 }
 
 void SceneTest::Exit()
@@ -472,4 +470,6 @@ void SceneTest::Exit()
 		delete proj;
 
 	delete collectible;
+
+	sceneGUI->Exit();
 }
