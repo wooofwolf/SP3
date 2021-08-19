@@ -30,6 +30,8 @@ protected:
 
 	int energy;
 
+	float cooldownTimer2;
+
 public:
 	// Constructor
 	Player();
