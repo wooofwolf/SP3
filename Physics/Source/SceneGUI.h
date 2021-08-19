@@ -8,6 +8,7 @@
 
 #include "SceneBase.h"
 #include "SingletonPattern.h"
+#include "Player.h"
 
 class SceneGUI : public SceneBase, public SingletonPattern<SceneGUI>
 {
@@ -26,5 +27,7 @@ protected:
 
 	// Flags for IMGUI
 	ImGuiWindowFlags windowFlags;
+
+	Player* player;
 };
 

@@ -25,6 +25,8 @@ void SceneGUI::Init()
 	windowFlags |= ImGuiWindowFlags_NoMove;
 	windowFlags |= ImGuiWindowFlags_NoResize;
 	windowFlags |= ImGuiWindowFlags_NoCollapse;
+
+	player = Player::GetInstance();
 }
 
 void SceneGUI::Update(double dt)
@@ -60,13 +62,13 @@ void SceneGUI::Update(double dt)
 			ImGui::TextColored(ImVec4(0, 1, 0, 1), "Health:");
 			ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(32.f / 255.f, 246.f / 255.f, 0, 1.0f));
 			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
-			ImGui::ProgressBar((float)(Player::GetInstance()->GetHealth()) / 100.f, ImVec2(600.0f, 60.0f));
+			ImGui::ProgressBar((float)(player->GetHealth()) / 100.f, ImVec2(600.0f, 60.0f));
 			ImGui::PopStyleColor();
 			ImGui::PopStyleColor();
 			ImGui::TextColored(ImVec4(0, 1, 0, 1), "Energy:");
 			ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(104.f / 255.f, 194.f / 255.f, 245.f / 255.f, 1.0f));
 			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
-			ImGui::ProgressBar((float)(Player::GetInstance()->GetEnergy()) / 100.f, ImVec2(600.0f, 60.0f));
+			ImGui::ProgressBar((float)(player->GetEnergy()) / 100.f, ImVec2(600.0f, 60.0f));
 			ImGui::PopStyleColor();
 			ImGui::PopStyleColor();
 		ImGui::End();
@@ -81,7 +83,7 @@ void SceneGUI::Update(double dt)
 			ImGuiWindowFlags_NoScrollbar;
 		ImGui::Begin("Gun", NULL, gunWindowFlags);
 			ImGui::SetWindowPos(ImVec2(1500.0f, 900.0f));
-			ImGui::SetWindowSize(ImVec2(50.0f, 50.0f));
+			ImGui::SetWindowSize(ImVec2(50.0f, 100.0f));
 			ImGui::SetWindowFontScale(3.f);
 			if (dynamic_cast<Revolver*>(Player::GetInstance()->GetActiveGun()) != nullptr)
 				ImGui::TextColored(ImVec4(0, 1, 0, 1), "Holding: Revolver");
@@ -89,6 +91,13 @@ void SceneGUI::Update(double dt)
 				ImGui::TextColored(ImVec4(0, 1, 0, 1), "Holding: Shotgun");
 			else
 				ImGui::TextColored(ImVec4(0, 1, 0, 1), "Holding: Minigun");
+			ImGui::TextColored(ImVec4(0, 1, 0, 1), "Reload:");
+			ImGui::SameLine();
+			ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(32.f / 255.f, 246.f / 255.f, 0, 1.0f));
+			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
+			ImGui::ProgressBar((float)(player->GetActiveGun()->fireRate - player->GetActiveGun()->fireRateTimer), ImVec2(100.0f, 60.0f));
+			ImGui::PopStyleColor();
+			ImGui::PopStyleColor();
 		ImGui::End();
 	ImGui::End();
 }
