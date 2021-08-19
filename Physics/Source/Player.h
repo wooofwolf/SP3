@@ -50,7 +50,7 @@ public:
 	void SetRotate(Vector3 rotate);
 	void SetPos(Vector3 pos);
 
-	float GetGameSpeed();
+	float GetPlusSpeed();
 
 	GunComponent* GetActiveGun();
 	void SetActiveGun(GunComponent* activeGun);

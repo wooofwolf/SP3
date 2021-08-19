@@ -38,9 +38,9 @@ void Player::Update(double dt)
 {
 	prevpos = pos;
 	// Currently Hold Space to slow time, Change to a timer toggle later
-	if (Application::IsKeyPressed(VK_SPACE))
+	if (Application::IsKeyPressed('2'))
 	{
-		m_speed = 0.5f;
+		m_speed = 1.5f;
 	}
 	else
 	{
@@ -129,7 +129,7 @@ void Player::SetPos(Vector3 pos)
 	this->pos = pos;
 }
 
-float Player::GetGameSpeed()
+float Player::GetPlusSpeed()
 {
 	return m_speed;
 }
