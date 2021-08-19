@@ -58,19 +58,19 @@ void Player::Update(double dt)
 
 	if (Application::IsKeyPressed('W'))
 	{
-		pos.y += 30 * dt * m_speed * SprintSpeed;
+		pos.y += 30 * dt * SprintSpeed;
 	}	
 	if (Application::IsKeyPressed('S'))
 	{
-		pos.y -= 30 * dt * m_speed * SprintSpeed;
+		pos.y -= 30 * dt * SprintSpeed;
 	}	
 	if (Application::IsKeyPressed('A'))
 	{
-		pos.x -= 30 * dt * m_speed * SprintSpeed;
+		pos.x -= 30 * dt * SprintSpeed;
 	}	
 	if (Application::IsKeyPressed('D'))
 	{
-		pos.x += 30 * dt * m_speed * SprintSpeed;
+		pos.x += 30 * dt * SprintSpeed;
 	}
 }
 
