@@ -93,7 +93,10 @@ void SceneGUI::Update(double dt)
 				ImGui::TextColored(ImVec4(0, 1, 0, 1), "Holding: Minigun");
 			ImGui::TextColored(ImVec4(0, 1, 0, 1), "Reload:");
 			ImGui::SameLine();
-			ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(32.f / 255.f, 246.f / 255.f, 0, 1.0f));
+			if (player->power2active)
+				ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(1.f, 0, 0, 1.0f));
+			else
+				ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(32.f / 255.f, 246.f / 255.f, 0, 1.0f));
 			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
 			ImGui::ProgressBar((float)(player->GetActiveGun()->fireRate - player->GetActiveGun()->fireRateTimer), ImVec2(200.0f, 60.0f), "");
 			ImGui::PopStyleColor();
