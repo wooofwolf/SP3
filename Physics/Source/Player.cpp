@@ -32,6 +32,7 @@ void Player::Init(int m_worldWidth, int m_worldHeight, GunComponent* activeGun)
 	SprintSpeed = 2.f;
 
 	power2active = false;
+	cooldownTimer2 = 0;
 
 	this->activeGun = activeGun;
 
@@ -52,25 +53,31 @@ void Player::Update(double dt)
 	}	
 
 	static bool bQButtonState = false;
-	if (!bQButtonState && Application::IsKeyPressed('2'))
+    
+
+
+	if (power2active == true)
+	{
+		cooldownTimer2 += dt;
+		m_speed = 2.f;
+		//std::cout << "activ" << std::endl;
+	}
+
+
+	if (cooldownTimer2 >= 5)
+	{
+		cooldownTimer2 = 0;
+		bQButtonState = false;
+		power2active = false;
+		m_speed = 1.f;
+		//std::cout << "no activ" << std::endl;
+	}
+
+	if (Application::IsKeyPressed('2'))
 	{
 		bQButtonState = true;
-		if (power2active == false)
-		{
-			m_speed = 2.f;
-			power2active = true;
-			std::cout << "activ" << std::endl;
-		}
-		else if (power2active == true)
-		{
-			m_speed = 1.f;
-			power2active = false;
-			std::cout << "no activ" << std::endl;
-		}
-
+		power2active = true;
 	}
-	else if (bQButtonState && !Application::IsKeyPressed('2'))
-		bQButtonState = false;
 
 	
 
