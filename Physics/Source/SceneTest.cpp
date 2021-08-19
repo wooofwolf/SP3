@@ -60,15 +60,15 @@ void SceneTest::Init()
 
 	revolver->nextGun = shotgun;
 	revolver->prevGun = minigun;
-	revolver->fireRate = 1;
+	revolver->fireRate = 0.5;
 	revolver->fireRateTimer = 0;
 	shotgun->nextGun = minigun;
 	shotgun->prevGun = revolver;
-	shotgun->fireRate = 2;
+	shotgun->fireRate = 1;
 	shotgun->fireRateTimer = 0;
 	minigun->nextGun = revolver;
 	minigun->prevGun = shotgun;
-	minigun->fireRate = 0.1;
+	minigun->fireRate = 0.2;
 	minigun->fireRateTimer = 0;
 
 	activeTileList.clear();
@@ -138,7 +138,9 @@ void SceneTest::Update(double dt)
 	}
 
 	//baseEnemy->Update(dt);
-	player->GetActiveGun()->UpdateFireRateTimer(dt);
+	revolver->UpdateFireRateTimer(dt);
+	shotgun->UpdateFireRateTimer(dt);
+	minigun->UpdateFireRateTimer(dt);
 	static bool bQButtonState = false;
 	if (!bQButtonState && Application::IsKeyPressed('Q'))
 	{

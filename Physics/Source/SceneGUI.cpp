@@ -2,6 +2,7 @@
 
 #include "Application.h"
 #include "Player.h"
+#include "Guns.h"
 
 void SceneGUI::Init()
 {
@@ -44,7 +45,7 @@ void SceneGUI::Update(double dt)
 		// Display the FPS
 		ImGui::TextColored(ImVec4(0, 1, 0, 1), "FPS: %f", fps);
 
-		// Render the Health
+		// Render the health and energy bars
 		ImGuiWindowFlags healthWindowFlags = ImGuiWindowFlags_AlwaysAutoResize |
 			ImGuiWindowFlags_NoBackground |
 			ImGuiWindowFlags_NoTitleBar |
@@ -68,6 +69,26 @@ void SceneGUI::Update(double dt)
 			ImGui::ProgressBar((float)(Player::GetInstance()->GetEnergy()) / 100.f, ImVec2(600.0f, 60.0f));
 			ImGui::PopStyleColor();
 			ImGui::PopStyleColor();
+		ImGui::End();
+
+		// Render which gun the player is holding
+		ImGuiWindowFlags gunWindowFlags = ImGuiWindowFlags_AlwaysAutoResize |
+			ImGuiWindowFlags_NoBackground |
+			ImGuiWindowFlags_NoTitleBar |
+			ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoResize |
+			ImGuiWindowFlags_NoCollapse |
+			ImGuiWindowFlags_NoScrollbar;
+		ImGui::Begin("Gun", NULL, gunWindowFlags);
+			ImGui::SetWindowPos(ImVec2(1500.0f, 900.0f));
+			ImGui::SetWindowSize(ImVec2(50.0f, 50.0f));
+			ImGui::SetWindowFontScale(3.f);
+			if (dynamic_cast<Revolver*>(Player::GetInstance()->GetActiveGun()) != nullptr)
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "Holding: Revolver");
+			else if (dynamic_cast<Shotgun*>(Player::GetInstance()->GetActiveGun()) != nullptr)
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "Holding: Shotgun");
+			else
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "Holding: Minigun");
 		ImGui::End();
 	ImGui::End();
 }
