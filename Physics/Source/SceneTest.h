@@ -10,10 +10,12 @@
 #include "Projectile.h"
 #include "Collectible.h"
 #include "SceneGUI.h"
+#include "SingletonPattern.h"
 
-class SceneTest : public SceneBase
+class SceneTest : public SceneBase, public SingletonPattern<SceneTest>
 {
-private:
+	friend SingletonPattern<SceneTest>;
+protected:
 	// Variables
 	float m_worldWidth;
 	float m_worldHeight;
@@ -23,6 +25,11 @@ private:
 	bool NearYEdge = false;
 
 	SceneGUI* sceneGUI;
+
+	// Constructor
+	SceneTest();
+	// Destructor
+	virtual ~SceneTest();
 
 public:
 	//Renderer* renderer;
@@ -50,11 +57,6 @@ public:
 	Collectible* collectible;
 
 	Player* player;
-public:
-	// Constructor
-	SceneTest();
-	// Destructor
-	~SceneTest();
 
 	BaseEnemy* SpawnEnemies();
 	virtual void Init();

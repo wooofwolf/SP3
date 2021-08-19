@@ -130,7 +130,7 @@ void Application::Init()
 	sceneManager = SceneManager::GetInstance();
 
 	sceneManager->AddScene("MenuScene", new MenuScene());
-	sceneManager->AddScene("TestScene", new SceneTest());
+	sceneManager->AddScene("TestScene", SceneTest::GetInstance());
 
 	sceneManager->SetActiveScene("MenuScene");
 
