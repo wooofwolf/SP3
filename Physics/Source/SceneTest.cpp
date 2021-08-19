@@ -37,8 +37,6 @@ void SceneTest::Init()
 	player = Player::GetInstance();
 	player->Init();
 
-
-	
 	//baseEnemy = new ConcreteBaseEnemy();
 	//baseEnemy->Init();	
 	//EntityList.push_back(player);
@@ -77,12 +75,12 @@ void SceneTest::Init()
 	powerupList.clear();
 
 
-	for (int i = 0; i < 2; ++i)
-	{
-		CavemenMelee* CavemanMelee = new CavemenMelee(baseEnemy);
+	//for (int i = 0; i < 2; ++i)
+	//{
+		CavemenMelee* CavemanMelee= new CavemenMelee(baseEnemy);
 		CavemanMelee->Init();
 		CaveManMeleeList.push_back(CavemanMelee);
-	}
+	/*}*/
 
 	camera->position.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, 2);
 	camera->target.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, player->GetPos().z);
@@ -100,9 +98,9 @@ void SceneTest::Update(double dt)
 	//camera->Update(dt);
 
 	player->Update(dt);
-	for (CavemenMelee* CaveMelee : CaveManMeleeList)
+	for (CavemenMelee* CaveMelee :  CaveManMeleeList)
 	{
-		CaveMelee->Movement(dt);
+		CaveMelee->Update(dt);
 	}
 	// yes i hard found the values where the outside of the map starts to show
 	// theres probably a better way to find these values but i cant be bothered lol -yh
@@ -326,7 +324,7 @@ void SceneTest::Render()
 	}
 	modelStack.PopMatrix();
 
-	for (std::vector<CavemenMelee*>::iterator it = CaveManMeleeList.begin(); it != CaveManMeleeList.end(); ++it)
+	for (std::vector<CavemenMelee*>::iterator it =  CaveManMeleeList.begin(); it !=  CaveManMeleeList.end(); ++it)
 	{
 		CavemenMelee* Cavemen = (CavemenMelee*)*it;
 		if (Cavemen->active != true)
@@ -343,7 +341,7 @@ void SceneTest::Render()
 		}
 	}
 
-	for (CavemenMelee* CaveMelee : CaveManMeleeList)
+	for (CavemenMelee* CaveMelee :  CaveManMeleeList)
 	{
 		CaveMelee->Collisioncheck(activeTileList);
 	}
@@ -417,7 +415,7 @@ void SceneTest::Exit()
 
 	for (Entity* entity : EntityList)
 		delete entity;
-	for (BaseEnemy* enemy : CaveManMeleeList)
+	for (BaseEnemy* enemy :  CaveManMeleeList)
 		delete enemy;
 	for (Projectile* proj : projectileList)
 		delete proj;

@@ -14,11 +14,32 @@ void BaseEnemy::Init()
 	normal.Set(0, 1, 0);
 	prevpos = pos;
 	Math::InitRNG();
+	currentFSM = IDLE;
+	player = Player::GetInstance();
+	map = Map::GetInstance();
 }
 
 void BaseEnemy::Update(double dt)
 {
-	Movement(dt);
+	/*std::cout << "IM BEING USED" << std::endl;
+	switch (currentFSM)
+	{
+		case IDLE:
+		{
+			Movement(dt);
+			if ((pos- player->GetPos()).Length() < 5)
+			{
+				currentFSM = ATTACK;
+			}
+			std::cout << "lalala" << std::endl;
+			break;
+		}
+		case ATTACK:
+		{
+			std::cout << "Kiil me" << std::endl;
+			break;
+		}
+	}*/
 }
 
 void BaseEnemy::CheckCollidedSide(DIRECTION direction , double dt)
@@ -126,6 +147,113 @@ void BaseEnemy::Movement(double dt)
 	}*/
 }
 
+void BaseEnemy::UpdateDirection()
+{
+	// Set the destination to the player
+	destination = player->GetPos();
+
+	// Calculate the direction between enemy2D and player2D
+	pathDir = destination - pos;
+
+	// Calculate the distance between enemy2D and player2D
+	float fDistance = (destination-pos).Length();
+	if (fDistance >= 0.01f)
+	{
+		// Calculate direction vector.
+		// We need to round the numbers as it is easier to work with whole numbers for movements
+		pathDir.x = (int)round(pathDir.x / fDistance);
+		pathDir.y = (int)round(pathDir.y / fDistance);
+	}
+	else
+	{
+		// Since we are not going anywhere, set this to 0.
+		pathDir = 0;
+	}
+}
+
+void BaseEnemy::UpdatePosition()
+{
+	// Store the old position
+	prevpos = pos;
+	// if the player is to the left or right of the enemy2D, then jump to attack
+	if (pathDir.x < 0)
+	{
+		// Move left
+		const int previousposition = pos.x;
+		if (pos.x >= 0)
+		{
+			pos.x--;
+		}
+
+		//// Constraint the enemy2D's position within the screen boundary
+		//CheckCollidedSide(LEFT,dt);
+
+
+		//// Find a feasible position for the enemy2D's current position
+		//if (CheckCollidedSide(LEFT,dt) == false)
+		//{
+		//	FlipHorizontalDirection();
+		//	i32vec2Index = i32vec2OldIndex;
+		//	i32vec2NumMicroSteps.x = 0;
+		//}
+
+		//// Check if enemy2D is in mid-air, such as walking off a platform
+		//if (IsMidAir() == true)
+		//{
+		//	cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
+		//}
+		////CS: Play the "left" animation
+		//animatedSprites->PlayAnimation("left", -1, 1.0f);
+		// Interact with the Player
+	}
+	else if (pathDir.x > 0)
+	{
+		// Move right
+		const int previousposition = pos.x;
+		if (pos.x < 200)
+		{
+			pos.x++;
+
+		}
+		//// Constraint the enemy2D's position within the screen boundary
+		//Constraint(RIGHT);
+
+		//// Find a feasible position for the enemy2D's current position
+		//if (CheckPosition(RIGHT) == false)
+		//{
+		//	FlipHorizontalDirection();
+		//	i32vec2Index = i32vec2OldIndex;
+		//	i32vec2NumMicroSteps.x = 0;
+		//}
+
+		//// Check if enemy2D is in mid-air, such as walking off a platform
+		//if (IsMidAir() == true)
+		//{
+		//	cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
+		//}
+
+		////CS: Play the "right" animation
+		//animatedSprites->PlayAnimation("right", -1, 1.0f);
+
+		// Interact with the Player
+	}
+	// if the player is above the enemy2D, then jump to attack
+	if (pathDir.y > 0)
+	{
+		if (pos.y >= 0)
+		{
+			pos.y++;
+		}
+	}
+	if (pathDir.y < 200)
+	{
+		if (pos.y < 200)
+		{
+			pos.y--;
+		}
+	}
+}
+
 Vector3 BaseEnemy::GetEnemyPos()
 {
 	return pos;
@@ -197,13 +325,91 @@ void CavemenMelee::Attack() const
 
 void CavemenMelee::Update(double dt)
 {
+	if (attacked)
+	{
+		attackCD = 5;
+		attacked = false;
+	}
+	attackCD -= dt;
+	std::cout << attackCD << std::endl;
+	//std::cout << "IM BEING USED" << std::endl;
+	switch (currentFSM)
+	{
+		case IDLE:
+		{
+			std::cout << "IDLING" << std::endl;
+			Movement(dt);
+			if ((pos - player->GetPos()).Length() < 25 && attackCD <= 0)
+			{
+				currentFSM = ATTACK;
+				bPathFind = true;
+			}
+			/*std::cout << "lalala" << std::endl;*/
+			break;
+		}
+		case ATTACK:
+		{
+			// Check if enemy has reached the destination from the last pathfind
+			//if ()
+			// Else if never reach the last pathfind, then recalculate the path
+			if (bPathFind == true)
+			{
+				std::cout << "ATTACK" << std::endl;
+				/*std::cout << "Kill me" << std::endl;*/
+				auto path = map->PathFind(pos, player->GetPos(), heuristic::manhattan);
+				/*		std::cout << "=== Printing out the path ===" << std::endl;*/
+						// Calculate new destination
+				bool bFirstPosition = true;
+				for (const auto& coord : path)
+				{
+					if (bFirstPosition == true)
+					{
+						// Set a destination
+						destination = coord;
+						// Calculate the direction between enemy2D and this destination
+						pathDir = destination - pos;
+						bFirstPosition = false;
+					}
+					else
+					{
+						if ((coord - destination) == pathDir)
+						{
+							// Set a destination
+							destination = coord;
+						}
+						else
+							break;
+					}
+				}
+			}
+			bPathFind = false;
+			UpdatePosition();
+			if ((player->GetPos() - pos).Length() < 5)
+			{
+				Attack();
+				attacked = true;
+			}
+			
+			if ((pos - player->GetPos()).Length() < 25)
+			{
+				currentFSM = IDLE;
+			}
+			break;
+		}
+	}
 }
 
 void CavemenMelee::Init()
 {
+	active = true;
 	pos.Set(50, 60, 1);
 	hp = 10;
-
+	currentFSM = IDLE;
+	player = Player::GetInstance();
+	map = Map::GetInstance();
+	attackCD = 0;
+	bPathFind = true;
+	attacked = false;
 }
 
 CavemenRanged::CavemenRanged(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
@@ -213,6 +419,7 @@ CavemenRanged::CavemenRanged(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 void CavemenRanged::Attack() const
 {
 	std::cout << "Cavemen Ranged Attack!!" << std::endl;
+
 }
 
 void CavemenRanged::Update(double dt)

@@ -7,6 +7,35 @@
 #include "SingletonPattern.h"
 #include "MeshList.h"
 #include "Player.h"
+#include <functional>
+#include <queue>
+struct Grid {
+	unsigned int value;
+
+	Vector3 pos;
+	Vector3 parent;
+	unsigned int f;
+	unsigned int g;
+	unsigned int h;
+	Grid()
+		:value(0), pos(0, 0,0), parent(-1, -1,0), f(0), g(0), h(0) {}
+
+	Grid(const Vector3 pos, unsigned int f)
+		:value(0), pos(pos), parent(-1, 1,0), f(f), g(0), h(0) {}
+
+	Grid(Vector3 pos, Vector3 parent, unsigned int f, unsigned int g, unsigned int h)
+		:value(0), pos(pos), parent(parent), f(f), g(g), h(h) {}
+
+
+};
+using HeuristicFunction = std::function<unsigned int(const Vector3&, const Vector3& , int)>;
+//reverse std::priority_queue to get the largest f value on top
+inline bool operator <(const Grid& a, const Grid& b) { return b.f < a.f; }
+namespace heuristic
+{
+	unsigned int manhattan(const Vector3 v1, const Vector3& v2, int);
+	unsigned int euclidean(const Vector3 v1, const Vector3& v2, int);
+}
 
 class Map: public SingletonPattern<Map>
 {
@@ -42,11 +71,49 @@ public:
 	// Mutators
 	void ReadFile(std::string fileName);
 
+	//for Astar Pathfinding
+	std::vector<Vector3>PathFind(const Vector3& startPos, const Vector3& targetPos, HeuristicFunction heuristicFunc);
+	//set if Astar PathFinding will consider diagonal movements
+	void SetDiagonalMovement(const bool bEnable);
+	//print out details about this class instance in the console window
+	void PrintSelf(void) const;
 private:
 	// Variables
 	TILES mapGrid[200][200];
 	std::vector <Vector3> activeTileList;
 
 	MS modelStack;
+protected:
+
+	Grid** arrMapInfo;
+	// For A-Star PathFinding
+// Build a path from m_cameFromList after calling PathFind()
+	std::vector<Vector3> BuildPath() const;
+	// Check if a grid is valid
+	bool isValid(const Vector3& pos) const;
+	// Check if a grid is blocked
+	bool isBlocked(const unsigned int uiRow,
+		const unsigned int uiCol,
+		const bool bInvert = true) const;
+	// Convert a position to a 1D position in the array
+	int ConvertTo1D(const Vector3& pos) const;
+	// Delete AStar lists
+	bool DeleteAStarLists(void);
+	// Reset AStar lists
+	bool ResetAStarLists(void);
+
+
+
+	//int m_size;
+	unsigned int m_nrOfDirections;
+	//glm::i32vec2 m_dimensions;
+	Vector3 m_startPos;
+	Vector3 m_targetPos;
+	std::priority_queue<Grid> m_openList;
+	std::vector<bool> m_closedList;
+	std::vector<Grid> m_cameFromList;
+	//std::vector<int> m_grid;
+	std::vector<Vector3> m_directions;
+	HeuristicFunction m_heuristic;
 };
 
