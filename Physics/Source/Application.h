@@ -4,6 +4,13 @@
 
 #include "timer.h"
 #include "SceneManager.h"
+#include "SoundController.h"
+
+//Include GLEW
+#include <GL/glew.h>
+
+//Include GLFW
+#include <GLFW/glfw3.h>
 
 class Application
 {
@@ -21,6 +28,7 @@ public:
 	static void GetCursorPos(double *xpos, double *ypos);
 	static int GetWindowWidth();
 	static int GetWindowHeight();
+	static GLFWwindow* GetWindow();
 private:
 	Application();
 	~Application();
@@ -28,6 +36,7 @@ private:
 	//Declare a window object
 	StopWatch m_timer;
 	SceneManager* sceneManager;
+	SoundController* soundController;
 };
 
 #endif

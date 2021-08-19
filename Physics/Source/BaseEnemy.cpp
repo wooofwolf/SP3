@@ -7,7 +7,7 @@ BaseEnemy::~BaseEnemy()
 
 void BaseEnemy::Init()
 {
-	active = false;
+	active = true;
 	hp = 0;
 	pos.Set(70, 60, 1);
 	vel.Set(0, 0, 0);
@@ -96,25 +96,25 @@ void BaseEnemy::Movement(double dt)
 		{
 			case LEFT:
 			{
-				pos.x -= 10 * dt;
+				pos.x -= 10 * dt * Player::GetInstance()->GetSlowSpeed();
 				CheckCollidedSide(LEFT, dt);
 				break;
 			}
 			case UP:
 			{
-				pos.y += 10 * dt;
+				pos.y += 10 * dt * Player::GetInstance()->GetSlowSpeed();
 				CheckCollidedSide(UP, dt);
 				break;
 			}
 			case RIGHT:
 			{
-				pos.x += 10 * dt;
+				pos.x += 10 * dt * Player::GetInstance()->GetSlowSpeed();
 				CheckCollidedSide(RIGHT, dt);
 				break;
 			}
 			case DOWN:
 			{
-				pos.y -= 10 * dt;
+				pos.y -= 10 * dt * Player::GetInstance()->GetSlowSpeed();
 				CheckCollidedSide(DOWN, dt);
 				break;
 			}

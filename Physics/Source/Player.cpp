@@ -31,6 +31,8 @@ void Player::Init(int m_worldWidth, int m_worldHeight, GunComponent* activeGun)
 	m_speed = 1.f;
 	SprintSpeed = 2.f;
 
+	power2active = false;
+
 	this->activeGun = activeGun;
 }
 
@@ -38,39 +40,53 @@ void Player::Update(double dt)
 {
 	prevpos = pos;
 	// Currently Hold Space to slow time, Change to a timer toggle later
-	if (Application::IsKeyPressed(VK_SPACE))
+	if (Application::IsKeyPressed('1'))
 	{
-		m_speed = 0.5f;
+		SlowSpeed = 0.5f;
 	}
 	else
 	{
-		m_speed = 1.f;
+		SlowSpeed = 1.f;
 	}	
+
+	static bool bQButtonState = false;
+	if (!bQButtonState && Application::IsKeyPressed('2'))
+	{
+		bQButtonState = true;
+		if (power2active == false)
+		{
+			m_speed = 2.f;
+			power2active = true;
+			std::cout << "activ" << std::endl;
+		}
+		else if (power2active == true)
+		{
+			m_speed = 1.f;
+			power2active = false;
+			std::cout << "no activ" << std::endl;
+		}
+
+	}
+	else if (bQButtonState && !Application::IsKeyPressed('2'))
+		bQButtonState = false;
+
 	
-	if (Application::IsKeyPressed(VK_SHIFT))
-	{
-		SprintSpeed = 4.f;
-	}
-	else
-	{
-		SprintSpeed = 2.f;
-	}
 
 	if (Application::IsKeyPressed('W'))
 	{
-		pos.y += 30 * dt * m_speed * SprintSpeed;
+		pos.y += 30 * dt * m_speed;
 	}	
 	if (Application::IsKeyPressed('S'))
 	{
-		pos.y -= 30 * dt * m_speed * SprintSpeed;
+		pos.y -= 30 * dt * m_speed;
 	}	
 	if (Application::IsKeyPressed('A'))
 	{
-		pos.x -= 30 * dt * m_speed * SprintSpeed;
+		pos.x -= 30 * dt * m_speed;
 	}	
 	if (Application::IsKeyPressed('D'))
 	{
-		pos.x += 30 * dt * m_speed * SprintSpeed;
+		pos.x += 30 * dt * m_speed;
 	}
 }
 
@@ -129,9 +145,14 @@ void Player::SetPos(Vector3 pos)
 	this->pos = pos;
 }
 
-float Player::GetGameSpeed()
+float Player::GetPlusSpeed()
 {
 	return m_speed;
+}
+
+float Player::GetSlowSpeed()
+{
+	return SlowSpeed;
 }
 
 GunComponent* Player::GetActiveGun()
@@ -151,17 +172,6 @@ void Player::Collisioncheck(std::vector<Vector3> activeTileList)
 		if ((pos - tilepos).Length() < scale.x + 2)
 		{
 			pos = prevpos;
-		}
-	}
-}
-
-void Player::Pickupcheck(std::vector<Vector3> pickupList)
-{
-	for (Vector3 Ppos : pickupList)
-	{
-		if ((pos - Ppos).Length() < scale.x + 2)
-		{
-			std::cout << "PICKUP DETECTED" << std::endl;
 		}
 	}
 }

@@ -19,6 +19,7 @@ protected:
 
 	SceneBase* base;
 
+	float SlowSpeed;
 	float m_speed;
 	float SprintSpeed;
 
@@ -40,7 +41,6 @@ public:
 	void Exit();
 
 	void Collisioncheck(std::vector<Vector3> activeTileList);
-	void Pickupcheck(std::vector<Vector3> powerupList);
 
 	void Movement(double dt);
 
@@ -51,7 +51,9 @@ public:
 	void SetRotate(Vector3 rotate);
 	void SetPos(Vector3 pos);
 
-	float GetGameSpeed();
+	float GetPlusSpeed();
+	float GetSlowSpeed();
+	bool power2active;
 
 	GunComponent* GetActiveGun();
 	void SetActiveGun(GunComponent* activeGun);
