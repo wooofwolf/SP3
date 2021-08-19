@@ -55,6 +55,7 @@ public:
 
 	float GetPlusSpeed();
 	float GetSlowSpeed();
+	bool power2active;
 
 	GunComponent* GetActiveGun();
 	void SetActiveGun(GunComponent* activeGun);
