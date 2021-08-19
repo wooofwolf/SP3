@@ -7,7 +7,7 @@ BaseEnemy::~BaseEnemy()
 
 void BaseEnemy::Init()
 {
-	active = false;
+	active = true;
 	hp = 0;
 	pos.Set(70, 60, 1);
 	vel.Set(0, 0, 0);
@@ -203,7 +203,7 @@ void CavemenMelee::Init()
 {
 	pos.Set(50, 60, 1);
 	hp = 10;
-
+	active = true;
 }
 
 CavemenRanged::CavemenRanged(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)

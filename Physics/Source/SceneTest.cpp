@@ -332,10 +332,6 @@ void SceneTest::Render()
 	for (std::vector<CavemenMelee*>::iterator it = CaveManMeleeList.begin(); it != CaveManMeleeList.end(); ++it)
 	{
 		CavemenMelee* Cavemen = (CavemenMelee*)*it;
-		if (Cavemen->active != true)
-		{
-			Cavemen->active = true;
-		}
 		if (Cavemen->active == true)
 		{
 			modelStack.PushMatrix();
@@ -373,6 +369,16 @@ void SceneTest::Render()
 	{
 		Projectile* projectile = (Projectile*)*it;
 		projectile->Collisioncheck(activeTileList);
+
+		for (CavemenMelee* enemy : CaveManMeleeList)
+		{
+			if (projectile->active && (projectile->GetPos() - enemy->GetEnemyPos()).Length() < projectile->GetScale().x + 2)
+			{
+				projectile->active = false;
+				enemy->active = false;
+			}
+		}
+
 		if (!projectile->active)
 		{
 			it = projectileList.erase(it);
@@ -395,6 +401,17 @@ void SceneTest::Render()
 			}
 			++it;
 		}
+	}
+	std::vector<CavemenMelee*>::iterator it2 = CaveManMeleeList.begin();
+	for (; it2 != CaveManMeleeList.end(); )
+	{
+		CavemenMelee* enemy = (CavemenMelee*)*it2;
+		if (!enemy->active)
+		{
+			it2 = CaveManMeleeList.erase(it2);
+		}
+		else
+			++it2;
 	}
 
 	//std::vector<Collectible*>::iterator it2 = collectibleList.begin();
