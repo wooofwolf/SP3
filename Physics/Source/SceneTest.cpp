@@ -138,7 +138,9 @@ void SceneTest::Update(double dt)
 	}
 
 	//baseEnemy->Update(dt);
-	player->GetActiveGun()->UpdateFireRateTimer(dt);
+	revolver->UpdateFireRateTimer(dt);
+	shotgun->UpdateFireRateTimer(dt);
+	minigun->UpdateFireRateTimer(dt);
 	static bool bQButtonState = false;
 	if (!bQButtonState && Application::IsKeyPressed('Q'))
 	{
