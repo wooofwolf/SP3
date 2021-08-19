@@ -331,13 +331,13 @@ void CavemenMelee::Update(double dt)
 		attacked = false;
 	}
 	attackCD -= dt;
-	std::cout << attackCD << std::endl;
+	//std::cout << attackCD << std::endl;
 	//std::cout << "IM BEING USED" << std::endl;
 	switch (currentFSM)
 	{
 		case IDLE:
 		{
-			std::cout << "IDLING" << std::endl;
+			//std::cout << "IDLING" << std::endl;
 			Movement(dt);
 			if ((pos - player->GetPos()).Length() < 25 && attackCD <= 0)
 			{
@@ -354,7 +354,7 @@ void CavemenMelee::Update(double dt)
 			// Else if never reach the last pathfind, then recalculate the path
 			if (bPathFind == true)
 			{
-				std::cout << "ATTACK" << std::endl;
+				//std::cout << "ATTACK" << std::endl;
 				/*std::cout << "Kill me" << std::endl;*/
 				auto path = map->PathFind(pos, player->GetPos(), heuristic::manhattan);
 				/*		std::cout << "=== Printing out the path ===" << std::endl;*/

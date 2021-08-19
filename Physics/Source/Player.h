@@ -28,7 +28,7 @@ protected:
 
 	GunComponent* activeGun;
 
-	int energy;
+	float energy;
 
 	float cooldownTimer2;
 
@@ -57,6 +57,8 @@ public:
 
 	float GetPlusSpeed();
 	float GetSlowSpeed();
+	
+	bool power1active;
 	bool power2active;
 
 	GunComponent* GetActiveGun();
@@ -64,7 +66,7 @@ public:
 
 	int GetHealth();
 	void SetHealth(int hp);
-	int GetEnergy();
+	float GetEnergy();
 	void SetEnergy(int energy);
 };
 

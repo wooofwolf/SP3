@@ -76,10 +76,10 @@ void SceneTest::Init()
 
 	//for (int i = 0; i < 2; ++i)
 	//{
-		CavemenMelee* CavemanMelee= new CavemenMelee(baseEnemy);
-		CavemanMelee->Init();
-		CaveManMeleeList.push_back(CavemanMelee);
-	}
+	CavemenMelee* CavemanMelee= new CavemenMelee(baseEnemy);
+	CavemanMelee->Init();
+	CaveManMeleeList.push_back(CavemanMelee);
+	//}
 	
 	for (int i = 0; i < max_collectibles; ++i)
 	{
@@ -95,6 +95,7 @@ void SceneTest::Init()
 
 	sceneGUI = SceneGUI::GetInstance();
 	sceneGUI->Init();
+
 }
 
 void SceneTest::Update(double dt)
