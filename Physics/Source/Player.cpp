@@ -47,6 +47,15 @@ void Player::Update(double dt)
 		SlowSpeed = 1.f;
 	}	
 
+	if (Application::IsKeyPressed('2'))
+	{
+		m_speed = 1.5f;
+	}
+	else
+	{
+		m_speed = 1.f;
+	}
+
 	if (Application::IsKeyPressed('W'))
 	{
 		pos.y += 30 * dt * SprintSpeed;
@@ -118,6 +127,11 @@ void Player::SetRotate(Vector3 rotate)
 void Player::SetPos(Vector3 pos)
 {
 	this->pos = pos;
+}
+
+float Player::GetPlusSpeed()
+{
+	return m_speed;
 }
 
 float Player::GetSlowSpeed()

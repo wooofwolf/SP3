@@ -46,7 +46,7 @@ void Projectile::Update(double dt)
 	{
 		prevpos = pos;
 
-		pos += vel * dt;
+		pos += vel * dt * Player::GetInstance()->GetPlusSpeed();
 	}
 }
 
