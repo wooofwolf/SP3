@@ -31,6 +31,8 @@ void Player::Init(int m_worldWidth, int m_worldHeight, GunComponent* activeGun)
 	m_speed = 1.f;
 	SprintSpeed = 2.f;
 
+	power2active = false;
+
 	this->activeGun = activeGun;
 }
 
@@ -47,14 +49,28 @@ void Player::Update(double dt)
 		SlowSpeed = 1.f;
 	}	
 
-	if (Application::IsKeyPressed('2'))
+	static bool bQButtonState = false;
+	if (!bQButtonState && Application::IsKeyPressed('2'))
 	{
-		m_speed = 2.f;
+		bQButtonState = true;
+		if (power2active == false)
+		{
+			m_speed = 2.f;
+			power2active = true;
+			std::cout << "activ" << std::endl;
+		}
+		else if (power2active == true)
+		{
+			m_speed = 1.f;
+			power2active = false;
+			std::cout << "no activ" << std::endl;
+		}
+
 	}
-	else
-	{
-		m_speed = 1.f;
-	}
+	else if (bQButtonState && !Application::IsKeyPressed('2'))
+		bQButtonState = false;
+
+	
 
 	if (Application::IsKeyPressed('W'))
 	{
