@@ -32,6 +32,8 @@ void Player::Init(int m_worldWidth, int m_worldHeight, GunComponent* activeGun)
 	SprintSpeed = 2.f;
 
 	this->activeGun = activeGun;
+
+	energy = 100;
 }
 
 void Player::Update(double dt)
@@ -147,6 +149,26 @@ GunComponent* Player::GetActiveGun()
 void Player::SetActiveGun(GunComponent* activeGun)
 {
 	this->activeGun = activeGun;
+}
+
+int Player::GetHealth()
+{
+	return hp;
+}
+
+void Player::SetHealth(int hp)
+{
+	this->hp = hp;
+}
+
+int Player::GetEnergy()
+{
+	return energy;
+}
+
+void Player::SetEnergy(int energy)
+{
+	this->energy = energy;
 }
 
 void Player::Collisioncheck(std::vector<Vector3> activeTileList)

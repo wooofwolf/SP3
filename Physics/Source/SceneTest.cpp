@@ -193,6 +193,11 @@ void SceneTest::Update(double dt)
 	}
 	else if (bFireButtonState && !Application::IsMousePressed(0))
 		bFireButtonState = false;
+
+	if (Application::IsMousePressed(1))
+	{
+		player->SetHealth(player->GetHealth() - dt);
+	}
 	
 	for (Projectile* proj : projectileList)
 	{

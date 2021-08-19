@@ -28,6 +28,8 @@ protected:
 
 	GunComponent* activeGun;
 
+	int energy;
+
 public:
 	// Constructor
 	Player();
@@ -56,5 +58,10 @@ public:
 
 	GunComponent* GetActiveGun();
 	void SetActiveGun(GunComponent* activeGun);
+
+	int GetHealth();
+	void SetHealth(int hp);
+	int GetEnergy();
+	void SetEnergy(int energy);
 };
 
