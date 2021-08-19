@@ -19,6 +19,7 @@ protected:
 
 	SceneBase* base;
 
+	float SlowSpeed;
 	float m_speed;
 	float SprintSpeed;
 
@@ -51,6 +52,7 @@ public:
 	void SetPos(Vector3 pos);
 
 	float GetPlusSpeed();
+	float GetSlowSpeed();
 
 	GunComponent* GetActiveGun();
 	void SetActiveGun(GunComponent* activeGun);

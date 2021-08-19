@@ -75,25 +75,25 @@ void BaseEnemy::Movement(double dt)
 		{
 			case LEFT:
 			{
-				pos.x -= 10 * dt * Player::GetInstance()->GetGameSpeed();
+				pos.x -= 10 * dt * Player::GetInstance()->GetSlowSpeed();
 				CheckCollidedSide(LEFT, dt);
 				break;
 			}
 			case UP:
 			{
-				pos.y += 10 * dt * Player::GetInstance()->GetGameSpeed();
+				pos.y += 10 * dt * Player::GetInstance()->GetSlowSpeed();
 				CheckCollidedSide(UP, dt);
 				break;
 			}
 			case RIGHT:
 			{
-				pos.x += 10 * dt * Player::GetInstance()->GetGameSpeed();
+				pos.x += 10 * dt * Player::GetInstance()->GetSlowSpeed();
 				CheckCollidedSide(RIGHT, dt);
 				break;
 			}
 			case DOWN:
 			{
-				pos.y -= 10 * dt * Player::GetInstance()->GetGameSpeed();
+				pos.y -= 10 * dt * Player::GetInstance()->GetSlowSpeed();
 				CheckCollidedSide(DOWN, dt);
 				break;
 			}
