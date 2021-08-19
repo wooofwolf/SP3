@@ -11,7 +11,7 @@ GunComponent::~GunComponent()
 
 void GunComponent::UpdateFireRateTimer(double dt)
 {
-	fireRateTimer += dt * Player::GetInstance()->GetGameSpeed();
+	fireRateTimer += dt;
 }
 
 Projectile* ConcreteGunComponent::FireGun()
