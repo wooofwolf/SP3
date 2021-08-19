@@ -49,7 +49,7 @@ void Player::Update(double dt)
 
 	if (Application::IsKeyPressed('2'))
 	{
-		m_speed = 1.5f;
+		m_speed = 2.f;
 	}
 	else
 	{
@@ -58,19 +58,19 @@ void Player::Update(double dt)
 
 	if (Application::IsKeyPressed('W'))
 	{
-		pos.y += 30 * dt * SprintSpeed;
+		pos.y += 30 * dt * m_speed;
 	}	
 	if (Application::IsKeyPressed('S'))
 	{
-		pos.y -= 30 * dt * SprintSpeed;
+		pos.y -= 30 * dt * m_speed;
 	}	
 	if (Application::IsKeyPressed('A'))
 	{
-		pos.x -= 30 * dt * SprintSpeed;
+		pos.x -= 30 * dt * m_speed;
 	}	
 	if (Application::IsKeyPressed('D'))
 	{
-		pos.x += 30 * dt * SprintSpeed;
+		pos.x += 30 * dt * m_speed;
 	}
 }
 
