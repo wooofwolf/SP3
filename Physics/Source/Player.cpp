@@ -38,39 +38,39 @@ void Player::Update(double dt)
 {
 	prevpos = pos;
 	// Currently Hold Space to slow time, Change to a timer toggle later
-	if (Application::IsKeyPressed(VK_SPACE))
+	if (Application::IsKeyPressed('1'))
 	{
-		m_speed = 0.5f;
+		SlowSpeed = 0.5f;
+	}
+	else
+	{
+		SlowSpeed = 1.f;
+	}	
+
+	if (Application::IsKeyPressed('2'))
+	{
+		m_speed = 2.f;
 	}
 	else
 	{
 		m_speed = 1.f;
-	}	
-	
-	if (Application::IsKeyPressed(VK_SHIFT))
-	{
-		SprintSpeed = 4.f;
-	}
-	else
-	{
-		SprintSpeed = 2.f;
 	}
 
 	if (Application::IsKeyPressed('W'))
 	{
-		pos.y += 30 * dt * m_speed * SprintSpeed;
+		pos.y += 30 * dt * m_speed;
 	}	
 	if (Application::IsKeyPressed('S'))
 	{
-		pos.y -= 30 * dt * m_speed * SprintSpeed;
+		pos.y -= 30 * dt * m_speed;
 	}	
 	if (Application::IsKeyPressed('A'))
 	{
-		pos.x -= 30 * dt * m_speed * SprintSpeed;
+		pos.x -= 30 * dt * m_speed;
 	}	
 	if (Application::IsKeyPressed('D'))
 	{
-		pos.x += 30 * dt * m_speed * SprintSpeed;
+		pos.x += 30 * dt * m_speed;
 	}
 }
 
@@ -129,9 +129,14 @@ void Player::SetPos(Vector3 pos)
 	this->pos = pos;
 }
 
-float Player::GetGameSpeed()
+float Player::GetPlusSpeed()
 {
 	return m_speed;
+}
+
+float Player::GetSlowSpeed()
+{
+	return SlowSpeed;
 }
 
 GunComponent* Player::GetActiveGun()
