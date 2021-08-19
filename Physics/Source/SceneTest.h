@@ -3,21 +3,19 @@
 #include "SceneBase.h"
 #include "Map.h"
 #include "Guns.h"
-
 #include "BaseEnemy.h"
 #include "Player.h"
-
 #include "MeshList.h"
-
 #include "Renderer.h"
-
 #include "Projectile.h"
-
 #include "Collectible.h"
+#include "SceneGUI.h"
+#include "SingletonPattern.h"
 
-class SceneTest : public SceneBase
+class SceneTest : public SceneBase, public SingletonPattern<SceneTest>
 {
-private:
+	friend SingletonPattern<SceneTest>;
+protected:
 	// Variables
 	float m_worldWidth;
 	float m_worldHeight;
@@ -25,6 +23,13 @@ private:
 
 	bool NearXEdge = false;
 	bool NearYEdge = false;
+
+	SceneGUI* sceneGUI;
+
+	// Constructor
+	SceneTest();
+	// Destructor
+	virtual ~SceneTest();
 
 public:
 	//Renderer* renderer;
@@ -54,11 +59,6 @@ public:
 	int max_collectibles = 20;
 
 	Player* player;
-public:
-	// Constructor
-	SceneTest();
-	// Destructor
-	~SceneTest();
 
 	BaseEnemy* SpawnEnemies();
 	virtual void Init();

@@ -4,6 +4,7 @@
 #include "Vector3.h"
 #include <vector>
 #include "Map.h"
+#include "Player.h"
 class BaseEnemy : protected Entity
 {
 protected: 
@@ -14,6 +15,13 @@ protected:
 		UP = 2,
 		DOWN = 3,
 		NUM_DIRECTIONS
+	};
+	enum FSM
+	{
+		ATTACK = 0,
+		IDLE = 1,
+		PATROL = 2,
+		NUM_FSM
 	};
 	void CheckCollidedSide(DIRECTION direction , double dt);
 	virtual void Attack() const = 0;
@@ -33,7 +41,18 @@ public:
 	bool changeDir;
 	void Movement(double dt);
 	DIRECTION direction;
+	FSM currentFSM;
+	int FSMcounter;
+	const int MaxFSMcounter = 60;
 	Map* map;
+	Player* player;
+	Vector3 destination;
+	Vector3 pathDir;
+	void UpdateDirection();
+	void UpdatePosition();
+	bool bPathFind;
+	float attackCD;
+	bool attacked;
 };
 
 class ConcreteBaseEnemy : public BaseEnemy
@@ -65,6 +84,8 @@ public:
 	void Attack() const override;
 	void Update(double dt) override;
 	void Init() override;
+
+
 };
 class CavemenRanged :public EnemyDecorator
 {

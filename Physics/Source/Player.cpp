@@ -31,7 +31,12 @@ void Player::Init(int m_worldWidth, int m_worldHeight, GunComponent* activeGun)
 	m_speed = 1.f;
 	SprintSpeed = 2.f;
 
+	power2active = false;
+	cooldownTimer2 = 0;
+
 	this->activeGun = activeGun;
+
+	energy = 100;
 }
 
 void Player::Update(double dt)
@@ -47,14 +52,34 @@ void Player::Update(double dt)
 		SlowSpeed = 1.f;
 	}	
 
+	static bool bQButtonState = false;
+    
+
+
+	if (power2active == true)
+	{
+		cooldownTimer2 += dt;
+		m_speed = 2.f;
+		//std::cout << "activ" << std::endl;
+	}
+
+
+	if (cooldownTimer2 >= 5)
+	{
+		cooldownTimer2 = 0;
+		bQButtonState = false;
+		power2active = false;
+		m_speed = 1.f;
+		//std::cout << "no activ" << std::endl;
+	}
+
 	if (Application::IsKeyPressed('2'))
 	{
-		m_speed = 2.f;
+		bQButtonState = true;
+		power2active = true;
 	}
-	else
-	{
-		m_speed = 1.f;
-	}
+
+	
 
 	if (Application::IsKeyPressed('W'))
 	{
@@ -147,6 +172,26 @@ GunComponent* Player::GetActiveGun()
 void Player::SetActiveGun(GunComponent* activeGun)
 {
 	this->activeGun = activeGun;
+}
+
+int Player::GetHealth()
+{
+	return hp;
+}
+
+void Player::SetHealth(int hp)
+{
+	this->hp = hp;
+}
+
+int Player::GetEnergy()
+{
+	return energy;
+}
+
+void Player::SetEnergy(int energy)
+{
+	this->energy = energy;
 }
 
 void Player::Collisioncheck(std::vector<Vector3> activeTileList)

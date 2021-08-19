@@ -63,6 +63,11 @@ int Application::GetWindowHeight()
 	return m_height;
 }
 
+GLFWwindow* Application::GetWindow()
+{
+	return m_window;
+}
+
 Application::Application()
 {
 }
@@ -93,7 +98,8 @@ void Application::Init()
 	//Create a window and create its OpenGL context
 	m_width = 1920;
 	m_height = 1080;
-	m_window = glfwCreateWindow(m_width, m_height, "Physics", NULL, NULL);
+	m_window = glfwCreateWindow(m_width, m_height, "Physics", NULL, NULL);		// Non-fullscreen
+	//m_window = glfwCreateWindow(m_width, m_height, "Physics", glfwGetPrimaryMonitor(), NULL);		// Fullscreen
 
 	//If the window couldn't be created
 	if (!m_window)
@@ -124,7 +130,7 @@ void Application::Init()
 	sceneManager = SceneManager::GetInstance();
 
 	sceneManager->AddScene("MenuScene", new MenuScene());
-	sceneManager->AddScene("TestScene", new SceneTest());
+	sceneManager->AddScene("TestScene", SceneTest::GetInstance());
 
 	sceneManager->SetActiveScene("MenuScene");
 

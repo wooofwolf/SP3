@@ -37,8 +37,6 @@ void SceneTest::Init()
 	player = Player::GetInstance();
 	player->Init();
 
-
-	
 	//baseEnemy = new ConcreteBaseEnemy();
 	//baseEnemy->Init();	
 	//EntityList.push_back(player);
@@ -62,23 +60,23 @@ void SceneTest::Init()
 
 	revolver->nextGun = shotgun;
 	revolver->prevGun = minigun;
-	revolver->fireRate = 1;
+	revolver->fireRate = 0.5;
 	revolver->fireRateTimer = 0;
 	shotgun->nextGun = minigun;
 	shotgun->prevGun = revolver;
-	shotgun->fireRate = 2;
+	shotgun->fireRate = 1;
 	shotgun->fireRateTimer = 0;
 	minigun->nextGun = revolver;
 	minigun->prevGun = shotgun;
-	minigun->fireRate = 0.1;
+	minigun->fireRate = 0.2;
 	minigun->fireRateTimer = 0;
 
 	activeTileList.clear();
 
 
-	for (int i = 0; i < 2; ++i)
-	{
-		CavemenMelee* CavemanMelee = new CavemenMelee(baseEnemy);
+	//for (int i = 0; i < 2; ++i)
+	//{
+		CavemenMelee* CavemanMelee= new CavemenMelee(baseEnemy);
 		CavemanMelee->Init();
 		CaveManMeleeList.push_back(CavemanMelee);
 	}
@@ -94,6 +92,9 @@ void SceneTest::Init()
 
 	camera->position.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, 2);
 	camera->target.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, player->GetPos().z);
+
+	sceneGUI = SceneGUI::GetInstance();
+	sceneGUI->Init();
 }
 
 void SceneTest::Update(double dt)
@@ -108,10 +109,9 @@ void SceneTest::Update(double dt)
 	//camera->Update(dt);
 
 	player->Update(dt);
-
-	for (CavemenMelee* CaveMelee : CaveManMeleeList)
+	for (CavemenMelee* CaveMelee :  CaveManMeleeList)
 	{
-		CaveMelee->Movement(dt);
+		CaveMelee->Update(dt);
 	}
 	// yes i hard found the values where the outside of the map starts to show
 	// theres probably a better way to find these values but i cant be bothered lol -yh
@@ -144,7 +144,9 @@ void SceneTest::Update(double dt)
 	}
 
 	//baseEnemy->Update(dt);
-	player->GetActiveGun()->UpdateFireRateTimer(dt);
+	revolver->UpdateFireRateTimer(dt);
+	shotgun->UpdateFireRateTimer(dt);
+	minigun->UpdateFireRateTimer(dt);
 	static bool bQButtonState = false;
 	if (!bQButtonState && Application::IsKeyPressed('Q'))
 	{
@@ -197,13 +199,18 @@ void SceneTest::Update(double dt)
 	}
 	else if (bFireButtonState && !Application::IsMousePressed(0))
 		bFireButtonState = false;
+
+	if (Application::IsMousePressed(1))
+	{
+		player->SetHealth(player->GetHealth() - dt);
+	}
 	
 	for (Projectile* proj : projectileList)
 	{
 		proj->Update(dt);
 	}
 
-
+	sceneGUI->Update(dt);
 }
 
 void SceneTest::Render()
@@ -329,7 +336,7 @@ void SceneTest::Render()
 	}
 	modelStack.PopMatrix();
 
-	for (std::vector<CavemenMelee*>::iterator it = CaveManMeleeList.begin(); it != CaveManMeleeList.end(); ++it)
+	for (std::vector<CavemenMelee*>::iterator it =  CaveManMeleeList.begin(); it !=  CaveManMeleeList.end(); ++it)
 	{
 		CavemenMelee* Cavemen = (CavemenMelee*)*it;
 		if (Cavemen->active == true)
@@ -342,7 +349,7 @@ void SceneTest::Render()
 		}
 	}
 
-	for (CavemenMelee* CaveMelee : CaveManMeleeList)
+	for (CavemenMelee* CaveMelee :  CaveManMeleeList)
 	{
 		CaveMelee->Collisioncheck(activeTileList);
 	}
@@ -443,12 +450,7 @@ void SceneTest::Render()
 		}
 	}
 
-	std::ostringstream ss;
-	ss.precision(5);
-	ss << "FPS: " << fps;
-	RenderTextOnScreen(MeshList::GetInstance()->GetMesh(MeshList::GEO_TEXT), ss.str(), Color(0, 1, 0), 3, 0, 3);
-
-	//RenderTextOnScreen(MeshList::GetInstance()->GetMesh(MeshList::GEO_TEXT), "Test", Color(0, 1, 0), 3, 0, 6);
+	sceneGUI->Render();
 }
 
 void SceneTest::Exit()
@@ -466,7 +468,7 @@ void SceneTest::Exit()
 
 	for (Entity* entity : EntityList)
 		delete entity;
-	for (BaseEnemy* enemy : CaveManMeleeList)
+	for (BaseEnemy* enemy :  CaveManMeleeList)
 		delete enemy;
 	for (Projectile* proj : projectileList)
 		delete proj;
@@ -474,5 +476,6 @@ void SceneTest::Exit()
 	for (Collectible* coll : collectibleList)
 		delete coll;
 
-	//delete collectible;
+
+	sceneGUI->Exit();
 }
