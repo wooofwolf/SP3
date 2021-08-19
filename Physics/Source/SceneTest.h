@@ -48,8 +48,10 @@ public:
 	std::vector<CavemenMelee*> CaveManMeleeList;
 	std::vector <Vector3> activeTileList;
 	std::vector<Projectile*> projectileList;
+	
+	std::vector<Collectible*> collectibleList;
 
-	Collectible* collectible;
+	int max_collectibles = 20;
 
 	Player* player;
 public:
