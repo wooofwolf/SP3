@@ -95,7 +95,7 @@ void SceneGUI::Update(double dt)
 			ImGui::SameLine();
 			ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(32.f / 255.f, 246.f / 255.f, 0, 1.0f));
 			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
-			ImGui::ProgressBar((float)(player->GetActiveGun()->fireRate - player->GetActiveGun()->fireRateTimer), ImVec2(100.0f, 60.0f));
+			ImGui::ProgressBar((float)(player->GetActiveGun()->fireRate - player->GetActiveGun()->fireRateTimer), ImVec2(200.0f, 60.0f), "");
 			ImGui::PopStyleColor();
 			ImGui::PopStyleColor();
 		ImGui::End();
