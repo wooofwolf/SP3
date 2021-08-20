@@ -76,19 +76,26 @@ void SceneTest::Init()
 
 	//for (int i = 0; i < 2; ++i)
 	//{
-		CavemenMelee* CavemanMelee= new CavemenMelee(baseEnemy);
-		CavemanMelee->Init();
-		CaveManMeleeList.push_back(CavemanMelee);
-	/*}*/
+	CavemenMelee* CavemanMelee= new CavemenMelee(baseEnemy);
+	CavemanMelee->Init();
+	CaveManMeleeList.push_back(CavemanMelee);
+	//}
+	
+	for (int i = 0; i < max_collectibles; ++i)
+	{
+		Collectible* collectible = new Collectible();
+		collectible->active = true;
+		collectibleList.push_back(collectible);
+	}
 
-	collectible = new Collectible();
-	collectible->active = true;
+
 
 	camera->position.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, 2);
 	camera->target.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, player->GetPos().z);
 
 	sceneGUI = SceneGUI::GetInstance();
 	sceneGUI->Init();
+
 }
 
 void SceneTest::Update(double dt)
@@ -266,26 +273,15 @@ void SceneTest::Render()
 				case Map::TILES::TILE_PICKUP:
 				{
 					Vector3 Collpos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
-					float width = (Collpos - Camera::GetInstance()->position).Length();
-					float height = Camera::GetInstance()->position.z - Collpos.z;
-					float hypotenuse = sqrtf(width * width + height * height);
-					float maxWidth = (Vector3(m_worldWidth / 2 + 2, 0, 1).Dot(Vector3(m_worldHeight / 2 + 2, 0, 1)) - Camera::GetInstance()->position.Length());
-					float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
-
-					collectible->SetPos(Collpos);
-					collectible->SetScale(Vector3(2, 2, 2));
-
-					if (hypotenuse <= maxHypotenuse)
+					
+					for (int i = 0; i < collectibleList.size(); i++)
 					{
-						modelStack.PushMatrix();
-						modelStack.Translate(collectible->GetPos().x, collectible->GetPos().y, collectible->GetPos().z);
-						modelStack.Scale(collectible->GetScale().x, collectible->GetScale().y, collectible->GetScale().z);
-						if (collectible->active == true)
+						if (collectibleList[i]->GetPos().IsZero())
 						{
-							RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE_GREEN), true);
+							collectibleList[i]->SetPos(Collpos);
+							collectibleList[i]->SetScale(Vector3(2, 2, 2));
+							break;
 						}
-						modelStack.PopMatrix();
-						break;
 					}
 				}
 			//case Map::TILES::TILE_PLAYER:
@@ -298,7 +294,11 @@ void SceneTest::Render()
 	}
 	Player::GetInstance()->Collisioncheck(activeTileList);
 	//Player::GetInstance()->Pickupcheck(powerupList);
-	collectible->Collisioncheck(activeTileList);
+	
+	for (Collectible* coll : collectibleList)
+	{
+		coll->Collisioncheck(activeTileList);
+	}
 
 	//modelStack.PushMatrix();
 	//player->Render();
@@ -444,19 +444,20 @@ void SceneTest::Render()
 			++it2;
 	}
 
-	//std::vector<Collectible*>::iterator it2 = collectibleList.begin();
-	//for ( ; it2 != collectibleList.end(); )
-	//{
-	//	Collectible* collectible = (Collectible*)*it2;
-	//	collectible->Collisioncheck(activeTileList);
-	//	if (!collectible->active)
-	//	{
-	//		it = projectileList.erase(it);
-	//	}
-		/*else
+	for (int i = 0; i < collectibleList.size(); i++)
+	{
+		
+		Collectible* collectible = collectibleList[i];
+		//collectible->Collisioncheck(activeTileList);
+		
+		if (!collectible->active)
 		{
-			float width = (projectile->GetPos() - Camera::GetInstance()->position).Length();
-			float height = Camera::GetInstance()->position.z - projectile->GetPos().z;
+			//it = projectileList.erase(it);
+		}
+		else
+		{
+			float width = (collectible->GetPos() - Camera::GetInstance()->position).Length();
+			float height = Camera::GetInstance()->position.z - collectible->GetPos().z;
 			float hypotenuse = sqrtf(width * width + height * height);
 			float maxWidth = (Vector3(m_worldWidth / 2 + 2, 0, 1).Dot(Vector3(m_worldHeight / 2 + 2, 0, 1)) - Camera::GetInstance()->position.Length());
 			float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
@@ -464,14 +465,13 @@ void SceneTest::Render()
 			if (hypotenuse <= maxHypotenuse)
 			{
 				modelStack.PushMatrix();
-				modelStack.Translate(projectile->GetPos().x, projectile->GetPos().y, projectile->GetPos().z);
-				modelStack.Scale(projectile->GetScale().x, projectile->GetScale().y, projectile->GetScale().z);
-				RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BALL), false);
+				modelStack.Translate(collectible->GetPos().x, collectible->GetPos().y, collectible->GetPos().z);
+				modelStack.Scale(collectible->GetScale().x, collectible->GetScale().y, collectible->GetScale().z);
+				RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE_GREEN), false);
 				modelStack.PopMatrix();
 			}
-			++it;
-		}*/
-	//}
+		}
+	}
 
 	sceneGUI->Render();
 }
@@ -495,8 +495,10 @@ void SceneTest::Exit()
 		delete enemy;
 	for (Projectile* proj : projectileList)
 		delete proj;
+	
+	for (Collectible* coll : collectibleList)
+		delete coll;
 
-	delete collectible;
 
 	sceneGUI->Exit();
 }
