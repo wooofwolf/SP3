@@ -61,7 +61,7 @@ void SceneTest::Init()
 	revolver->fireRateTimer = 0;
 	shotgun->nextGun = minigun;
 	shotgun->prevGun = revolver;
-	shotgun->fireRate = 1;
+	shotgun->fireRate = 1;		
 	shotgun->fireRateTimer = 0;
 	minigun->nextGun = revolver;
 	minigun->prevGun = shotgun;
@@ -69,6 +69,7 @@ void SceneTest::Init()
 	minigun->fireRateTimer = 0;
 
 	activeTileList.clear();
+	HazardTileList.clear();
 
 	for (int y = 0; y < 200; ++y)
 	{
@@ -214,12 +215,21 @@ void SceneTest::Update(double dt)
 		enemy->Update(dt);
 	}
 
+	Player::GetInstance()->Collisioncheck(activeTileList);
+	Player::GetInstance()->Hazardcheck(HazardTileList);
+
+	for (Collectible* coll : collectibleList)
+	{
+		coll->Collisioncheck(activeTileList);
+	}
+
 	sceneGUI->Update(dt);
 }
 
 void SceneTest::Render()
 {
 	activeTileList.clear();
+	HazardTileList.clear();
 
 	double x, y;
 	Application::GetCursorPos(&x, &y);
@@ -270,25 +280,33 @@ void SceneTest::Render()
 					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE), true);
 					modelStack.PopMatrix();
 					break;
+				}
+			}
+			case Tile::TILE_TYPE::TILE_HAZARD:
+			{
+				Vector3 hazardPos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
+				float width = (hazardPos - Camera::GetInstance()->position).Length();
+				float height = Camera::GetInstance()->position.z - hazardPos.z;
+				float hypotenuse = sqrtf(width * width + height * height);
+				float maxWidth = (Vector3(m_worldWidth / 2 + 2, 0, 1).Dot(Vector3(m_worldHeight / 2 + 2, 0, 1)) - Camera::GetInstance()->position.Length());
+				float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
 
+				// Occlusion Rendering
+				if (hypotenuse <= maxHypotenuse)
+				{
+					HazardTileList.push_back(hazardPos);
+					modelStack.PushMatrix();
+					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
+					modelStack.Scale(2, 2, 2);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_HAZARD), true);
+					modelStack.PopMatrix();
+					break;
 				}
 			}
 			}
 		}
 	}
-	Player::GetInstance()->Collisioncheck(activeTileList);
-	//Player::GetInstance()->Pickupcheck(powerupList);
 
-	for (Collectible* coll : collectibleList)
-	{
-		coll->Collisioncheck(activeTileList);
-	}
-
-	//modelStack.PushMatrix();
-	//player->Render();
-	//modelStack.PopMatrix();
-
-	//done for now
 
 	Vector3 playerpos;
 
@@ -338,11 +356,24 @@ void SceneTest::Render()
 	//RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
 	//modelStack.PopMatrix();
 
+	//std::cout << (x / w) * m_worldWidth << ' ' << m_worldHeight - (y / h) * m_worldHeight << std::endl;
+
+	//baseEnemy->active = true;
+
 	std::vector<Projectile*>::iterator it = projectileList.begin();
 	for (; it != projectileList.end(); )
 	{
 		Projectile* projectile = (Projectile*)*it;
 		projectile->Collisioncheck(activeTileList);
+
+		for (BaseEnemy* enemy : enemyList)
+		{
+			if (projectile->active && (projectile->GetPos() - enemy->GetEnemyPos()).Length() < projectile->GetScale().x + 2)
+			{
+				projectile->active = false;
+				enemy->SetEnemyHP(enemy->GetEnemyHP() - projectile->damage);
+			}
+		}
 
 		if (projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->detonateTimer >= 3)
 		{
@@ -422,7 +453,6 @@ void SceneTest::Render()
 	for (; it3 != collectibleList.end(); )
 	{
 		Collectible* collectible = (Collectible*)*it3;
-		//collectible->Collisioncheck(activeTileList);
 
 		if (!collectible->active)
 		{

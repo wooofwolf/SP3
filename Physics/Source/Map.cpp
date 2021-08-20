@@ -160,20 +160,14 @@ std::stack<Vector3> Map::TracePath(Vector3 dest)
 	std::stack<Vector3> path;
 	while (!(mapGrid[x][y].parent_i == x && mapGrid[x][y].parent_j == y))
 	{
-		path.push(Vector3(x, y));
+		path.push(Vector3(x, y, 1));
 		int temp_x = mapGrid[x][y].parent_i;
 		int temp_y = mapGrid[x][y].parent_j;
 		x = temp_x;
 		y = temp_y;
 	}
 
-	path.push(Vector3(x, y));
-	/*while (!path.empty())
-	{
-		Vector3 p = path.top();
-		path.pop();
-		printf("-> (%f,%f) ", p.x, p.y);
-	}*/
+	path.push(Vector3(x, y, 1));
 
 	return path;
 }

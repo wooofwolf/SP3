@@ -45,6 +45,7 @@ public:
 	void Exit();
 
 	void Collisioncheck(std::vector<Vector3> activeTileList);
+	void Hazardcheck(std::vector<Vector3> activeTileList);
 
 	void Movement(double dt);
 
@@ -64,8 +65,8 @@ public:
 	GunComponent* GetActiveGun();
 	void SetActiveGun(GunComponent* activeGun);
 
-	int GetHealth();
-	void SetHealth(int hp);
+	float GetHealth();
+	void SetHealth(float hp);
 	float GetEnergy();
 	void SetEnergy(int energy);
 };

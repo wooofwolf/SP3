@@ -28,10 +28,16 @@ public:
 	std::vector<BaseEnemy*> BasicEnemyList;
 	~BaseEnemy();
 	virtual void Init();
+
 	void Render();
 	Vector3 GetEnemyPos();
 	void SetEnemyPos(Vector3 pos);
+	int GetEnemyHP();
+	void SetEnemyHP(int hp);
 	bool GetActive();
+
+	Vector3 GetScale();
+
 	bool active;
 	void Collisioncheck(std::vector <Vector3> activeTileList);
 	void Exit();
@@ -45,6 +51,7 @@ public:
 	Player* player;
 	Vector3 destination;
 	Vector3 pathDir;
+	int damage;
 	void UpdateDirection();
 	void UpdatePosition();
 	bool bPathFind;

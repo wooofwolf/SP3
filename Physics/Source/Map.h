@@ -20,6 +20,8 @@ struct Tile {
 
 		TILE_PICKUP,
 
+		TILE_HAZARD = 5,
+
 		TILE_TOTAL
 	};
 
