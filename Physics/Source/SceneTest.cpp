@@ -323,12 +323,17 @@ void SceneTest::Render()
 
 	if (NearXEdge == true || NearYEdge == true)
 	{
+		// make code the do pls thank
+
 		playerpos = player->GetPos() - camera->position;
+		//playerpos.Set((w * player->GetPos().x) / m_worldWidth, h - (h * player->GetPos().y) / m_worldHeight);
 	}
 	else
 	{
 		playerpos.Set(m_worldWidth * 0.5, m_worldHeight * 0.5);
 	}
+
+	//std::cout << player->GetPos().x << ' ' << player->GetPos().y << std::endl;
 
 	float mousePosX = (x / w) * m_worldWidth;
 	float mousePosY = m_worldHeight - (y / h) * m_worldHeight;
