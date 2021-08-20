@@ -4,7 +4,7 @@
 #include "Vector3.h"
 #include <vector>
 #include "Player.h" 
-class BaseEnemy : protected Entity
+class BaseEnemy : public Entity
 {
 protected: 
 	enum DIRECTION
@@ -19,7 +19,7 @@ protected:
 	{
 		ATTACK = 0,
 		IDLE = 1,
-		PATROL = 2,
+		MOVE = 2,
 		NUM_FSM
 	};
 	void CheckCollidedSide(DIRECTION direction , double dt);
@@ -42,8 +42,6 @@ public:
 	void Movement(double dt);
 	DIRECTION direction;
 	FSM currentFSM;
-	int FSMcounter;
-	const int MaxFSMcounter = 60;
 	Player* player;
 	Vector3 destination;
 	Vector3 pathDir;
@@ -52,6 +50,10 @@ public:
 	bool bPathFind;
 	float attackCD;
 	bool attacked;
+	std::stack<Vector3> path;
+	bool moving;
+	double movingTimer;
+	Vector3 dest;
 };
 
 class ConcreteBaseEnemy : public BaseEnemy

@@ -31,9 +31,6 @@ void SceneTest::Init()
 {
 	SceneBase::Init();
 
-
-	baseEnemy = new ConcreteBaseEnemy();
-	baseEnemy->Init();
 	player = Player::GetInstance();
 	player->Init();
 
@@ -58,11 +55,6 @@ void SceneTest::Init()
 	map = Map::GetInstance();
 	map->Init("Maps/TestMap.csv");
 
-	for (CavemenMelee* enemy : map->CaveMeleeList)
-	{
-		enemy->UpdateDirection();
-		CaveManMeleeList.push_back(enemy);
-	}
 	revolver->nextGun = shotgun;
 	revolver->prevGun = minigun;
 	revolver->fireRate = 0.5;
@@ -78,17 +70,13 @@ void SceneTest::Init()
 
 	activeTileList.clear();
 
-	CavemenMelee* CavemanMelee= new CavemenMelee(baseEnemy);
-	CavemanMelee->Init();
-	CaveManMeleeList.push_back(CavemanMelee);
-
 	for (int y = 0; y < 200; ++y)
 	{
 		for (int x = 0; x < 200; ++x)
 		{
-			switch (map->GetTile(x, y))
+			switch (map->GetTile(x, y).type)
 			{
-			case Map::TILES::TILE_PICKUP:
+			case Tile::TILE_TYPE::TILE_PICKUP:
 			{
 				Vector3 Collpos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
 
@@ -124,10 +112,6 @@ void SceneTest::Update(double dt)
 	//camera->Update(dt);
 
 	player->Update(dt);
-	for (CavemenMelee* CaveMelee :  CaveManMeleeList)
-	{
-		CaveMelee->Update(dt);
-	}
 	// yes i hard found the values where the outside of the map starts to show
 	// theres probably a better way to find these values but i cant be bothered lol -yh
 
@@ -225,6 +209,11 @@ void SceneTest::Update(double dt)
 		proj->Update(dt);
 	}
 
+	for (BaseEnemy* enemy : enemyList)
+	{
+		enemy->Update(dt);
+	}
+
 	sceneGUI->Update(dt);
 }
 
@@ -260,9 +249,9 @@ void SceneTest::Render()
 	{
 		for (int x = 0; x < 200; ++x)
 		{
-			switch (map->GetTile(x, y))
+			switch (map->GetTile(x, y).type)
 			{
-			case Map::TILES::TILE_WALL:
+			case Tile::TILE_TYPE::TILE_WALL:
 			{
 				Vector3 tilePos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
 				float width = (tilePos - Camera::GetInstance()->position).Length();
@@ -332,24 +321,6 @@ void SceneTest::Render()
 	}
 	modelStack.PopMatrix();
 
-	for (std::vector<CavemenMelee*>::iterator it = CaveManMeleeList.begin(); it != CaveManMeleeList.end(); ++it)
-	{
-		CavemenMelee* Cavemen = (CavemenMelee*)*it;
-		if (Cavemen->active == true)
-		{
-			modelStack.PushMatrix();
-			modelStack.Translate(Cavemen->GetEnemyPos().x, Cavemen->GetEnemyPos().y, 1);
-			modelStack.Scale(3, 3, 3);
-			RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
-			modelStack.PopMatrix();
-		}
-	}
-
-	for (CavemenMelee* CaveMelee : CaveManMeleeList)
-	{
-		CaveMelee->Collisioncheck(activeTileList);
-	}
-
 	//std::cout << (x / w) * m_worldWidth << ' ' << m_worldHeight - (y / h) * m_worldHeight << std::endl;
 
 	//baseEnemy->active = true;
@@ -372,15 +343,6 @@ void SceneTest::Render()
 	{
 		Projectile* projectile = (Projectile*)*it;
 		projectile->Collisioncheck(activeTileList);
-
-		for (CavemenMelee* enemy : CaveManMeleeList)
-		{
-			if (projectile->active && (projectile->GetPos() - enemy->GetEnemyPos()).Length() < projectile->GetScale().x + 2)
-			{
-				projectile->active = false;
-				enemy->active = false;
-			}
-		}
 
 		if (projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->detonateTimer >= 3)
 		{
@@ -427,16 +389,32 @@ void SceneTest::Render()
 			++it;
 		}
 	}
-	std::vector<CavemenMelee*>::iterator it2 = CaveManMeleeList.begin();
-	for (; it2 != CaveManMeleeList.end(); )
+	
+	std::vector<BaseEnemy*>::iterator it2 = enemyList.begin();
+	for (; it2 != enemyList.end(); )
 	{
-		CavemenMelee* enemy = (CavemenMelee*)*it2;
+		BaseEnemy* enemy = (BaseEnemy*)*it2;
+
 		if (!enemy->active)
-		{
-			it2 = CaveManMeleeList.erase(it2);
-		}
+			it2 = enemyList.erase(it2);
 		else
-			++it2;
+		{
+			float width = (enemy->GetEnemyPos() - Camera::GetInstance()->position).Length();
+			float height = Camera::GetInstance()->position.z - enemy->GetEnemyPos().z;
+			float hypotenuse = sqrtf(width * width + height * height);
+			float maxWidth = (Vector3(m_worldWidth / 2 + 2, 0, 1).Dot(Vector3(m_worldHeight / 2 + 2, 0, 1)) - Camera::GetInstance()->position.Length());
+			float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
+
+			if (hypotenuse <= maxHypotenuse)
+			{
+				modelStack.PushMatrix();
+				modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+				modelStack.Scale(3, 3, 3);
+				RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
+				modelStack.PopMatrix();
+			}
+			it2++;
+		}
 	}
 
 	std::vector<Collectible*>::iterator it3 = collectibleList.begin();
@@ -486,15 +464,14 @@ void SceneTest::Exit()
 	delete shotgun;
 	delete minigun;
 
-	for (Entity* entity : EntityList)
-		delete entity;
-	for (BaseEnemy* enemy :  CaveManMeleeList)
-		delete enemy;
 	for (Projectile* proj : projectileList)
 		delete proj;
 	
 	for (Collectible* coll : collectibleList)
 		delete coll;
+
+	for (BaseEnemy* enemy : enemyList)
+		delete enemy;
 
 
 	sceneGUI->Exit();

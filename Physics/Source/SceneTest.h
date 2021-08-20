@@ -3,7 +3,6 @@
 #include "SceneBase.h"
 #include "Map.h"
 #include "Guns.h"
-#include "BaseEnemy.h"
 #include "Player.h"
 #include "MeshList.h"
 #include "Renderer.h"
@@ -41,24 +40,13 @@ public:
 	GunComponent* shotgun;
 	GunComponent* minigun;
 
-	BaseEnemy* baseEnemy;
-	BaseEnemy* cavemanMelee;
-	BaseEnemy* cavemeanRanged;
-	BaseEnemy* Knight;
-	BaseEnemy* Archer;
-	BaseEnemy* Cyborg;
-	BaseEnemy* Sniper;
-
-	std::vector<Entity*> EntityList;
-	std::vector<CavemenMelee*> CaveManMeleeList;
 	std::vector <Vector3> activeTileList;
 	std::vector<Projectile*> projectileList;
-	
+	std::vector<BaseEnemy*> enemyList;
 	std::vector<Collectible*> collectibleList;
 
 	Player* player;
 
-	BaseEnemy* SpawnEnemies();
 	virtual void Init();
 	virtual void Update(double dt);
 	virtual void Render();

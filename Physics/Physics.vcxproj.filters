@@ -68,9 +68,6 @@
     <ClCompile Include="Source\Entity.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
-    <ClCompile Include="Source\BaseEnemy.cpp">
-      <Filter>Entities</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Projectile.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
@@ -112,6 +109,9 @@
     </ClCompile>
     <ClCompile Include="Source\SceneGUI.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BaseEnemy.cpp">
+      <Filter>Entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
