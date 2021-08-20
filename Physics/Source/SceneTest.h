@@ -56,8 +56,6 @@ public:
 	
 	std::vector<Collectible*> collectibleList;
 
-	int max_collectibles = 20;
-
 	Player* player;
 
 	BaseEnemy* SpawnEnemies();

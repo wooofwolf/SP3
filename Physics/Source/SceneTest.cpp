@@ -73,21 +73,30 @@ void SceneTest::Init()
 
 	activeTileList.clear();
 
-
-	//for (int i = 0; i < 2; ++i)
-	//{
 	CavemenMelee* CavemanMelee= new CavemenMelee(baseEnemy);
 	CavemanMelee->Init();
 	CaveManMeleeList.push_back(CavemanMelee);
-	//}
-	
-	for (int i = 0; i < max_collectibles; ++i)
-	{
-		Collectible* collectible = new Collectible();
-		collectible->active = true;
-		collectibleList.push_back(collectible);
-	}
 
+	for (int y = 0; y < 200; ++y)
+	{
+		for (int x = 0; x < 200; ++x)
+		{
+			switch (map->GetTile(x, y))
+			{
+			case Map::TILES::TILE_PICKUP:
+			{
+				Vector3 Collpos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
+
+				Collectible* collectible = new Collectible();
+
+				collectible->active = true;
+				collectible->SetPos(Collpos);
+				collectible->SetScale(Vector3(2, 2, 2));
+				collectibleList.push_back(collectible);
+			}
+			}
+		}
+	}
 
 
 	camera->position.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, 2);
@@ -270,25 +279,6 @@ void SceneTest::Render()
 
 					}
 				}
-				case Map::TILES::TILE_PICKUP:
-				{
-					Vector3 Collpos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
-					
-					for (int i = 0; i < collectibleList.size(); i++)
-					{
-						if (collectibleList[i]->GetPos().IsZero())
-						{
-							collectibleList[i]->SetPos(Collpos);
-							collectibleList[i]->SetScale(Vector3(2, 2, 2));
-							break;
-						}
-					}
-				}
-			//case Map::TILES::TILE_PLAYER:
-			//{
-			//	Player::GetInstance()->SetPos(Vector3(10, 90, 1));
-			//	break;
-			//}
 			}
 		}
 	}
@@ -422,15 +412,16 @@ void SceneTest::Render()
 			++it2;
 	}
 
-	for (int i = 0; i < collectibleList.size(); i++)
-	{
-		
-		Collectible* collectible = collectibleList[i];
+	std::vector<Collectible*>::iterator it3 = collectibleList.begin();
+	
+	for (; it3 != collectibleList.end(); )
+	{	
+		Collectible* collectible = (Collectible*)*it3;
 		//collectible->Collisioncheck(activeTileList);
 		
 		if (!collectible->active)
 		{
-			//it = projectileList.erase(it);
+			it3 = collectibleList.erase(it3);
 		}
 		else
 		{
@@ -448,6 +439,7 @@ void SceneTest::Render()
 				RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE_GREEN), false);
 				modelStack.PopMatrix();
 			}
+			it3++;
 		}
 	}
 
