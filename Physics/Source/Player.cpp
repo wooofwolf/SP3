@@ -22,7 +22,7 @@ void Player::Init(int m_worldWidth, int m_worldHeight, GunComponent* activeGun)
 	this->m_worldWidth = m_worldWidth;
 	this->m_worldHeight = m_worldHeight;
 
-	hp = 100;
+	hp = 100.f;
 	pos.Set(1, 1, 1);
 	prevpos.Set(1, 1, 1);
 	scale.Set(3, 3, 3);
@@ -262,7 +262,10 @@ void Player::Hazardcheck(std::vector<Vector3> activeTileList)
 	{
 		if ((pos - tilepos).Length() < scale.x + 2)
 		{
-			SetHealth(GetHealth() - 0.5f);
+			if (hp > 0.f)
+			{
+				hp -= 0.5f;
+			}
 		}
 	}
 }

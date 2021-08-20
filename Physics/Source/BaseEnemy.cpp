@@ -176,7 +176,7 @@ void BaseEnemy::UpdatePosition()
 {
 	// Store the old position
 	prevpos = pos;
-	std::cout << "Path Direction: "<<pathDir << std::endl;
+	//std::cout << "Path Direction: "<<pathDir << std::endl;
 	
 	// if the player is to the left or right of the enemy2D, then jump to attack
 	if (pathDir.x < 0)
