@@ -52,6 +52,7 @@ public:
 	std::vector<Entity*> EntityList;
 	std::vector<CavemenMelee*> CaveManMeleeList;
 	std::vector <Vector3> activeTileList;
+	std::vector <Vector3> HazardTileList;
 	std::vector<Projectile*> projectileList;
 	
 	std::vector<Collectible*> collectibleList;

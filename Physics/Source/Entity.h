@@ -8,7 +8,7 @@ class Entity
 {
 protected:
 	// Variables
-	int hp;
+	float hp;
 	Vector3 pos;
 	Vector3 prevpos;
 	Vector3 vel;
