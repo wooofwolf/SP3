@@ -200,10 +200,10 @@ void SceneTest::Update(double dt)
 	else if (bFireButtonState && !Application::IsMousePressed(0))
 		bFireButtonState = false;
 
-	if (Application::IsMousePressed(1))
-	{
-		player->SetHealth(player->GetHealth() - dt);
-	}
+	//if (Application::IsMousePressed(1))
+	//{
+	//	player->SetHealth(player->GetHealth() - dt);
+	//}
 	
 	for (Projectile* proj : projectileList)
 	{
@@ -263,7 +263,7 @@ void SceneTest::Render()
 			{
 			case Tile::TILE_TYPE::TILE_WALL:
 			{
-				Vector3 tilePos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
+				Vector3 tilePos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 0);
 				float width = (tilePos - Camera::GetInstance()->position).Length();
 				float height = Camera::GetInstance()->position.z - tilePos.z;
 				float hypotenuse = sqrtf(width * width + height * height);
@@ -275,7 +275,7 @@ void SceneTest::Render()
 				{
 					activeTileList.push_back(tilePos);
 					modelStack.PushMatrix();
-					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
+					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 0);
 					modelStack.Scale(2, 2, 2);
 					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE), true);
 					modelStack.PopMatrix();
@@ -284,7 +284,7 @@ void SceneTest::Render()
 			}
 			case Tile::TILE_TYPE::TILE_HAZARD:
 			{
-				Vector3 hazardPos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
+				Vector3 hazardPos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 0);
 				float width = (hazardPos - Camera::GetInstance()->position).Length();
 				float height = Camera::GetInstance()->position.z - hazardPos.z;
 				float hypotenuse = sqrtf(width * width + height * height);
@@ -296,7 +296,7 @@ void SceneTest::Render()
 				{
 					HazardTileList.push_back(hazardPos);
 					modelStack.PushMatrix();
-					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
+					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 0);
 					modelStack.Scale(2, 2, 2);
 					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_HAZARD), true);
 					modelStack.PopMatrix();
@@ -332,7 +332,7 @@ void SceneTest::Render()
 
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(player->GetPos().x, player->GetPos().y, 0);
+		modelStack.Translate(player->GetPos().x, player->GetPos().y, 1);
 		modelStack.Rotate(Math::RadianToDegree(atan2f(dir.y, dir.x)), 0, 0, 1);
 		modelStack.Scale(player->GetScale().x, player->GetScale().y, player->GetScale().z);
 		RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE_RED), false);
@@ -403,7 +403,7 @@ void SceneTest::Render()
 				if (projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION)
 				{
 					modelStack.PushMatrix();
-					modelStack.Translate(projectile->GetPos().x, projectile->GetPos().y, projectile->GetPos().z);
+					modelStack.Translate(projectile->GetPos().x, projectile->GetPos().y, 2);
 					modelStack.Scale(projectile->GetScale().x, projectile->GetScale().y, projectile->GetScale().z);
 					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_SPHERE_BLUE), false);
 					modelStack.PopMatrix();
@@ -411,7 +411,7 @@ void SceneTest::Render()
 				else
 				{
 					modelStack.PushMatrix();
-					modelStack.Translate(projectile->GetPos().x, projectile->GetPos().y, projectile->GetPos().z);
+					modelStack.Translate(projectile->GetPos().x, projectile->GetPos().y, 2);
 					modelStack.Scale(projectile->GetScale().x, projectile->GetScale().y, projectile->GetScale().z);
 					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BALL), false);
 					modelStack.PopMatrix();
