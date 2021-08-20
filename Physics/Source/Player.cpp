@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "GL\glew.h"
 #include "SceneBase.h"
+#include "SceneTest.h"
 
 Player::Player()
 {
@@ -31,47 +32,106 @@ void Player::Init(int m_worldWidth, int m_worldHeight, GunComponent* activeGun)
 	m_speed = 1.f;
 	SprintSpeed = 2.f;
 
+	power1active = false;
 	power2active = false;
+	cooldownTimer2 = 0;
+	cooldownTimer3 = 30;
 
 	this->activeGun = activeGun;
+
+	energy = 100.f;
 }
 
 void Player::Update(double dt)
 {
 	prevpos = pos;
-	// Currently Hold Space to slow time, Change to a timer toggle later
-	if (Application::IsKeyPressed('1'))
+	
+	// Energy Regeneration
+	if (energy < 100.f)
+	{
+		if (power1active == false)
+		{
+			energy += 1.5 * dt;
+		}
+	}
+
+	// Ability 1
+	static bool b1ButtonState = false;
+	if (!b1ButtonState && Application::IsKeyPressed('1'))
+	{
+		b1ButtonState = true;
+
+		power1active = !power1active;
+	}
+	else if (b1ButtonState && !Application::IsKeyPressed('1'))
+		b1ButtonState = false;
+
+	if (power1active == true)
 	{
 		SlowSpeed = 0.5f;
+		
+		if (energy > 0)
+		{
+			energy -= 2 * dt;
+		}
+		else
+		{
+			power1active = false;
+		}
 	}
 	else
 	{
 		SlowSpeed = 1.f;
-	}	
-
-	static bool bQButtonState = false;
-	if (!bQButtonState && Application::IsKeyPressed('2'))
-	{
-		bQButtonState = true;
-		if (power2active == false)
-		{
-			m_speed = 2.f;
-			power2active = true;
-			std::cout << "activ" << std::endl;
-		}
-		else if (power2active == true)
-		{
-			m_speed = 1.f;
-			power2active = false;
-			std::cout << "no activ" << std::endl;
-		}
-
 	}
-	else if (bQButtonState && !Application::IsKeyPressed('2'))
-		bQButtonState = false;
 
-	
+	// Ability 2
+	static bool b2ButtonState = false;
+	if (!b2ButtonState && Application::IsKeyPressed('2') && energy >= 50)
+	{
+		b2ButtonState = true;
 
+		power2active = true;
+		cooldownTimer2 = 0;
+
+		energy -= 50;
+	}
+	else if (b2ButtonState && !Application::IsKeyPressed('2'))
+		b2ButtonState = false;
+
+	if (power2active == true)
+	{
+		cooldownTimer2 += dt;
+		m_speed = 2.f;
+		//std::cout << "activ" << std::endl;
+	}
+
+	if (cooldownTimer2 >= 5)
+	{
+		cooldownTimer2 = 0;
+		//bQButtonState = false;
+		power2active = false;
+		m_speed = 1.f;
+		//std::cout << "no activ" << std::endl;
+	}
+
+	// Ability 3: Time Grenade
+	cooldownTimer3 += dt;
+
+	static bool bAbility3Pressed = false;
+	if (!bAbility3Pressed && Application::IsKeyPressed('3') && cooldownTimer3 >= 30.f && energy >= 90)
+	{
+		Projectile* proj = new Projectile(Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3);
+		proj->Init();
+		SceneTest::GetInstance()->projectileList.push_back(proj);
+
+		energy -= 90; 
+		cooldownTimer3 = 0;
+		bAbility3Pressed = true;
+	}
+	else if (bAbility3Pressed && !Application::IsKeyPressed('3'))
+		bAbility3Pressed = false;
+
+	// Movement
 	if (Application::IsKeyPressed('W'))
 	{
 		pos.y += 30 * dt * m_speed;
@@ -163,6 +223,26 @@ GunComponent* Player::GetActiveGun()
 void Player::SetActiveGun(GunComponent* activeGun)
 {
 	this->activeGun = activeGun;
+}
+
+int Player::GetHealth()
+{
+	return hp;
+}
+
+void Player::SetHealth(int hp)
+{
+	this->hp = hp;
+}
+
+float Player::GetEnergy()
+{
+	return energy;
+}
+
+void Player::SetEnergy(int energy)
+{
+	this->energy = energy;
 }
 
 void Player::Collisioncheck(std::vector<Vector3> activeTileList)

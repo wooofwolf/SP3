@@ -21,6 +21,8 @@ void Projectile::Init()
 	scale.Set(1.f, 1.f, 1.f);
 	normal = Player::GetInstance()->GetRotate().Normalized();
 	pos = Player::GetInstance()->GetPos() + normal * 2;
+	detonateTimer = 0;
+	explosionTimer = 0;
 	active = true;
 
 	switch (type)
@@ -37,6 +39,14 @@ void Projectile::Init()
 		vel = normal * 150;
 		damage = 5;
 		break;
+	case PROJECTILE_TYPE::PROJECTILE_ABILITY_3:
+		vel = normal * 150;
+		break;
+	case PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION:
+		vel.SetZero();
+		damage = 10;
+		scale.Set(10.f, 10.f, 1.f);
+		break;
 	}
 }
 
@@ -45,6 +55,17 @@ void Projectile::Update(double dt)
 	if (active)
 	{
 		prevpos = pos;
+
+		if (type == PROJECTILE_TYPE::PROJECTILE_ABILITY_3)
+		{
+			vel *= 0.9f;
+			detonateTimer += dt;
+		}
+		else if (type == PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION)
+		{
+			vel.SetZero();
+			explosionTimer += dt;
+		}
 
 		pos += vel * dt * Player::GetInstance()->GetPlusSpeed();
 	}
@@ -90,7 +111,13 @@ void Projectile::Collisioncheck(std::vector<Vector3> activeTileList)
 	{
 		if ((pos - tilepos).Length() < scale.x + 2)
 		{
-			active = false;
+			if (type == PROJECTILE_TYPE::PROJECTILE_ABILITY_3 || type == PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION)
+			{
+				vel.SetZero();
+				pos = prevpos;
+			}
+			else
+				active = false;
 		}
 	}
 }
@@ -103,4 +130,14 @@ Vector3 Projectile::GetPos()
 Vector3 Projectile::GetScale()
 {
 	return scale;
+}
+
+void Projectile::SetPos(Vector3 pos)
+{
+	this->pos = pos;
+}
+
+void Projectile::SetScale(Vector3 scale)
+{
+	this->scale = scale;
 }

@@ -28,6 +28,7 @@ MeshList::MeshList()
 	meshlist[GEO_WIN_2] = MeshBuilder::GenerateQuad("win-2", Color(1, 1, 1), 200.f);
 	//meshlist[GEO_WIN_2]->textureID = LoadTGA("Image//right-wins.tga");
 	meshlist[GEO_BASEENEMY] = MeshBuilder::GenerateCube("BaseEnemy/Caveman", Color(0, 0, 1), 2.f);
+	meshlist[GEO_SPHERE_BLUE] = MeshBuilder::GenerateSphere("Explosion", Color(175.f / 255.f, 238.f / 255.f, 238 / 255.f), 10, 10, 1.f);
 }
 
 MeshList::~MeshList()
