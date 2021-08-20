@@ -307,7 +307,7 @@ std::stack<Vector3> Map::AStarSearch(Vector3 source, Vector3 destination)
 			}
 			else if (closedList[i][j + 1] == false && IsUnblocked(Vector3(i, j + 1)) == true)
 			{
-				gNew = mapGrid[i][j + 1].g + 1.0;
+				gNew = mapGrid[i][j].g + 1.0;
 				hNew = CalculateHValue(Vector3(i, j + 1), dest);
 				fNew = gNew + hNew;
 
@@ -335,7 +335,7 @@ std::stack<Vector3> Map::AStarSearch(Vector3 source, Vector3 destination)
 			}
 			else if (closedList[i][j - 1] == false && IsUnblocked(Vector3(i, j - 1)) == true)
 			{
-				gNew = mapGrid[i][j - 1].g + 1.0;
+				gNew = mapGrid[i][j].g + 1.0;
 				hNew = CalculateHValue(Vector3(i, j - 1), dest);
 				fNew = gNew + hNew;
 
@@ -348,6 +348,118 @@ std::stack<Vector3> Map::AStarSearch(Vector3 source, Vector3 destination)
 					mapGrid[i][j - 1].h = hNew;
 					mapGrid[i][j - 1].parent_i = i;
 					mapGrid[i][j - 1].parent_j = j;
+				}
+			}
+		}
+		// North-East
+		if (IsValid(Vector3(i - 1, j + 1)) == true)
+		{
+			if (IsDestination(Vector3(i - 1, j + 1), dest) == true)
+			{
+				mapGrid[i - 1][j + 1].parent_i = i;
+				mapGrid[i - 1][j + 1].parent_j = j;
+				foundDest = true;
+				return TracePath(dest);
+			}
+			else if (closedList[i - 1][j + 1] == false && IsUnblocked(Vector3(i - 1, j + 1)) == true)
+			{
+				gNew = mapGrid[i][j].g + 1.414;
+				hNew = CalculateHValue(Vector3(i - 1, j + 1), dest);
+				fNew = gNew + hNew;
+
+				if (mapGrid[i - 1][j + 1].f == FLT_MAX || mapGrid[i - 1][j + 1].f > fNew)
+				{
+					openList.insert(std::make_pair(fNew, std::make_pair(i - 1, j + 1)));
+
+					mapGrid[i - 1][j + 1].f = fNew;
+					mapGrid[i - 1][j + 1].g = gNew;
+					mapGrid[i - 1][j + 1].h = hNew;
+					mapGrid[i - 1][j + 1].parent_i = i;
+					mapGrid[i - 1][j + 1].parent_j = j;
+				}
+			}
+		}
+		// North-West
+		if (IsValid(Vector3(i - 1, j - 1)) == true)
+		{
+			if (IsDestination(Vector3(i - 1, j - 1), dest) == true)
+			{
+				mapGrid[i - 1][j - 1].parent_i = i;
+				mapGrid[i - 1][j - 1].parent_j = j;
+				foundDest = true;
+				return TracePath(dest);
+			}
+			else if (closedList[i - 1][j - 1] == false && IsUnblocked(Vector3(i - 1, j - 1)) == true)
+			{
+				gNew = mapGrid[i][j].g + 1.414;
+				hNew = CalculateHValue(Vector3(i - 1, j - 1), dest);
+				fNew = gNew + hNew;
+
+				if (mapGrid[i - 1][j - 1].f == FLT_MAX || mapGrid[i - 1][j - 1].f > fNew)
+				{
+					openList.insert(std::make_pair(fNew, std::make_pair(i - 1, j - 1)));
+
+					mapGrid[i - 1][j - 1].f = fNew;
+					mapGrid[i - 1][j - 1].g = gNew;
+					mapGrid[i - 1][j - 1].h = hNew;
+					mapGrid[i - 1][j - 1].parent_i = i;
+					mapGrid[i - 1][j - 1].parent_j = j;
+				}
+			}
+		}
+		// South-East
+		if (IsValid(Vector3(i + 1, j + 1)) == true)
+		{
+			if (IsDestination(Vector3(i + 1, j + 1), dest) == true)
+			{
+				mapGrid[i + 1][j + 1].parent_i = i;
+				mapGrid[i + 1][j + 1].parent_j = j;
+				foundDest = true;
+				return TracePath(dest);
+			}
+			else if (closedList[i + 1][j + 1] == false && IsUnblocked(Vector3(i + 1, j + 1)) == true)
+			{
+				gNew = mapGrid[i][j].g + 1.414;
+				hNew = CalculateHValue(Vector3(i + 1, j + 1), dest);
+				fNew = gNew + hNew;
+
+				if (mapGrid[i + 1][j + 1].f == FLT_MAX || mapGrid[i + 1][j + 1].f > fNew)
+				{
+					openList.insert(std::make_pair(fNew, std::make_pair(i + 1, j + 1)));
+
+					mapGrid[i + 1][j + 1].f = fNew;
+					mapGrid[i + 1][j + 1].g = gNew;
+					mapGrid[i + 1][j + 1].h = hNew;
+					mapGrid[i + 1][j + 1].parent_i = i;
+					mapGrid[i + 1][j + 1].parent_j = j;
+				}
+			}
+		}
+		// South-West
+		if (IsValid(Vector3(i + 1, j - 1)) == true)
+		{
+			if (IsDestination(Vector3(i + 1, j - 1), dest) == true)
+			{
+				mapGrid[i + 1][j - 1].parent_i = i;
+				mapGrid[i + 1][j - 1].parent_j = j;
+				foundDest = true;
+				return TracePath(dest);
+			}
+			else if (closedList[i + 1][j - 1] == false && IsUnblocked(Vector3(i + 1, j - 1)) == true)
+			{
+				gNew = mapGrid[i][j].g + 1.414;
+				hNew = CalculateHValue(Vector3(i + 1, j - 1), dest);
+				fNew = gNew + hNew;
+
+				if (mapGrid[i + 1][j - 1].f == FLT_MAX || mapGrid[i + 1][j - 1].f > fNew)
+				{
+					openList.insert(std::make_pair(fNew, std::make_pair(i + 1, j - 1)));
+
+					mapGrid[i + 1][j - 1].f = fNew;
+					mapGrid[i + 1][j - 1].g = gNew;
+					mapGrid[i + 1][j - 1].h = hNew;
+					mapGrid[i + 1][j - 1].parent_i = i;
+					mapGrid[i + 1][j - 1].parent_j = j;
 				}
 			}
 		}
