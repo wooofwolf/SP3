@@ -3,8 +3,7 @@
 #include "Entity.h"
 #include "Vector3.h"
 #include <vector>
-#include "Map.h"
-#include "Player.h"
+#include "Player.h" 
 class BaseEnemy : protected Entity
 {
 protected: 
@@ -31,6 +30,7 @@ public:
 	virtual void Init();
 	void Render();
 	Vector3 GetEnemyPos();
+	void SetEnemyPos(Vector3 pos);
 	bool GetActive();
 	bool active;
 	void Collisioncheck(std::vector <Vector3> activeTileList);
@@ -44,7 +44,6 @@ public:
 	FSM currentFSM;
 	int FSMcounter;
 	const int MaxFSMcounter = 60;
-	Map* map;
 	Player* player;
 	Vector3 destination;
 	Vector3 pathDir;

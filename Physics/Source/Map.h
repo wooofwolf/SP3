@@ -7,16 +7,12 @@
 #include "SingletonPattern.h"
 #include "MeshList.h"
 #include "Player.h"
+#include "BaseEnemy.h"
 #include <functional>
 #include <queue>
 struct Grid {
 	unsigned int value;
 
-	Vector3 pos;
-	Vector3 parent;
-	unsigned int f;
-	unsigned int g;
-	unsigned int h;
 	Grid()
 		:value(0), pos(0, 0,0), parent(-1, -1,0), f(0), g(0), h(0) {}
 
@@ -25,6 +21,12 @@ struct Grid {
 
 	Grid(Vector3 pos, Vector3 parent, unsigned int f, unsigned int g, unsigned int h)
 		:value(0), pos(pos), parent(parent), f(f), g(g), h(h) {}
+
+	Vector3 pos;
+	Vector3 parent;
+	unsigned int f;
+	unsigned int g;
+	unsigned int h;
 
 
 };
@@ -77,6 +79,8 @@ public:
 	void SetDiagonalMovement(const bool bEnable);
 	//print out details about this class instance in the console window
 	void PrintSelf(void) const;
+	BaseEnemy* baseEnemy;
+	std::vector<CavemenMelee*> CaveMeleeList;
 private:
 	// Variables
 	TILES mapGrid[200][200];

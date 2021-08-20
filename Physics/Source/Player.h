@@ -6,7 +6,6 @@
 #include "Entity.h"
 #include "SceneBase.h"
 #include "SingletonPattern.h"
-#include "Map.h"
 #include "Guns.h"
 
 

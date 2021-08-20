@@ -3,7 +3,6 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-
 #include "Application.h"
 #include "GL/glew.h"
 #include "Camera.h"
@@ -30,7 +29,7 @@ void Map::Init(std::string fileName)
 	m_targetPos = Vector3(0, 0,0);
 	//m_size = cSettings->NUM_TILES_YAXIS* cSettings->NUM_TILES_XAXIS;
 
-	m_nrOfDirections = 4;
+	m_nrOfDirections = 8;
 	m_directions = { { -1, 0 }, { 1, 0 }, { 0, 1 }, { 0, -1 },
 						{ -1, -1 }, { 1, 1 }, { -1, 1 }, { 1, -1 } };
 
@@ -104,6 +103,14 @@ void Map::ReadFile(std::string fileName)
 				Player::GetInstance()->SetPos(Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1));
 				c = '0';
 			}
+			if (c == '4')
+			{
+				CavemenMelee* CavemanMelee = new CavemenMelee(baseEnemy);
+				CavemanMelee->Init();
+				CavemanMelee->SetEnemyPos(Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1));
+				CaveMeleeList.push_back(CavemanMelee);
+				c = '0';
+			}
 			if (c == '\n')
 			{
 				++y;
@@ -121,8 +128,7 @@ void Map::ReadFile(std::string fileName)
 std::vector<Vector3> Map::PathFind(const Vector3& startPos, const Vector3& targetPos, HeuristicFunction heuristicFunc)
 {
 	// Check if the startPos and targetPost are blocked
-	if (isBlocked(startPos.y, startPos.x) ||
-		(isBlocked(targetPos.y, targetPos.x)))
+	if (isBlocked(startPos.y, startPos.x) || (isBlocked(targetPos.y, targetPos.x)))
 	{
 		std::cout << "Invalid start or target position." << std::endl;
 		// Return an empty path
@@ -173,9 +179,7 @@ std::vector<Vector3> Map::PathFind(const Vector3& startPos, const Vector3& targe
 			const auto neighborIndex = ConvertTo1D(neighborPos);
 
 			//cout << "\t#" << i << ": Check this: " << neighborPos.x << ", " << neighborPos.y << ":\t";
-			if (!isValid(neighborPos) ||
-				isBlocked(neighborPos.y, neighborPos.x) ||
-				m_closedList[neighborIndex] == true)
+			if (!isValid(neighborPos) || isBlocked(neighborPos.y, neighborPos.x) || m_closedList[neighborIndex] == true)
 			{
 				//cout << "This position is not valid. Going to next neighbour." << endl;
 				continue;
@@ -236,7 +240,7 @@ void Map::PrintSelf(void) const
 std::vector<Vector3> Map::BuildPath() const
 {
 	std::vector<Vector3> path;
-	auto currentPos = m_targetPos;
+	Vector3 currentPos = m_targetPos;
 	auto currentIndex = ConvertTo1D(currentPos);
 
 	while (!(m_cameFromList[currentIndex].parent == currentPos))
@@ -296,7 +300,8 @@ bool Map::isBlocked(const unsigned int uiRow, const unsigned int uiCol, const bo
 int Map::ConvertTo1D(const Vector3& pos) const
 {
 	//return (pos.y * m_dimensions.x) + pos.x;
-	return (pos.y * 200) + pos.x;
+	return ((((pos.y-m_worldHeight +2 )/-4) * 200) + ((pos.x-2)/4));
+	//Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1)
 }
 
 bool Map::DeleteAStarLists(void)

@@ -58,6 +58,11 @@ void SceneTest::Init()
 	map = Map::GetInstance();
 	map->Init("Maps/TestMap.csv");
 
+	for (CavemenMelee* enemy : map->CaveMeleeList)
+	{
+		enemy->UpdateDirection();
+		CaveManMeleeList.push_back(enemy);
+	}
 	revolver->nextGun = shotgun;
 	revolver->prevGun = minigun;
 	revolver->fireRate = 1;
@@ -73,13 +78,6 @@ void SceneTest::Init()
 
 	activeTileList.clear();
 
-
-	//for (int i = 0; i < 2; ++i)
-	//{
-		CavemenMelee* CavemanMelee= new CavemenMelee(baseEnemy);
-		CavemanMelee->Init();
-		CaveManMeleeList.push_back(CavemanMelee);
-	/*}*/
 
 	collectible = new Collectible();
 	collectible->active = true;
