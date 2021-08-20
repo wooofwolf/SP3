@@ -69,7 +69,7 @@ void SceneTest::Init()
 	revolver->fireRateTimer = 0;
 	shotgun->nextGun = minigun;
 	shotgun->prevGun = revolver;
-	shotgun->fireRate = 1;
+	shotgun->fireRate = 1;		
 	shotgun->fireRateTimer = 0;
 	minigun->nextGun = revolver;
 	minigun->prevGun = shotgun;
@@ -357,7 +357,7 @@ void SceneTest::Render()
 		{
 			modelStack.PushMatrix();
 			modelStack.Translate(Cavemen->GetEnemyPos().x, Cavemen->GetEnemyPos().y, 1);
-			modelStack.Scale(3, 3, 3);
+			modelStack.Scale(baseEnemy->GetScale().x, baseEnemy->GetScale().y, baseEnemy->GetScale().z);
 			RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
 			modelStack.PopMatrix();
 		}
@@ -379,7 +379,8 @@ void SceneTest::Render()
 			if (projectile->active && (projectile->GetPos() - enemy->GetEnemyPos()).Length() < projectile->GetScale().x + 2)
 			{
 				projectile->active = false;
-				enemy->active = false;
+				enemy->SetEnemyHP(enemy->GetEnemyHP() - projectile->damage);
+				
 			}
 		}
 

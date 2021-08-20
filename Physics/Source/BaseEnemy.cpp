@@ -11,6 +11,7 @@ void BaseEnemy::Init()
 	active = true;
 	hp = 0;
 	vel.Set(0, 0, 0);
+	scale.Set(3, 3, 3);
 	normal.Set(0, 1, 0);
 	prevpos = pos;
 	Math::InitRNG();
@@ -39,6 +40,7 @@ void BaseEnemy::Update(double dt)
 			break;
 		}
 	}*/
+
 }
 
 void BaseEnemy::CheckCollidedSide(DIRECTION direction , double dt)
@@ -258,6 +260,16 @@ void BaseEnemy::SetEnemyPos(Vector3 pos)
 	this->pos = pos;
 }
 
+int BaseEnemy::GetEnemyHP()
+{
+	return hp;
+}
+
+void BaseEnemy::SetEnemyHP(int hp)
+{
+	this->hp = hp;
+}
+
 bool BaseEnemy::GetActive()
 {
 	if (active == true)
@@ -266,6 +278,11 @@ bool BaseEnemy::GetActive()
 	}
 	else
 		return false;
+}
+
+Vector3 BaseEnemy::GetScale()
+{
+	return scale;	
 }
 
 void BaseEnemy::Collisioncheck(std::vector<Vector3> activeTileList)
@@ -294,6 +311,7 @@ void ConcreteBaseEnemy::Update(double dt)
 
 void ConcreteBaseEnemy::Init()
 {
+	scale.Set(3, 3, 3);
 }
 
 EnemyDecorator::EnemyDecorator(BaseEnemy* baseEnemy): baseEnemy(baseEnemy)
@@ -319,11 +337,16 @@ CavemenMelee::CavemenMelee(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 
 void CavemenMelee::Attack() const
 {
+	player->SetHealth(player->GetHealth() - 5);
 	std::cout << "Cavemen Melee Attack!!" << std::endl;
 }
 
 void CavemenMelee::Update(double dt)
 {
+	if (hp <= 0)
+	{
+		active = false;
+	}
 	//Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1)
 	Map* map = Map::GetInstance();
 	//Vector3 unOffsetPlayerPos = ((player->GetPos().x - 2) / 4, (player->GetPos().y - map->m_worldHeight + 2) / -4);
@@ -370,7 +393,7 @@ void CavemenMelee::Update(double dt)
 						// Calculate the direction between enemy2D and this destination
 						pathDir = destination - pos;
 						bFirstPosition = false;
-						}
+					}
 					else
 					{
 						if ((coord - destination) == pathDir)
@@ -407,7 +430,7 @@ void CavemenMelee::Update(double dt)
 void CavemenMelee::Init()
 {
 	active = true;
-	hp = 10;
+	hp = 50;
 	currentFSM = IDLE;
 	player = Player::GetInstance();
 	attackCD = 0;
@@ -421,6 +444,7 @@ CavemenRanged::CavemenRanged(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 
 void CavemenRanged::Attack() const
 {
+	player->SetHealth(player->GetHealth() - 10);
 	std::cout << "Cavemen Ranged Attack!!" << std::endl;
 
 }
@@ -431,14 +455,23 @@ void CavemenRanged::Update(double dt)
 
 void CavemenRanged::Init()
 {
+	active = true;
+	hp = 30;
+	currentFSM = IDLE;
+	player = Player::GetInstance();
+	attackCD = 0;
+	bPathFind = true;
+	attacked = false;
 }
 
 Knights::Knights(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 {
+
 }
 
 void Knights::Attack() const
 {
+	player->SetHealth(player->GetHealth() - 15);
 	std::cout << "Knights Attack!!" << std::endl;
 }
 
@@ -448,6 +481,13 @@ void Knights::Update(double dt)
 
 void Knights::Init()
 {
+	active = true;
+	hp = 80;
+	currentFSM = IDLE;
+	player = Player::GetInstance();
+	attackCD = 0;
+	bPathFind = true;
+	attacked = false;
 }
 
 Archer::Archer(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
@@ -456,6 +496,7 @@ Archer::Archer(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 
 void Archer::Attack() const
 {
+	player->SetHealth(player->GetHealth() - 10);
 	std::cout << "Archer Attack!!" << std::endl;
 }
 
@@ -465,6 +506,13 @@ void Archer::Update(double dt)
 
 void Archer::Init()
 {
+	active = true;
+	hp = 60;
+	currentFSM = IDLE;
+	player = Player::GetInstance();
+	attackCD = 0;
+	bPathFind = true;
+	attacked = false;
 }
 
 Cyborg::Cyborg(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
@@ -473,6 +521,7 @@ Cyborg::Cyborg(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 
 void Cyborg::Attack() const
 {
+	player->SetHealth(player->GetHealth() - 25);
 	std::cout << "Cyborg Attack!!" << std::endl;
 }
 
@@ -482,6 +531,13 @@ void Cyborg::Update(double dt)
 
 void Cyborg::Init()
 {
+	active = true;
+	hp = 110;
+	currentFSM = IDLE;
+	player = Player::GetInstance();
+	attackCD = 0;
+	bPathFind = true;
+	attacked = false;
 }
 
 Sniper::Sniper(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
@@ -490,6 +546,7 @@ Sniper::Sniper(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 
 void Sniper::Attack() const
 {
+	player->SetHealth(player->GetHealth() - 15);
 	std::cout << "Sniper Attack!!" << std::endl;
 }
 
@@ -499,4 +556,11 @@ void Sniper::Update(double dt)
 
 void Sniper::Init()
 {
+	active = true;
+	hp = 80;
+	currentFSM = IDLE;
+	player = Player::GetInstance();
+	attackCD = 0;
+	bPathFind = true;
+	attacked = false;
 }
