@@ -387,6 +387,17 @@ void SceneTest::Render()
 			}
 		}
 
+		if (projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->detonateTimer >= 3)
+		{
+			projectile->type = Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION;
+			projectile->SetScale(Vector3(20.f, 20.f, 1.f));
+		}
+
+		if (projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION && projectile->explosionTimer >= 0.1)
+		{
+			projectile->active = false;
+		}
+
 		if (!projectile->active)
 		{
 			it = projectileList.erase(it);
@@ -401,11 +412,22 @@ void SceneTest::Render()
 
 			if (hypotenuse <= maxHypotenuse)
 			{
-				modelStack.PushMatrix();
-					modelStack.Translate(projectile->GetPos().x, projectile->GetPos().y, projectile->GetPos().z);
-					modelStack.Scale(projectile->GetScale().x, projectile->GetScale().y, projectile->GetScale().z);
-					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BALL), false);
-				modelStack.PopMatrix();
+				if (projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION)
+				{
+					modelStack.PushMatrix();
+						modelStack.Translate(projectile->GetPos().x, projectile->GetPos().y, projectile->GetPos().z);
+						modelStack.Scale(projectile->GetScale().x, projectile->GetScale().y, projectile->GetScale().z);
+						RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_SPHERE_BLUE), false);
+					modelStack.PopMatrix();
+				}
+				else
+				{
+					modelStack.PushMatrix();
+						modelStack.Translate(projectile->GetPos().x, projectile->GetPos().y, projectile->GetPos().z);
+						modelStack.Scale(projectile->GetScale().x, projectile->GetScale().y, projectile->GetScale().z);
+						RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BALL), false);
+					modelStack.PopMatrix();
+				}
 			}
 			++it;
 		}

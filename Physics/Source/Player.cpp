@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "GL\glew.h"
 #include "SceneBase.h"
+#include "SceneTest.h"
 
 Player::Player()
 {
@@ -33,6 +34,7 @@ void Player::Init(int m_worldWidth, int m_worldHeight, GunComponent* activeGun)
 
 	power2active = false;
 	cooldownTimer2 = 0;
+	cooldownTimer3 = 30;
 
 	this->activeGun = activeGun;
 
@@ -79,7 +81,22 @@ void Player::Update(double dt)
 		power2active = true;
 	}
 
-	
+	// Ability 3: Time Grenade
+	cooldownTimer3 += dt;
+
+	static bool bAbility3Pressed = false;
+	if (!bAbility3Pressed && Application::IsKeyPressed('3') && cooldownTimer3 >= 30.f)
+	{
+		Projectile* proj = new Projectile(Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3);
+		proj->Init();
+		SceneTest::GetInstance()->projectileList.push_back(proj);
+
+		energy -= 90; 
+		cooldownTimer3 = 0;
+		bAbility3Pressed = true;
+	}
+	else if (bAbility3Pressed && !Application::IsKeyPressed('3'))
+		bAbility3Pressed = false;
 
 	if (Application::IsKeyPressed('W'))
 	{

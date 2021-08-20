@@ -10,11 +10,15 @@ struct Projectile: public Entity
 		PROJECTILE_REVOLVER,
 		PROJECTILE_SHOTGUN,
 		PROJECTILE_MINIGUN,
+		PROJECTILE_ABILITY_3,
+		PROJECTILE_ABILITY_3_EXPLOSION,
 		PROJECTILE_TOTAL
 	};
 
 	PROJECTILE_TYPE type;
 	int damage;
+	double detonateTimer;
+	double explosionTimer;
 
 	Projectile();
 	Projectile(PROJECTILE_TYPE type);
@@ -29,6 +33,8 @@ struct Projectile: public Entity
 	void Collisioncheck(std::vector <Vector3> activeTileList);
 
 	Vector3 GetPos();
+	void SetPos(Vector3 pos);
 	Vector3 GetScale();
+	void SetScale(Vector3 scale);
 };
 
