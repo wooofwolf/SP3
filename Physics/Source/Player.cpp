@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "GL\glew.h"
 #include "SceneBase.h"
+#include "SceneTest.h"
 
 Player::Player()
 {
@@ -34,6 +35,7 @@ void Player::Init(int m_worldWidth, int m_worldHeight, GunComponent* activeGun)
 	power1active = false;
 	power2active = false;
 	cooldownTimer2 = 0;
+	cooldownTimer3 = 30;
 
 	this->activeGun = activeGun;
 
@@ -84,17 +86,14 @@ void Player::Update(double dt)
 
 	// Ability 2
 	static bool b2ButtonState = false;
-	if (!b2ButtonState && Application::IsKeyPressed('2'))
+	if (!b2ButtonState && Application::IsKeyPressed('2') && energy >= 50)
 	{
 		b2ButtonState = true;
 
 		power2active = true;
 		cooldownTimer2 = 0;
 
-		if (energy > 50.f)
-		{
-			energy -= 50.f;
-		}
+		energy -= 50;
 	}
 	else if (b2ButtonState && !Application::IsKeyPressed('2'))
 		b2ButtonState = false;
@@ -115,15 +114,22 @@ void Player::Update(double dt)
 		//std::cout << "no activ" << std::endl;
 	}
 
-	// Ability 3
-	static bool b3ButtonState = false;
-	if (!b3ButtonState && Application::IsKeyPressed('3'))
-	{
-		b3ButtonState = true;
-	}
-	else if (b3ButtonState && !Application::IsKeyPressed('3'))
-		b3ButtonState = false;
+	// Ability 3: Time Grenade
+	cooldownTimer3 += dt;
 
+	static bool bAbility3Pressed = false;
+	if (!bAbility3Pressed && Application::IsKeyPressed('3') && cooldownTimer3 >= 30.f && energy >= 90)
+	{
+		Projectile* proj = new Projectile(Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3);
+		proj->Init();
+		SceneTest::GetInstance()->projectileList.push_back(proj);
+
+		energy -= 90; 
+		cooldownTimer3 = 0;
+		bAbility3Pressed = true;
+	}
+	else if (bAbility3Pressed && !Application::IsKeyPressed('3'))
+		bAbility3Pressed = false;
 
 	// Movement
 	if (Application::IsKeyPressed('W'))

@@ -31,6 +31,7 @@ protected:
 	float energy;
 
 	float cooldownTimer2;
+	float cooldownTimer3;
 
 public:
 	// Constructor
