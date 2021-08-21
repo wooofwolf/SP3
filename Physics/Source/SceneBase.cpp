@@ -18,6 +18,8 @@ SceneBase::~SceneBase()
 
 void SceneBase::Init()
 {
+	//enemyList.push_back()
+
 	// Black background
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 	// Enable depth test

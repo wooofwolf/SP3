@@ -3,7 +3,9 @@
 #include "Entity.h"
 #include "Vector3.h"
 #include <vector>
-#include "Player.h" 
+
+#include <stack>
+
 class BaseEnemy : public Entity
 {
 protected: 
@@ -48,7 +50,6 @@ public:
 	void Movement(double dt);
 	DIRECTION direction;
 	FSM currentFSM;
-	Player* player;
 	Vector3 destination;
 	Vector3 pathDir;
 	int damage;

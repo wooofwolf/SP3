@@ -10,7 +10,8 @@
 #include "Camera.h"
 #include "SceneBase.h"
 #include "Player.h"
-#include "SceneTest.h"
+//#include "SceneTest.h"
+//#include "SceneLevel3.h"
 
 typedef std::pair<int, int> pair;
 typedef std::pair<double, pair> pPair;
@@ -109,7 +110,7 @@ void Map::ReadFile(std::string fileName)
 				CavemenMelee* CavemanMelee = new CavemenMelee(baseEnemy);
 				CavemanMelee->Init();
 				CavemanMelee->SetEnemyPos(Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1));
-				SceneTest::GetInstance()->enemyList.push_back(CavemanMelee);
+				SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(CavemanMelee);
 				c = '0';
 			}
 			if (c == '\n')

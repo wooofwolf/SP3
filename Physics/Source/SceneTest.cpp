@@ -6,6 +6,7 @@
 #include "GL\glew.h"
 #include "Map.h"
 #include "Guns.h"
+#include "Projectile.h"
 
 SceneTest::SceneTest():map(nullptr)
 {
