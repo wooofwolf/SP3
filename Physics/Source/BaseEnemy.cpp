@@ -2,6 +2,7 @@
 #include <MyMath.h>
 #include "Application.h"
 #include "Map.h"
+#include "Projectile.h"
 BaseEnemy::~BaseEnemy()
 {
 }
@@ -17,7 +18,8 @@ void BaseEnemy::Init()
 	Math::InitRNG();
 	currentFSM = IDLE;
 	player = Player::GetInstance();
-	moving = false;
+	stasisTimer = 0;
+	pathfinding = false;
 	dest.SetZero();
 	movingTimer = 0;
 }
@@ -91,19 +93,19 @@ void BaseEnemy::Render()
 
 void BaseEnemy::Movement(double dt)
 {
-	if (!moving && !path.empty())
+	if (!pathfinding && !path.empty())
 	{
 		dest = Vector3(2 + 4 * path.top().x, Map::GetInstance()->m_worldHeight - 2 - 4 * path.top().y, 1);
 		path.pop();
-		moving = true;
+		pathfinding = true;
 	}
-	if (moving)
+	if (pathfinding)
 	{
 		movingTimer += dt;
 		if (movingTimer >= 0.2)
 		{
 			pos = dest;
-			moving = false;
+			pathfinding = false;
 			movingTimer = 0.0;
 		}
 	}
@@ -221,7 +223,7 @@ void BaseEnemy::SetEnemyPos(Vector3 pos)
 	this->pos = pos;
 }
 
-int BaseEnemy::GetEnemyHP()
+float BaseEnemy::GetEnemyHP()
 {
 	return hp;
 }
@@ -268,6 +270,7 @@ void ConcreteBaseEnemy::Attack() const
 
 void ConcreteBaseEnemy::Update(double dt)
 {
+
 }
 
 void ConcreteBaseEnemy::Init()
@@ -304,9 +307,21 @@ void CavemenMelee::Attack() const
 
 void CavemenMelee::Update(double dt)
 {
-	if (hp <= 0)
+	if (!moving || moving)
 	{
-		active = false;
+		if (hp <= 0)
+		{
+			active = false;
+		}
+	}
+	if (!moving)
+	{
+		stasisTimer += dt;
+		std::cout << stasisTimer << std::endl;
+	}
+	if (stasisTimer >= 5)
+	{
+		moving = false;
 	}
 	//Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1)
 	//Vector3 unOffsetPlayerPos = ((player->GetPos().x - 2) / 4, (player->GetPos().y - map->m_worldHeight + 2) / -4);
@@ -318,8 +333,10 @@ void CavemenMelee::Update(double dt)
 	attackCD -= dt;
 	//std::cout << attackCD << std::endl;
 	//std::cout << "IM BEING USED" << std::endl;
-	switch (currentFSM)		
+	if (moving)
 	{
+		switch (currentFSM)
+		{
 		case IDLE:
 		{
 			//std::cout << "IDLING" << std::endl;
@@ -342,6 +359,7 @@ void CavemenMelee::Update(double dt)
 			Movement(dt);
 			break;
 		}
+		}
 	}
 }
 
@@ -354,7 +372,7 @@ void CavemenMelee::Init()
 	attackCD = 0;
 	bPathFind = true;
 	attacked = false;
-	moving = false;
+	pathfinding = false;
 	dest.SetZero();
 	movingTimer = 0;
 }
@@ -366,9 +384,14 @@ CavemenRanged::CavemenRanged(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 void CavemenRanged::Attack() const
 {
 	player->SetHealth(player->GetHealth() - 10);
-	std::cout << "Cavemen Ranged Attack!!" << std::endl;
-
+	std::cout << "Cavemen Melee Attack!!" << std::endl;
 }
+
+//Projectile* CavemenRanged::Shoot()
+//{
+//	player->SetHealth(player->GetHealth() - 10);
+//	return new Projectile(Projectile::PROJECTILE_TYPE::PROJECTILE_REVOLVER);
+//}
 
 void CavemenRanged::Update(double dt)
 {
@@ -417,6 +440,7 @@ Archer::Archer(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 
 void Archer::Attack() const
 {
+
 	player->SetHealth(player->GetHealth() - 10);
 	std::cout << "Archer Attack!!" << std::endl;
 }
