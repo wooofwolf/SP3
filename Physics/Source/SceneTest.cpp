@@ -226,6 +226,8 @@ void SceneTest::Update(double dt)
 		coll->Collisioncheck(activeTileList);
 	}
 
+	boss->Update(dt);
+
 	sceneGUI->Update(dt);
 }
 
@@ -377,6 +379,11 @@ void SceneTest::Render()
 				enemy->SetEnemyHP(enemy->GetEnemyHP() - projectile->damage);
 			}
 
+		}
+		if (projectile->active && (projectile->GetPos() - boss->GetPos()).Length() < projectile->GetScale().x + boss->GetScale().x && boss->GetFightActive())
+		{
+			projectile->active = false;
+			boss->SetHP(boss->GetHP() - projectile->damage);
 		}
 		if (projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->detonateTimer >= 3)
 		{

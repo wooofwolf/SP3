@@ -1,5 +1,7 @@
 #include "Boss.h"
 
+#include "Player.h"
+
 Boss::Boss()
 {
 }
@@ -17,10 +19,16 @@ void Boss::Init()
 	scale.Set(10.f, 10.f, 1.f);
 	normal.SetZero();
 	active = true;
+
+	bossFightActive = false;
 }
 
 void Boss::Update(double dt)
 {
+	if ((Player::GetInstance()->GetPos() - pos).Length() <= 50.f)
+	{
+		bossFightActive = true;
+	}
 }
 
 void Boss::Render()
@@ -52,4 +60,19 @@ Vector3 Boss::GetPos()
 Vector3 Boss::GetScale()
 {
 	return scale;
+}
+
+bool Boss::GetFightActive()
+{
+	return bossFightActive;
+}
+
+float Boss::GetHP()
+{
+	return hp;
+}
+
+void Boss::SetHP(float hp)
+{
+	this->hp = hp;
 }

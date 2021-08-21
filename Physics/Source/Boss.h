@@ -12,6 +12,8 @@ protected:
 	// Destructor
 	virtual ~Boss();
 
+	bool bossFightActive;
+
 public:
 	void Init();
 	void Update(double dt);
@@ -24,5 +26,8 @@ public:
 	void SetPos(Vector3 pos);
 	Vector3 GetPos();
 	Vector3 GetScale();
+	bool GetFightActive();
+	float GetHP();
+	void SetHP(float hp);
 };
 
