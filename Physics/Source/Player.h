@@ -28,6 +28,9 @@ protected:
 	float cooldownTimer2;
 	float cooldownTimer3;
 
+	float dashCooldown;
+	float dashTimer;
+	bool dash;
 public:
 	// Constructor
 	Player();
