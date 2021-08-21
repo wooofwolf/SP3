@@ -30,6 +30,8 @@ MeshList::MeshList()
 	meshlist[GEO_BASEENEMY] = MeshBuilder::GenerateCube("BaseEnemy/Caveman", Color(0, 0, 1), 2.f);
 	meshlist[GEO_ARCHER] = MeshBuilder::GenerateCube("BaseEnemy/Caveman archer", Color(0, 1, 1), 2.f);
 	meshlist[GEO_SPHERE_BLUE] = MeshBuilder::GenerateSphere("Explosion", Color(175.f / 255.f, 238.f / 255.f, 238 / 255.f), 10, 10, 1.f);
+	
+	meshlist[GEO_HAZARD] = MeshBuilder::GenerateCube("hazard", Color(1, 0, 1), 2.f);
 }
 
 MeshList::~MeshList()

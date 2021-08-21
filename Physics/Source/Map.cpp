@@ -3,39 +3,40 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <set>
+
 #include "Application.h"
 #include "GL/glew.h"
 #include "Camera.h"
 #include "SceneBase.h"
 #include "Player.h"
-using namespace std::placeholders;
-Map::Map() : mapGrid{TILES::TILE_NONE}
+#include "SceneTest.h"
+
+typedef std::pair<int, int> pair;
+typedef std::pair<double, pair> pPair;
+
+Map::Map()
 {
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 	activeTileList.clear();
+
+	for (int i = 0; i < 200; ++i)
+	{
+		for (int j = 0; j < 200; ++j)
+		{
+			mapGrid[i][j] = Tile();
+		}
+	}
 }
 
 Map::~Map()
 {
-	// Delete AStar lists
-	DeleteAStarLists();
 }
 
 void Map::Init(std::string fileName)
 {
 	Map::GetInstance()->ReadFile(fileName);
-	m_startPos = Vector3(0, 0,0);
-	m_targetPos = Vector3(0, 0,0);
-	//m_size = cSettings->NUM_TILES_YAXIS* cSettings->NUM_TILES_XAXIS;
-
-	m_nrOfDirections = 8;
-	m_directions = { { -1, 0 }, { 1, 0 }, { 0, 1 }, { 0, -1 },
-						{ -1, -1 }, { 1, 1 }, { -1, 1 }, { 1, -1 } };
-
-	// Resize these 2 lists
-	m_cameFromList.resize(200*200);
-	m_closedList.resize(200*200, false);
 }
 
 void Map::RenderMap(std::string fileName)
@@ -51,9 +52,9 @@ void Map::RenderMap(std::string fileName)
 	{
 		for (int x = 0; x < 200; ++x)
 		{
-			switch(GetTile(x,y))
+			switch(GetTile(x,y).type)
 			{
-			case TILES::TILE_WALL:
+			case Tile::TILE_TYPE::TILE_WALL:
 				Vector3 tilePos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1);
 				float width = (tilePos - Camera::GetInstance()->position).Length();
 				float height = Camera::GetInstance()->position.z - tilePos.z;
@@ -78,12 +79,12 @@ void Map::RenderMap(std::string fileName)
 	Player::GetInstance()->Collisioncheck(activeTileList);
 }
 
-Map::TILES Map::GetTile(int x, int y)
+Tile Map::GetTile(int x, int y)
 {
 	return mapGrid[x][y];
 }
 
-void Map::SetTile(int x, int y, Map::TILES tile)
+void Map::SetTile(int x, int y, Tile tile)
 {
 	this->mapGrid[x][y] = tile;
 }
@@ -108,7 +109,7 @@ void Map::ReadFile(std::string fileName)
 				CavemenMelee* CavemanMelee = new CavemenMelee(baseEnemy);
 				CavemanMelee->Init();
 				CavemanMelee->SetEnemyPos(Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1));
-				CaveMeleeList.push_back(CavemanMelee);
+				SceneTest::GetInstance()->enemyList.push_back(CavemanMelee);
 				c = '0';
 			}
 			if (c == '\n')
@@ -116,238 +117,355 @@ void Map::ReadFile(std::string fileName)
 				++y;
 				x = 0;
 			}
-			else if (c - '0' >= static_cast<int>(TILES::TILE_NONE) && c - '0' <= static_cast<int>(TILES::TILE_TOTAL))
+			else if (c - '0' >= static_cast<int>(Tile::TILE_TYPE::TILE_NONE) && c - '0' <= static_cast<int>(Tile::TILE_TYPE::TILE_TOTAL))
 			{
-				mapGrid[x][y] = static_cast<Map::TILES>(c - '0');
+				Tile newTile = Tile();
+				newTile.pos.Set(x, y, 1);
+				newTile.type = static_cast<Tile::TILE_TYPE>(c - '0');
+				mapGrid[x][y] = newTile;
 				++x;
 			}
 		}
 	fin.close();
 }
 
-std::vector<Vector3> Map::PathFind(const Vector3& startPos, const Vector3& targetPos, HeuristicFunction heuristicFunc)
+bool Map::IsValid(Vector3 pos)
 {
-	// Check if the startPos and targetPost are blocked
-	if (isBlocked(startPos.y, startPos.x) || (isBlocked(targetPos.y, targetPos.x)))
-	{
-		std::cout << "Invalid start or target position." << std::endl;
-		// Return an empty path
-		std::vector<Vector3> path;
-		return path;
-	}
-
-	// Set up the variables and lists
-	m_startPos = startPos;
-	m_targetPos = targetPos;
-
-	m_heuristic = std::bind(heuristicFunc, _1, _2, _3);
-
-	// Reset AStar lists
-	ResetAStarLists();
-
-	// Add the start pos to 2 lists
-	m_cameFromList[ConvertTo1D(m_startPos)].parent = m_startPos;
-	m_openList.push(Grid(m_startPos, 0));
-
-	unsigned int fNew, gNew, hNew;
-	Vector3 currentPos;
-
-	// Start the path finding...
-	while (!m_openList.empty())
-	{
-		// Get the node with the least f value
-		currentPos = m_openList.top().pos;
-		//cout << endl << "*** New position to check: " << currentPos.x << ", " << currentPos.y << endl;
-		//cout << "*** targetPos: " << m_targetPos.x << ", " << m_targetPos.y << endl;
-
-		// If the targetPos was reached, then quit this loop
-		if (currentPos == m_targetPos)
-		{
-			//cout << "=== Found the targetPos: " << m_targetPos.x << ", " << m_targetPos.y << endl;
-			while (m_openList.size() != 0)
-				m_openList.pop();
-			break;
-		}
-
-		m_openList.pop();
-		m_closedList[ConvertTo1D(currentPos)] = true;
-
-		// Check the neighbors of the current node
-		for (unsigned int i = 0; i < m_nrOfDirections; ++i)
-		{
-			const auto neighborPos = currentPos + m_directions[i];
-			const auto neighborIndex = ConvertTo1D(neighborPos);
-
-			//cout << "\t#" << i << ": Check this: " << neighborPos.x << ", " << neighborPos.y << ":\t";
-			if (!isValid(neighborPos) || isBlocked(neighborPos.y, neighborPos.x) || m_closedList[neighborIndex] == true)
-			{
-				//cout << "This position is not valid. Going to next neighbour." << endl;
-				continue;
-			}
-
-			gNew = m_cameFromList[ConvertTo1D(currentPos)].g + 1;
-			hNew = m_heuristic(neighborPos, m_targetPos , 10);
-			fNew = gNew + hNew;
-
-			if (m_cameFromList[neighborIndex].f == 0 || fNew < m_cameFromList[neighborIndex].f)
-			{
-				//cout << "Adding to Open List: " << neighborPos.x << ", " << neighborPos.y;
-			/*	std::cout << ". [ f : " << fNew << ", g : " << gNew << ", h : " << hNew << "]" << std::endl;*/
-				m_openList.push(Grid(neighborPos, fNew));
-				m_cameFromList[neighborIndex] = { neighborPos, currentPos, fNew, gNew, hNew };
-			}
-			else
-			{
-				//cout << "Not adding this" << endl;
-			}
-		}
-		//system("pause");
-	}
-	return BuildPath();
+	// enemy pos to grid pos
+	//Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1)
+	return (pos.x >= 0 && pos.x < 200) && (pos.y >= 0 && pos.y < 200);
 }
 
-void Map::SetDiagonalMovement(const bool bEnable)
+bool Map::IsUnblocked(Vector3 pos)
 {
-	m_nrOfDirections = (bEnable) ? 8 : 4;
+	// Check position of tiles and see if its blocking the grid
+	return mapGrid[(int)(pos.x)][(int)(pos.y)].type == Tile::TILE_TYPE::TILE_NONE;
 }
 
-
-void Map::PrintSelf(void) const
+bool Map::IsDestination(Vector3 pos, Vector3 dest)
 {
-	//std::cout << std::endl << "AStar::PrintSelf()" << std::endl;
-	for (unsigned uiRow = 0; uiRow < 200; uiRow++)
-	{
-		for (unsigned uiCol = 0; uiCol < 200; uiCol++)
-		{
-			std::cout.fill('0');
-			std::cout.width(3);	
-			std::cout << arrMapInfo[uiRow][uiCol].value;
-			if (uiCol != 200 - 1)
-				std::cout << ", ";
-			else
-				std::cout << std::endl;
-		}
-	}
-	
-
-	std::cout << "m_openList: " << m_openList.size() << std::endl;
-	std::cout << "m_cameFromList: " << m_cameFromList.size() << std::endl;
-	std::cout << "m_closedList: " << m_closedList.size() << std::endl;
-
-	std::cout << "===== AStar::PrintSelf() =====" << std::endl;
+	return (int)pos.x == (int)dest.x && (int)pos.y == (int)dest.y;
 }
 
-std::vector<Vector3> Map::BuildPath() const
+double Map::CalculateHValue(Vector3 pos, Vector3 dest)
 {
-	std::vector<Vector3> path;
-	Vector3 currentPos = m_targetPos;
-	auto currentIndex = ConvertTo1D(currentPos);
+	return sqrt(2 * (pos.x - dest.x) + (pos.y - dest.y) * 2);
+}
 
-	while (!(m_cameFromList[currentIndex].parent == currentPos))
+std::stack<Vector3> Map::TracePath(Vector3 dest)
+{
+	int x = dest.x;
+	int y = dest.y;
+
+	std::stack<Vector3> path;
+	while (!(mapGrid[x][y].parent_i == x && mapGrid[x][y].parent_j == y))
 	{
-		path.push_back(currentPos);
-		currentPos = m_cameFromList[currentIndex].parent;
-		currentIndex = ConvertTo1D(currentPos);
+		path.push(Vector3(x, y, 1));
+		int temp_x = mapGrid[x][y].parent_i;
+		int temp_y = mapGrid[x][y].parent_j;
+		x = temp_x;
+		y = temp_y;
 	}
 
-	// If the path has only 1 entry, then it is the the target position
-	if (path.size() == 1)
-	{
-		// if m_startPos is next to m_targetPos, then having 1 path point is OK
-		if (m_nrOfDirections == 4)
-		{
-			if (abs(m_targetPos.y - m_startPos.y) + abs(m_targetPos.x - m_startPos.x) > 1)
-				path.clear();
-		}
-		else
-		{
-			if (abs(m_targetPos.y - m_startPos.y) + abs(m_targetPos.x - m_startPos.x) > 2)
-				path.clear();
-			else if (abs(m_targetPos.y - m_startPos.y) + abs(m_targetPos.x - m_startPos.x) > 1)
-				path.clear();
-		}
-	}
-	else
-		std::reverse(path.begin(), path.end());
+	path.push(Vector3(x, y, 1));
 
 	return path;
 }
 
-bool Map::isValid(const Vector3& pos) const
+std::stack<Vector3> Map::AStarSearch(Vector3 source, Vector3 destination)
 {
-	return (pos.x >= 0) && (pos.x < 200) &&
-		(pos.y >= 0) && (pos.y < 200);
-}
+	Vector3 src = Vector3((source.x - 2) / 4, (source.y - m_worldHeight + 2) / -4);
+	Vector3 dest = Vector3((destination.x - 2) / 4, (destination.y - m_worldHeight + 2) / -4);
 
-bool Map::isBlocked(const unsigned int uiRow, const unsigned int uiCol, const bool bInvert) const
-{
-	if (bInvert == true)
+	if (IsValid(src) == false)
 	{
-		if ((static_cast<int>(mapGrid[200 - uiRow - 1][uiCol]) == 1))
-			return true;
-		else
-			return false;
+		std::cout << "Source is invalid" << std::endl;
+		return std::stack<Vector3>();
 	}
-	else
+	if (IsValid(dest) == false)
 	{
-		if ((static_cast<int>(mapGrid[uiRow][uiCol]) == 1))
-			return true;
-		else
-			return false;
-	}
-}
-
-int Map::ConvertTo1D(const Vector3& pos) const
-{
-	//return (pos.y * m_dimensions.x) + pos.x;
-	return ((((pos.y-m_worldHeight +2 )/-4) * 200) + ((pos.x-2)/4));
-	//Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1)
-}
-
-bool Map::DeleteAStarLists(void)
-{
-	// Delete m_openList
-	while (m_openList.size() != 0)
-		m_openList.pop();
-	// Delete m_cameFromList
-	m_cameFromList.clear();
-	// Delete m_closedList
-	m_closedList.clear();
-
-	return true;
-}
-
-bool Map::ResetAStarLists(void)
-{
-	// Delete m_openList
-	while (m_openList.size() != 0)
-		m_openList.pop();
-	// Reset m_cameFromList
-	for (int i = 0; i < m_cameFromList.size(); i++)
-	{
-		m_cameFromList[i].pos = Vector3(0, 0 , 0);
-		m_cameFromList[i].parent = Vector3(0, 0 , 0);
-		m_cameFromList[i].f = 0;
-		m_cameFromList[i].g = 0;
-		m_cameFromList[i].h = 0;
-	}
-	// Reset m_closedList
-	for (int i = 0; i < m_closedList.size(); i++)
-	{
-		m_closedList[i] = false;
+		std::cout << "Destination is invalid" << std::endl;
+		return std::stack<Vector3>();
 	}
 
-	return true;
-}
+	if (IsUnblocked(src) == false || IsUnblocked(dest) == false)
+	{
+		std::cout << "Source or destination is blocked" << std::endl;
+		return std::stack<Vector3>();
+	}
 
-unsigned int heuristic::manhattan(const Vector3 v1, const Vector3& v2,int)
-{
-	Vector3 delta = v2 - v1;
-	return static_cast<unsigned int>(delta.x + delta.y);
-}
+	if (IsDestination(src, dest))
+	{
+		std::cout << "Already at destination" << std::endl;
+		return std::stack<Vector3>();
+	}
 
-unsigned int heuristic::euclidean(const Vector3 v1, const Vector3& v2,int)
-{
-	Vector3 delta = v2 - v1;
-	return static_cast<unsigned int>(sqrt((delta.x * delta.x) + (delta.y * delta.y)));
+	bool closedList[200][200];
+	memset(closedList, false, sizeof(closedList));
+
+	int i, j;
+	for (i = 0; i < 200; i++)
+	{
+		for (j = 0; j < 200; j++)
+		{
+			mapGrid[i][j].f = FLT_MAX;
+			mapGrid[i][j].g = FLT_MAX;
+			mapGrid[i][j].h = FLT_MAX;
+
+			mapGrid[i][j].parent_i = -1;
+			mapGrid[i][j].parent_i = -1;
+		}
+	}
+
+	i = src.x, j = src.y;
+	mapGrid[i][j].f = 0.0;
+	mapGrid[i][j].g = 0.0;
+	mapGrid[i][j].h = 0.0;
+
+	mapGrid[i][j].parent_i = i;
+	mapGrid[i][j].parent_j = j;
+
+	std::set<pPair> openList;
+	openList.insert(std::make_pair(0.0, std::make_pair(i, j)));
+
+	bool foundDest = false;
+	while (!openList.empty())
+	{
+		pPair p = *openList.begin();
+		openList.erase(openList.begin());
+
+		i = p.second.first;
+		j = p.second.second;
+		closedList[i][j] = true;
+
+		double gNew, hNew, fNew;
+		// North
+		if (IsValid(Vector3(i - 1, j)) == true)
+		{
+			if (IsDestination(Vector3(i - 1, j), dest) == true)
+			{
+				mapGrid[i - 1][j].parent_i = i;
+				mapGrid[i - 1][j].parent_j = j;
+				foundDest = true;
+				return TracePath(dest);
+			}
+			else if (closedList[i - 1][j] == false && IsUnblocked(Vector3(i - 1, j)) == true)
+			{
+				gNew = mapGrid[i][j].g + 1.0;
+				hNew = CalculateHValue(Vector3(i - 1, j), dest);
+				fNew = gNew + hNew;
+
+				if (mapGrid[i - 1][j].f == FLT_MAX || mapGrid[i - 1][j].f > fNew)
+				{
+					openList.insert(std::make_pair(fNew, std::make_pair(i - 1, j)));
+
+					mapGrid[i - 1][j].f = fNew;
+					mapGrid[i - 1][j].g = gNew;
+					mapGrid[i - 1][j].h = hNew;
+					mapGrid[i - 1][j].parent_i = i;
+					mapGrid[i - 1][j].parent_j = j;
+				}
+			}
+		}
+		// South
+		if (IsValid(Vector3(i + 1, j)) == true)
+		{
+			if (IsDestination(Vector3(i + 1, j), dest) == true)
+			{
+				mapGrid[i + 1][j].parent_i = i;
+				mapGrid[i + 1][j].parent_j = j;
+				foundDest = true;
+				return TracePath(dest);
+			}
+			else if (closedList[i + 1][j] == false && IsUnblocked(Vector3(i + 1, j)) == true)
+			{
+				gNew = mapGrid[i][j].g + 1.0;
+				hNew = CalculateHValue(Vector3(i + 1, j), dest);
+				fNew = gNew + hNew;
+
+				if (mapGrid[i + 1][j].f == FLT_MAX || mapGrid[i + 1][j].f > fNew)
+				{
+					openList.insert(std::make_pair(fNew, std::make_pair(i + 1, j)));
+
+					mapGrid[i + 1][j].f = fNew;
+					mapGrid[i + 1][j].g = gNew;
+					mapGrid[i + 1][j].h = hNew;
+					mapGrid[i + 1][j].parent_i = i;
+					mapGrid[i + 1][j].parent_j = j;
+				}
+			}
+		}
+		// East
+		if (IsValid(Vector3(i, j + 1)) == true)
+		{
+			if (IsDestination(Vector3(i, j + 1), dest) == true)
+			{
+				mapGrid[i][j + 1].parent_i = i;
+				mapGrid[i][j + 1].parent_j = j;
+				foundDest = true;
+				return TracePath(dest);
+			}
+			else if (closedList[i][j + 1] == false && IsUnblocked(Vector3(i, j + 1)) == true)
+			{
+				gNew = mapGrid[i][j].g + 1.0;
+				hNew = CalculateHValue(Vector3(i, j + 1), dest);
+				fNew = gNew + hNew;
+
+				if (mapGrid[i][j + 1].f == FLT_MAX || mapGrid[i][j + 1].f > fNew)
+				{
+					openList.insert(std::make_pair(fNew, std::make_pair(i, j + 1)));
+
+					mapGrid[i][j + 1].f = fNew;
+					mapGrid[i][j + 1].g = gNew;
+					mapGrid[i][j + 1].h = hNew;
+					mapGrid[i][j + 1].parent_i = i;
+					mapGrid[i][j + 1].parent_j = j;
+				}
+			}
+		}
+		// West
+		if (IsValid(Vector3(i, j - 1)) == true)
+		{
+			if (IsDestination(Vector3(i, j - 1), dest) == true)
+			{
+				mapGrid[i][j - 1].parent_i = i;
+				mapGrid[i][j - 1].parent_j = j;
+				foundDest = true;
+				return TracePath(dest);
+			}
+			else if (closedList[i][j - 1] == false && IsUnblocked(Vector3(i, j - 1)) == true)
+			{
+				gNew = mapGrid[i][j].g + 1.0;
+				hNew = CalculateHValue(Vector3(i, j - 1), dest);
+				fNew = gNew + hNew;
+
+				if (mapGrid[i][j - 1].f == FLT_MAX || mapGrid[i][j - 1].f > fNew)
+				{
+					openList.insert(std::make_pair(fNew, std::make_pair(i, j - 1)));
+
+					mapGrid[i][j - 1].f = fNew;
+					mapGrid[i][j - 1].g = gNew;
+					mapGrid[i][j - 1].h = hNew;
+					mapGrid[i][j - 1].parent_i = i;
+					mapGrid[i][j - 1].parent_j = j;
+				}
+			}
+		}
+		// North-East
+		if (IsValid(Vector3(i - 1, j + 1)) == true)
+		{
+			if (IsDestination(Vector3(i - 1, j + 1), dest) == true)
+			{
+				mapGrid[i - 1][j + 1].parent_i = i;
+				mapGrid[i - 1][j + 1].parent_j = j;
+				foundDest = true;
+				return TracePath(dest);
+			}
+			else if (closedList[i - 1][j + 1] == false && IsUnblocked(Vector3(i - 1, j + 1)) == true)
+			{
+				gNew = mapGrid[i][j].g + 1.414;
+				hNew = CalculateHValue(Vector3(i - 1, j + 1), dest);
+				fNew = gNew + hNew;
+
+				if (mapGrid[i - 1][j + 1].f == FLT_MAX || mapGrid[i - 1][j + 1].f > fNew)
+				{
+					openList.insert(std::make_pair(fNew, std::make_pair(i - 1, j + 1)));
+
+					mapGrid[i - 1][j + 1].f = fNew;
+					mapGrid[i - 1][j + 1].g = gNew;
+					mapGrid[i - 1][j + 1].h = hNew;
+					mapGrid[i - 1][j + 1].parent_i = i;
+					mapGrid[i - 1][j + 1].parent_j = j;
+				}
+			}
+		}
+		// North-West
+		if (IsValid(Vector3(i - 1, j - 1)) == true)
+		{
+			if (IsDestination(Vector3(i - 1, j - 1), dest) == true)
+			{
+				mapGrid[i - 1][j - 1].parent_i = i;
+				mapGrid[i - 1][j - 1].parent_j = j;
+				foundDest = true;
+				return TracePath(dest);
+			}
+			else if (closedList[i - 1][j - 1] == false && IsUnblocked(Vector3(i - 1, j - 1)) == true)
+			{
+				gNew = mapGrid[i][j].g + 1.414;
+				hNew = CalculateHValue(Vector3(i - 1, j - 1), dest);
+				fNew = gNew + hNew;
+
+				if (mapGrid[i - 1][j - 1].f == FLT_MAX || mapGrid[i - 1][j - 1].f > fNew)
+				{
+					openList.insert(std::make_pair(fNew, std::make_pair(i - 1, j - 1)));
+
+					mapGrid[i - 1][j - 1].f = fNew;
+					mapGrid[i - 1][j - 1].g = gNew;
+					mapGrid[i - 1][j - 1].h = hNew;
+					mapGrid[i - 1][j - 1].parent_i = i;
+					mapGrid[i - 1][j - 1].parent_j = j;
+				}
+			}
+		}
+		// South-East
+		if (IsValid(Vector3(i + 1, j + 1)) == true)
+		{
+			if (IsDestination(Vector3(i + 1, j + 1), dest) == true)
+			{
+				mapGrid[i + 1][j + 1].parent_i = i;
+				mapGrid[i + 1][j + 1].parent_j = j;
+				foundDest = true;
+				return TracePath(dest);
+			}
+			else if (closedList[i + 1][j + 1] == false && IsUnblocked(Vector3(i + 1, j + 1)) == true)
+			{
+				gNew = mapGrid[i][j].g + 1.414;
+				hNew = CalculateHValue(Vector3(i + 1, j + 1), dest);
+				fNew = gNew + hNew;
+
+				if (mapGrid[i + 1][j + 1].f == FLT_MAX || mapGrid[i + 1][j + 1].f > fNew)
+				{
+					openList.insert(std::make_pair(fNew, std::make_pair(i + 1, j + 1)));
+
+					mapGrid[i + 1][j + 1].f = fNew;
+					mapGrid[i + 1][j + 1].g = gNew;
+					mapGrid[i + 1][j + 1].h = hNew;
+					mapGrid[i + 1][j + 1].parent_i = i;
+					mapGrid[i + 1][j + 1].parent_j = j;
+				}
+			}
+		}
+		// South-West
+		if (IsValid(Vector3(i + 1, j - 1)) == true)
+		{
+			if (IsDestination(Vector3(i + 1, j - 1), dest) == true)
+			{
+				mapGrid[i + 1][j - 1].parent_i = i;
+				mapGrid[i + 1][j - 1].parent_j = j;
+				foundDest = true;
+				return TracePath(dest);
+			}
+			else if (closedList[i + 1][j - 1] == false && IsUnblocked(Vector3(i + 1, j - 1)) == true)
+			{
+				gNew = mapGrid[i][j].g + 1.414;
+				hNew = CalculateHValue(Vector3(i + 1, j - 1), dest);
+				fNew = gNew + hNew;
+
+				if (mapGrid[i + 1][j - 1].f == FLT_MAX || mapGrid[i + 1][j - 1].f > fNew)
+				{
+					openList.insert(std::make_pair(fNew, std::make_pair(i + 1, j - 1)));
+
+					mapGrid[i + 1][j - 1].f = fNew;
+					mapGrid[i + 1][j - 1].g = gNew;
+					mapGrid[i + 1][j - 1].h = hNew;
+					mapGrid[i + 1][j - 1].parent_i = i;
+					mapGrid[i + 1][j - 1].parent_j = j;
+				}
+			}
+		}
+	}
+	if (foundDest == false)
+		std::cout << "Failed to find the Destination Cell" << std::endl;
+
+	return std::stack<Vector3>();
 }

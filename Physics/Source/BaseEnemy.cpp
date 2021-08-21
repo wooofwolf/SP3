@@ -19,6 +19,9 @@ void BaseEnemy::Init()
 	currentFSM = IDLE;
 	player = Player::GetInstance();
 	stasisTimer = 0;
+	pathfinding = false;
+	dest.SetZero();
+	movingTimer = 0;
 }
 
 void BaseEnemy::Update(double dt)
@@ -90,64 +93,22 @@ void BaseEnemy::Render()
 
 void BaseEnemy::Movement(double dt)
 {
-	prevpos = pos;
-	if (directionalCD > 0)
+	if (!pathfinding && !path.empty())
 	{
-		directionalCD-= dt;
-		
-		switch (direction)
+		dest = Vector3(2 + 4 * path.top().x, Map::GetInstance()->m_worldHeight - 2 - 4 * path.top().y, 1);
+		path.pop();
+		pathfinding = true;
+	}
+	if (pathfinding)
+	{
+		movingTimer += dt;
+		if (movingTimer >= 0.2)
 		{
-			case LEFT:
-			{
-				pos.x -= 10 * dt * Player::GetInstance()->GetSlowSpeed();
-				CheckCollidedSide(LEFT, dt);
-				break;
-			}
-			case UP:
-			{
-				pos.y += 10 * dt * Player::GetInstance()->GetSlowSpeed();
-				CheckCollidedSide(UP, dt);
-				break;
-			}
-			case RIGHT:
-			{
-				pos.x += 10 * dt * Player::GetInstance()->GetSlowSpeed();
-				CheckCollidedSide(RIGHT, dt);
-				break;
-			}
-			case DOWN:
-			{
-				pos.y -= 10 * dt * Player::GetInstance()->GetSlowSpeed();
-				CheckCollidedSide(DOWN, dt);
-				break;
-			}
+			pos = dest;
+			pathfinding = false;
+			movingTimer = 0.0;
 		}
 	}
-	else if (directionalCD <= 0)
-	{
-		this->direction = static_cast<DIRECTION>(Math::RandIntMinMax(0, 3));
-		directionalCD = 3;
-	}
-	/*if (Application::IsKeyPressed(0x25))
-	{
-		pos.x -= 10 * dt;
-		CheckCollidedSide(LEFT, dt);
-	}
-	else if (Application::IsKeyPressed(0x27))
-	{
-		pos.x += 10 * dt;
-		CheckCollidedSide(RIGHT, dt);
-	}
-	else if (Application::IsKeyPressed(0x26))
-	{
-		pos.y += 10 * dt;
-		CheckCollidedSide(UP, dt);
-	}
-	else if (Application::IsKeyPressed(0x28))
-	{
-		pos.y -= 10 * dt;
-		CheckCollidedSide(DOWN, dt);
-	}*/
 }
 
 void BaseEnemy::UpdateDirection()
@@ -178,7 +139,7 @@ void BaseEnemy::UpdatePosition()
 {
 	// Store the old position
 	prevpos = pos;
-	std::cout << "Path Direction: "<<pathDir << std::endl;
+	//std::cout << "Path Direction: "<<pathDir << std::endl;
 	
 	// if the player is to the left or right of the enemy2D, then jump to attack
 	if (pathDir.x < 0)
@@ -353,8 +314,16 @@ void CavemenMelee::Update(double dt)
 			active = false;
 		}
 	}
+	if (!moving)
+	{
+		stasisTimer += dt;
+		std::cout << stasisTimer << std::endl;
+	}
+	if (stasisTimer >= 5)
+	{
+		moving = false;
+	}
 	//Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1)
-	Map* map = Map::GetInstance();
 	//Vector3 unOffsetPlayerPos = ((player->GetPos().x - 2) / 4, (player->GetPos().y - map->m_worldHeight + 2) / -4);
 	if (attacked)
 	{
@@ -368,78 +337,28 @@ void CavemenMelee::Update(double dt)
 	{
 		switch (currentFSM)
 		{
-			case IDLE:
-			{
-				//std::cout << "IDLING" << std::endl;
-				Movement(dt);
-				if ((pos - player->GetPos()).Length() < 25 && attackCD <= 0)
-				{
-					currentFSM = ATTACK;
-					bPathFind = true;
-				}
-				/*std::cout << "lalala" << std::endl;*/
-				break;
-			}
-			case ATTACK:
-			{
-				// Check if enemy has reached the destination from the last pathfind
-				// Else if never reach the last pathfind, then recalculate the path
-				if (bPathFind == true)
-				{
-					//std::cout << "ATTACK" << std::endl;
-					/*std::cout << "Kill me" << std::endl;*/
-					auto path = map->PathFind(pos, player->GetPos(), heuristic::euclidean);
-					/*		std::cout << "=== Printing out the path ===" << std::endl;*/
-							// Calculate new destination
-					bool bFirstPosition = true;
-					for (const auto& coord : path)
-					{
-						if (bFirstPosition == true)
-						{
-							// Set a destination
-							destination = coord;
-							// Calculate the direction between enemy2D and this destination
-							pathDir = destination - pos;
-							bFirstPosition = false;
-						}
-						else
-						{
-							if ((coord - destination) == pathDir)
-							{
-								// Set a destination
-								destination = coord;
-							}
-							else
-								break;
-						}
-					}
-					bPathFind = false;
-				}
-				if (pos == destination && player->GetPos() != pos)
-				{
-					bPathFind = true;
-				}
-				UpdatePosition();
-				if ((player->GetPos() - pos).Length() < 5)
-				{
-					Attack();
-					attacked = true;
-				}
-
-				if ((pos - player->GetPos()).Length() < 25)
-				{
-					currentFSM = IDLE;
-				}
-				break;
-			}
-		}
-	}
-	else if (!moving)
-	{
-		stasisTimer += dt;
-		if (stasisTimer >= 5)
+		case IDLE:
 		{
-			moving = true;
+			//std::cout << "IDLING" << std::endl;
+			//Movement(dt);
+			if ((pos - player->GetPos()).Length() < 50 && attackCD <= 0)
+			{
+				currentFSM = ATTACK;
+			}
+			/*std::cout << "lalala" << std::endl;*/
+			break;
+		}
+		case ATTACK:
+		{
+			path = Map::GetInstance()->AStarSearch(pos, player->GetPos());
+			currentFSM = MOVE;
+			break;
+		}
+		case MOVE:
+		{
+			Movement(dt);
+			break;
+		}
 		}
 	}
 }
@@ -453,6 +372,9 @@ void CavemenMelee::Init()
 	attackCD = 0;
 	bPathFind = true;
 	attacked = false;
+	pathfinding = false;
+	dest.SetZero();
+	movingTimer = 0;
 }
 
 CavemenRanged::CavemenRanged(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
