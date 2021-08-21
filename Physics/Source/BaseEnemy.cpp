@@ -2,6 +2,7 @@
 #include <MyMath.h>
 #include "Application.h"
 #include "Map.h"
+#include "Projectile.h"
 BaseEnemy::~BaseEnemy()
 {
 }
@@ -17,6 +18,7 @@ void BaseEnemy::Init()
 	Math::InitRNG();
 	currentFSM = IDLE;
 	player = Player::GetInstance();
+	stasisTimer = 0;
 }
 
 void BaseEnemy::Update(double dt)
@@ -260,7 +262,7 @@ void BaseEnemy::SetEnemyPos(Vector3 pos)
 	this->pos = pos;
 }
 
-int BaseEnemy::GetEnemyHP()
+float BaseEnemy::GetEnemyHP()
 {
 	return hp;
 }
@@ -307,6 +309,7 @@ void ConcreteBaseEnemy::Attack() const
 
 void ConcreteBaseEnemy::Update(double dt)
 {
+
 }
 
 void ConcreteBaseEnemy::Init()
@@ -343,9 +346,12 @@ void CavemenMelee::Attack() const
 
 void CavemenMelee::Update(double dt)
 {
-	if (hp <= 0)
+	if (!moving || moving)
 	{
-		active = false;
+		if (hp <= 0)
+		{
+			active = false;
+		}
 	}
 	//Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1)
 	Map* map = Map::GetInstance();
@@ -358,71 +364,82 @@ void CavemenMelee::Update(double dt)
 	attackCD -= dt;
 	//std::cout << attackCD << std::endl;
 	//std::cout << "IM BEING USED" << std::endl;
-	switch (currentFSM)		
+	if (moving)
 	{
-		case IDLE:
+		switch (currentFSM)
 		{
-			//std::cout << "IDLING" << std::endl;
-			Movement(dt);
-			if ((pos - player->GetPos()).Length() < 25 && attackCD <= 0)
+			case IDLE:
 			{
-				currentFSM = ATTACK;
-				bPathFind = true;
-			}
-			/*std::cout << "lalala" << std::endl;*/
-			break;
-		}
-		case ATTACK:
-		{
-			// Check if enemy has reached the destination from the last pathfind
-			// Else if never reach the last pathfind, then recalculate the path
-			if (bPathFind == true)
-			{
-				//std::cout << "ATTACK" << std::endl;
-				/*std::cout << "Kill me" << std::endl;*/
-				auto path = map->PathFind(pos, player->GetPos(), heuristic::euclidean);
-				/*		std::cout << "=== Printing out the path ===" << std::endl;*/
-						// Calculate new destination
-				bool bFirstPosition = true;
-				for (const auto& coord : path)
+				//std::cout << "IDLING" << std::endl;
+				Movement(dt);
+				if ((pos - player->GetPos()).Length() < 25 && attackCD <= 0)
 				{
-					if (bFirstPosition == true)
+					currentFSM = ATTACK;
+					bPathFind = true;
+				}
+				/*std::cout << "lalala" << std::endl;*/
+				break;
+			}
+			case ATTACK:
+			{
+				// Check if enemy has reached the destination from the last pathfind
+				// Else if never reach the last pathfind, then recalculate the path
+				if (bPathFind == true)
+				{
+					//std::cout << "ATTACK" << std::endl;
+					/*std::cout << "Kill me" << std::endl;*/
+					auto path = map->PathFind(pos, player->GetPos(), heuristic::euclidean);
+					/*		std::cout << "=== Printing out the path ===" << std::endl;*/
+							// Calculate new destination
+					bool bFirstPosition = true;
+					for (const auto& coord : path)
 					{
-						// Set a destination
-						destination = coord;
-						// Calculate the direction between enemy2D and this destination
-						pathDir = destination - pos;
-						bFirstPosition = false;
-					}
-					else
-					{
-						if ((coord - destination) == pathDir)
+						if (bFirstPosition == true)
 						{
 							// Set a destination
 							destination = coord;
+							// Calculate the direction between enemy2D and this destination
+							pathDir = destination - pos;
+							bFirstPosition = false;
 						}
 						else
-							break;
+						{
+							if ((coord - destination) == pathDir)
+							{
+								// Set a destination
+								destination = coord;
+							}
+							else
+								break;
+						}
 					}
+					bPathFind = false;
 				}
-				bPathFind = false;
+				if (pos == destination && player->GetPos() != pos)
+				{
+					bPathFind = true;
+				}
+				UpdatePosition();
+				if ((player->GetPos() - pos).Length() < 5)
+				{
+					Attack();
+					attacked = true;
+				}
+
+				if ((pos - player->GetPos()).Length() < 25)
+				{
+					currentFSM = IDLE;
+				}
+				break;
 			}
-			if (pos == destination && player->GetPos() != pos)
-			{
-				bPathFind = true;
-			}
-			UpdatePosition();
-			if ((player->GetPos() - pos).Length() < 5)
-			{
-				Attack();
-				attacked = true;
-			}
-			
-			if ((pos - player->GetPos()).Length() < 25)
-			{
-				currentFSM = IDLE;
-			}
-			break;
+		}
+	}
+	else if (!moving)
+	{
+		stasisTimer += dt;
+		if (stasisTimer >= 5)
+		{
+			moving = true;
 		}
 	}
 }
@@ -445,9 +462,14 @@ CavemenRanged::CavemenRanged(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 void CavemenRanged::Attack() const
 {
 	player->SetHealth(player->GetHealth() - 10);
-	std::cout << "Cavemen Ranged Attack!!" << std::endl;
-
+	std::cout << "Cavemen Melee Attack!!" << std::endl;
 }
+
+//Projectile* CavemenRanged::Shoot()
+//{
+//	player->SetHealth(player->GetHealth() - 10);
+//	return new Projectile(Projectile::PROJECTILE_TYPE::PROJECTILE_REVOLVER);
+//}
 
 void CavemenRanged::Update(double dt)
 {
@@ -496,6 +518,7 @@ Archer::Archer(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 
 void Archer::Attack() const
 {
+
 	player->SetHealth(player->GetHealth() - 10);
 	std::cout << "Archer Attack!!" << std::endl;
 }

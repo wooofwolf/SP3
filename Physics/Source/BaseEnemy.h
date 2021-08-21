@@ -32,15 +32,21 @@ public:
 	void Render();
 	Vector3 GetEnemyPos();
 	void SetEnemyPos(Vector3 pos);
-	int GetEnemyHP();
+	float GetEnemyHP();
 	void SetEnemyHP(int hp);
 	bool GetActive();
 
 	Vector3 GetScale();
 
+	Projectile* projectile;
+	Projectile Shoot();
 	bool active;
 	void Collisioncheck(std::vector <Vector3> activeTileList);
 	void Exit();
+
+	bool moving = true;
+
+	float stasisTimer;
 	float directionalCD;
 	virtual void Update(double dt);
 	bool collided;
