@@ -112,6 +112,11 @@ bool SceneManager::CheckSceneExists(const std::string& sceneName)
 	return sceneMap.count(sceneName) != 0;
 }
 
+SceneBase* SceneManager::GetActiveScene()
+{
+	return activeScene;
+}
+
 SceneManager::SceneManager()
 	: activeScene(nullptr)
 	, nextScene(nullptr)

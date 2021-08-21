@@ -19,6 +19,7 @@ public:
 	bool RemoveScene(const std::string& sceneName);
 	bool SetActiveScene(const std::string& sceneName);
 	bool CheckSceneExists(const std::string& sceneName);
+	SceneBase* GetActiveScene();
 
 protected:
 	// Constructor
