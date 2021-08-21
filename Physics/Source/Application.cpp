@@ -12,6 +12,8 @@
 #include <stdlib.h>
 
 #include "SceneTest.h"
+#include "SceneLevel3.h"
+
 #include "MenuScene.h"
 #include "SceneManager.h"
 
@@ -131,6 +133,7 @@ void Application::Init()
 
 	sceneManager->AddScene("MenuScene", new MenuScene());
 	sceneManager->AddScene("TestScene", SceneTest::GetInstance());
+	sceneManager->AddScene("Level3", SceneLevel3::GetInstance());
 
 	sceneManager->SetActiveScene("MenuScene");
 

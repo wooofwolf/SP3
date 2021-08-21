@@ -10,6 +10,9 @@
 #include "GameObject.h"
 #include <vector>
 
+#include "Projectile.h"
+#include "BaseEnemy.h"
+
 class SceneBase : public Scene
 {
 	enum UNIFORM_TYPE
@@ -54,7 +57,8 @@ public:
 	void RenderMesh(Mesh *mesh, bool enableLight);
 	void RenderGO(GameObject *go);
 
-	GameObject* FetchGO();
+	std::vector<Projectile*> projectileList;
+	std::vector<BaseEnemy*> enemyList;
 protected:
 	unsigned m_vertexArrayID;
 	unsigned m_programID;

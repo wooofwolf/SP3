@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "Player.h"
 #include "Guns.h"
+#include "Boss.h"
 
 void SceneGUI::Init()
 {
@@ -102,6 +103,28 @@ void SceneGUI::Update(double dt)
 			ImGui::PopStyleColor();
 			ImGui::PopStyleColor();
 		ImGui::End();
+
+		// Render the boss bar
+		if (Boss::GetInstance()->GetFightActive())
+		{
+			ImGuiWindowFlags bossBarWindowFlags = ImGuiWindowFlags_AlwaysAutoResize |
+				ImGuiWindowFlags_NoBackground |
+				ImGuiWindowFlags_NoTitleBar |
+				ImGuiWindowFlags_NoMove |
+				ImGuiWindowFlags_NoResize |
+				ImGuiWindowFlags_NoCollapse |
+				ImGuiWindowFlags_NoScrollbar;
+			ImGui::Begin("Boss", NULL, bossBarWindowFlags);
+				ImGui::SetWindowPos(ImVec2(450.0f, 10.0f));
+				ImGui::SetWindowSize(ImVec2(1000.0f, 100.0f));
+				ImGui::SetWindowFontScale(3.f);
+				ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(229.f / 255.f, 101.f / 255.f, 46.f / 255.f, 1.0f));
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
+				ImGui::ProgressBar(Boss::GetInstance()->GetHP() / 1000.f, ImVec2(1000.f, 80.f), "");
+				ImGui::PopStyleColor();
+				ImGui::PopStyleColor();
+			ImGui::End();
+		}
 	ImGui::End();
 }
 
