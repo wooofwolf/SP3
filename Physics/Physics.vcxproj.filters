@@ -73,6 +73,9 @@
     <ClCompile Include="Source\MenuScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="Source\SceneLevel1.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
@@ -144,6 +147,9 @@
       <Filter>Scenes</Filter>
     </ClInclude>
     <ClInclude Include="Source\MenuScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneLevel1.h">
       <Filter>Scenes</Filter>
     </ClInclude>
   </ItemGroup>
