@@ -51,6 +51,9 @@ void SceneTest::Init()
 	player = Player::GetInstance();
 	player->Init(m_worldWidth, m_worldHeight, revolver);
 
+	boss = Boss::GetInstance();
+	boss->Init();
+
 	// Test map
 	map = Map::GetInstance();
 	map->Init("Maps/TestMap.csv");
@@ -445,6 +448,24 @@ void SceneTest::Render()
 				modelStack.PopMatrix();
 			}
 			it2++;
+		}
+	}
+
+	if (boss->active)
+	{
+		float width = (boss->GetPos() - Camera::GetInstance()->position).Length();
+		float height = Camera::GetInstance()->position.z - boss->GetPos().z;
+		float hypotenuse = sqrtf(width * width + height * height);
+		float maxWidth = (Vector3(m_worldWidth / 2 + 2, 0, 1).Dot(Vector3(m_worldHeight / 2 + 2, 0, 1)) - Camera::GetInstance()->position.Length());
+		float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
+
+		if (hypotenuse <= maxHypotenuse)
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(boss->GetPos().x, boss->GetPos().y, boss->GetPos().z);
+			modelStack.Scale(boss->GetScale().x, boss->GetScale().y, boss->GetScale().z);
+			RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
+			modelStack.PopMatrix();
 		}
 	}
 
