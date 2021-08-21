@@ -4,14 +4,15 @@
 #include <string>
 #include <fstream>
 #include <set>
+#include <sstream>
 
 #include "Application.h"
 #include "GL/glew.h"
 #include "Camera.h"
 #include "SceneBase.h"
 #include "Player.h"
-//#include "SceneTest.h"
-//#include "SceneLevel3.h"
+
+#include "Boss.h"
 
 typedef std::pair<int, int> pair;
 typedef std::pair<double, pair> pPair;
@@ -97,34 +98,51 @@ void Map::ReadFile(std::string fileName)
 	fin.open(fileName, std::ios::in);
 		int x, y;
 		x = y = 0;
-		char c;
-		while (fin.get(c))
+		std::string str;
+		int val;
+		while (std::getline(fin, str))
 		{
-			if (c == '2')
+			std::stringstream ss(str);
+
+			while (ss >> val)
 			{
-				Player::GetInstance()->SetPos(Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1));
-				c = '0';
-			}
-			if (c == '4')
-			{
-				CavemenMelee* CavemanMelee = new CavemenMelee(baseEnemy);
-				CavemanMelee->Init();
-				CavemanMelee->SetEnemyPos(Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1));
-				SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(CavemanMelee);
-				c = '0';
-			}
-			if (c == '\n')
-			{
-				++y;
-				x = 0;
-			}
-			else if (c - '0' >= static_cast<int>(Tile::TILE_TYPE::TILE_NONE) && c - '0' <= static_cast<int>(Tile::TILE_TYPE::TILE_TOTAL))
-			{
-				Tile newTile = Tile();
-				newTile.pos.Set(x, y, 1);
-				newTile.type = static_cast<Tile::TILE_TYPE>(c - '0');
-				mapGrid[x][y] = newTile;
-				++x;
+				if (val == 2)
+				{
+					Player::GetInstance()->SetPos(Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1));
+					val = 0;
+				}
+				if (val == 4)
+				{
+					CavemenMelee* CavemanMelee = new CavemenMelee(baseEnemy);
+					CavemanMelee->Init();
+					CavemanMelee->SetEnemyPos(Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1));
+					SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(CavemanMelee);
+					val = 0;
+				}
+				if (val == 100)
+				{
+					Boss* boss = Boss::GetInstance();
+					boss->SetPos(Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1));
+					val = 0;
+				}
+
+				if (val >= static_cast<int>(Tile::TILE_TYPE::TILE_NONE) && val <= static_cast<int>(Tile::TILE_TYPE::TILE_TOTAL))
+				{
+					Tile newTile = Tile();
+					newTile.pos.Set(x, y, 1);
+					newTile.type = static_cast<Tile::TILE_TYPE>(val);
+					mapGrid[x][y] = newTile;
+					++x;
+					if (x > 199)
+					{
+						++y;
+						x = 0;
+					}
+				}
+				if (ss.peek() == ',')
+				{
+					ss.ignore();
+				}
 			}
 		}
 	fin.close();

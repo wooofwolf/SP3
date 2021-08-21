@@ -41,11 +41,16 @@ void Projectile::Init()
 		break;
 	case PROJECTILE_TYPE::PROJECTILE_ABILITY_3:
 		vel = normal * 150;
+		damage = 10;
 		break;
 	case PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION:
 		vel.SetZero();
 		damage = 10;
 		scale.Set(10.f, 10.f, 1.f);
+		break;
+	case PROJECTILE_TYPE::PROJECTILE_SPEARS:
+		vel = normal * 100;
+		damage = 10;
 		break;
 	}
 }
