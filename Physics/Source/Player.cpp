@@ -2,7 +2,8 @@
 #include "Application.h"
 #include "GL\glew.h"
 #include "SceneBase.h"
-#include "SceneTest.h"
+//#include "SceneTest.h"
+//#include "SceneLevel3.h"
 
 Player::Player()
 {
@@ -122,7 +123,7 @@ void Player::Update(double dt)
 	{
 		Projectile* proj = new Projectile(Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3);
 		proj->Init();
-		SceneTest::GetInstance()->projectileList.push_back(proj);
+		SceneManager::GetInstance()->GetActiveScene()->projectileList.push_back(proj);
 
 		energy -= 90; 
 		cooldownTimer3 = 0;
@@ -152,23 +153,6 @@ void Player::Update(double dt)
 
 void Player::Render()
 {
-	double x, y;
-	Application::GetCursorPos(&x, &y);
-	int w = Application::GetWindowWidth();
-	int h = Application::GetWindowHeight();
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	modelStack.LoadIdentity();
-
-	modelStack.PushMatrix();
-	{
-		modelStack.Translate(pos.x, pos.y, 0);
-		modelStack.Rotate(Math::RadianToDegree(atan2f(m_worldHeight - (y / h) * m_worldHeight - pos.y, (x / w) * m_worldWidth - pos.x)), 0, 0, 1);
-		modelStack.Scale(scale.x, scale.y * 0.5, scale.z);
-		//RenderMesh(meshlist->GetMesh(MeshList::GEO_CUBE_RED), false);
-	}
-	modelStack.PopMatrix();
 }
 
 void Player::Exit()

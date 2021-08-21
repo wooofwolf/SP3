@@ -2,7 +2,8 @@
 #include <MyMath.h>
 #include "Application.h"
 #include "Map.h"
-#include "Projectile.h"
+#include "Player.h" 
+
 BaseEnemy::~BaseEnemy()
 {
 }
@@ -17,9 +18,7 @@ void BaseEnemy::Init()
 	prevpos = pos;
 	Math::InitRNG();
 	currentFSM = IDLE;
-	player = Player::GetInstance();
-	stasisTimer = 0;
-	pathfinding = false;
+	moving = false;
 	dest.SetZero();
 	movingTimer = 0;
 }
@@ -32,7 +31,7 @@ void BaseEnemy::Update(double dt)
 		case IDLE:
 		{
 			Movement(dt);
-			if ((pos- player->GetPos()).Length() < 5)
+			if ((pos- Player::GetInstance()->GetPos()).Length() < 5)
 			{
 				currentFSM = ATTACK;
 			}
@@ -113,13 +112,13 @@ void BaseEnemy::Movement(double dt)
 
 void BaseEnemy::UpdateDirection()
 {
-	// Set the destination to the player
-	destination = player->GetPos();
+	// Set the destination to the Player::GetInstance()
+	destination = Player::GetInstance()->GetPos();
 
-	// Calculate the direction between enemy2D and player2D
+	// Calculate the direction between enemy2D and Player::GetInstance()2D
 	pathDir = destination - pos;
 
-	// Calculate the distance between enemy2D and player2D
+	// Calculate the distance between enemy2D and Player::GetInstance()2D
 	float fDistance = (destination-pos).Length();
 	if (fDistance >= 0.01f)
 	{
@@ -141,7 +140,7 @@ void BaseEnemy::UpdatePosition()
 	prevpos = pos;
 	//std::cout << "Path Direction: "<<pathDir << std::endl;
 	
-	// if the player is to the left or right of the enemy2D, then jump to attack
+	// if the Player::GetInstance() is to the left or right of the enemy2D, then jump to attack
 	if (pathDir.x < 0)
 	{
 		// Move left
@@ -194,7 +193,7 @@ void BaseEnemy::UpdatePosition()
 		//animatedSprites->PlayAnimation("right", -1, 1.0f);
 		// Interact with the Player
 	}
-	// if the player is above the enemy2D, then jump to attack
+	// if the Player::GetInstance() is above the enemy2D, then jump to attack
 	if (pathDir.y > 0)
 	{
 		const int previousposition = pos.y;
@@ -301,7 +300,7 @@ CavemenMelee::CavemenMelee(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 
 void CavemenMelee::Attack() const
 {
-	player->SetHealth(player->GetHealth() - 5);
+	Player::GetInstance()->SetHealth(Player::GetInstance()->GetHealth() - 5);
 	std::cout << "Cavemen Melee Attack!!" << std::endl;
 }
 
@@ -324,7 +323,7 @@ void CavemenMelee::Update(double dt)
 		moving = false;
 	}
 	//Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1)
-	//Vector3 unOffsetPlayerPos = ((player->GetPos().x - 2) / 4, (player->GetPos().y - map->m_worldHeight + 2) / -4);
+	//Vector3 unOffsetPlayerPos = ((Player::GetInstance()->GetPos().x - 2) / 4, (Player::GetInstance()->GetPos().y - map->m_worldHeight + 2) / -4);
 	if (attacked)
 	{
 		attackCD = 5;
@@ -341,7 +340,7 @@ void CavemenMelee::Update(double dt)
 		{
 			//std::cout << "IDLING" << std::endl;
 			//Movement(dt);
-			if ((pos - player->GetPos()).Length() < 50 && attackCD <= 0)
+			if ((pos - Player::GetInstance()->GetPos()).Length() < 50 && attackCD <= 0)
 			{
 				currentFSM = ATTACK;
 			}
@@ -350,7 +349,7 @@ void CavemenMelee::Update(double dt)
 		}
 		case ATTACK:
 		{
-			path = Map::GetInstance()->AStarSearch(pos, player->GetPos());
+			path = Map::GetInstance()->AStarSearch(pos, Player::GetInstance()->GetPos());
 			currentFSM = MOVE;
 			break;
 		}
@@ -368,7 +367,6 @@ void CavemenMelee::Init()
 	active = true;
 	hp = 50;
 	currentFSM = IDLE;
-	player = Player::GetInstance();
 	attackCD = 0;
 	bPathFind = true;
 	attacked = false;
@@ -383,10 +381,9 @@ CavemenRanged::CavemenRanged(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 
 void CavemenRanged::Attack() const
 {
-	player->SetHealth(player->GetHealth() - 10);
-	std::cout << "Cavemen Melee Attack!!" << std::endl;
+	Player::GetInstance()->SetHealth(Player::GetInstance()->GetHealth() - 10);
+	std::cout << "Cavemen Ranged Attack!!" << std::endl;
 }
-
 //Projectile* CavemenRanged::Shoot()
 //{
 //	player->SetHealth(player->GetHealth() - 10);
@@ -402,7 +399,6 @@ void CavemenRanged::Init()
 	active = true;
 	hp = 30;
 	currentFSM = IDLE;
-	player = Player::GetInstance();
 	attackCD = 0;
 	bPathFind = true;
 	attacked = false;
@@ -415,7 +411,7 @@ Knights::Knights(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 
 void Knights::Attack() const
 {
-	player->SetHealth(player->GetHealth() - 15);
+	Player::GetInstance()->SetHealth(Player::GetInstance()->GetHealth() - 15);
 	std::cout << "Knights Attack!!" << std::endl;
 }
 
@@ -428,7 +424,6 @@ void Knights::Init()
 	active = true;
 	hp = 80;
 	currentFSM = IDLE;
-	player = Player::GetInstance();
 	attackCD = 0;
 	bPathFind = true;
 	attacked = false;
@@ -440,8 +435,7 @@ Archer::Archer(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 
 void Archer::Attack() const
 {
-
-	player->SetHealth(player->GetHealth() - 10);
+	Player::GetInstance()->SetHealth(Player::GetInstance()->GetHealth() - 10);
 	std::cout << "Archer Attack!!" << std::endl;
 }
 
@@ -454,7 +448,6 @@ void Archer::Init()
 	active = true;
 	hp = 60;
 	currentFSM = IDLE;
-	player = Player::GetInstance();
 	attackCD = 0;
 	bPathFind = true;
 	attacked = false;
@@ -466,7 +459,7 @@ Cyborg::Cyborg(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 
 void Cyborg::Attack() const
 {
-	player->SetHealth(player->GetHealth() - 25);
+	Player::GetInstance()->SetHealth(Player::GetInstance()->GetHealth() - 25);
 	std::cout << "Cyborg Attack!!" << std::endl;
 }
 
@@ -479,7 +472,6 @@ void Cyborg::Init()
 	active = true;
 	hp = 110;
 	currentFSM = IDLE;
-	player = Player::GetInstance();
 	attackCD = 0;
 	bPathFind = true;
 	attacked = false;
@@ -491,7 +483,7 @@ Sniper::Sniper(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 
 void Sniper::Attack() const
 {
-	player->SetHealth(player->GetHealth() - 15);
+	Player::GetInstance()->SetHealth(Player::GetInstance()->GetHealth() - 15);
 	std::cout << "Sniper Attack!!" << std::endl;
 }
 
@@ -504,7 +496,6 @@ void Sniper::Init()
 	active = true;
 	hp = 80;
 	currentFSM = IDLE;
-	player = Player::GetInstance();
 	attackCD = 0;
 	bPathFind = true;
 	attacked = false;

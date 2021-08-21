@@ -14,10 +14,6 @@ class Player : public Entity, public SingletonPattern<Player>
 	friend SingletonPattern<Player>;
 protected:
 
-	MS modelStack;
-
-	SceneBase* base;
-
 	float SlowSpeed;
 	float m_speed;
 	float SprintSpeed;

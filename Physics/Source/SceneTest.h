@@ -6,10 +6,11 @@
 #include "Player.h"
 #include "MeshList.h"
 #include "Renderer.h"
-#include "Projectile.h"
+//#include "Projectile.h"
 #include "Collectible.h"
 #include "SceneGUI.h"
 #include "SingletonPattern.h"
+#include "Boss.h"
 
 class SceneTest : public SceneBase, public SingletonPattern<SceneTest>
 {
@@ -47,6 +48,7 @@ public:
 	std::vector<Collectible*> collectibleList;
 
 	Player* player;
+	Boss* boss;
 
 	virtual void Init();
 	virtual void Update(double dt);

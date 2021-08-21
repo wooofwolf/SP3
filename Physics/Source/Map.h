@@ -7,7 +7,7 @@
 #include "SingletonPattern.h"
 #include "MeshList.h"
 #include "Player.h"
-#include "BaseEnemy.h"
+//#include "BaseEnemy.h"
 
 struct Tile {
 	// Tileset
