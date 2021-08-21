@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Entity.h"
 #include "Vector3.h"
+#include "Projectile.h"
 #include <vector>
 
 #include <stack>

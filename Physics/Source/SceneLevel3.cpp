@@ -6,8 +6,8 @@
 #include "GL\glew.h"
 #include "Map.h"
 #include "Guns.h"
-
 #include "Projectile.h"
+#include "Boss.h"
 
 SceneLevel3::SceneLevel3():map(nullptr)
 {
@@ -36,6 +36,7 @@ void SceneLevel3::Init()
 	player = Player::GetInstance();
 	player->Init();
 
+	Boss::GetInstance()->Init();
 	//baseEnemy = new ConcreteBaseEnemy();
 	//baseEnemy->Init();	
 	//EntityList.push_back(player);
@@ -224,6 +225,8 @@ void SceneLevel3::Update(double dt)
 	{
 		coll->Collisioncheck(activeTileList);
 	}
+
+	Boss::GetInstance()->Update(dt);
 
 	sceneGUI->Update(dt);
 }

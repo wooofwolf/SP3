@@ -383,7 +383,7 @@ void CavemenRanged::Attack() const
 {
 	Player::GetInstance()->SetHealth(Player::GetInstance()->GetHealth() - 10);
 	std::cout << "Cavemen Ranged Attack!!" << std::endl;
-
+}
 //Projectile* CavemenRanged::Shoot()
 //{
 //	player->SetHealth(player->GetHealth() - 10);
