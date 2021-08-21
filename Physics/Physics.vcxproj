@@ -166,6 +166,7 @@
     <ClCompile Include="Source\Entity.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\SceneGUI.cpp" />
+    <ClCompile Include="Source\SceneLevel3.cpp" />
     <ClCompile Include="Source\SceneManager.cpp" />
     <ClCompile Include="Source\Guns.cpp" />
     <ClCompile Include="Source\LoadOBJ.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="Source\Entity.h" />
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\SceneGUI.h" />
+    <ClInclude Include="Source\SceneLevel3.h" />
     <ClInclude Include="Source\SceneManager.h" />
     <ClInclude Include="Source\Guns.h" />
     <ClInclude Include="Source\Light.h" />
