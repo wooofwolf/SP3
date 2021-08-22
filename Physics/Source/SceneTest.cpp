@@ -30,6 +30,8 @@ SceneTest::~SceneTest()
 
 void SceneTest::Init()
 {
+	type = SceneBase::SCENE_TYPE::SCENE_TEST;
+
 	SceneBase::Init();
 
 	player = Player::GetInstance();

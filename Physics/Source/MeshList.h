@@ -25,6 +25,7 @@ public:
 		GEO_WIN_1,
 		GEO_WIN_2,
 		GEO_HAZARD,
+		GEO_EXIT,
 
 		NUM_GEOMETRY,
 	};
@@ -37,5 +38,4 @@ public:
 private:
 	Mesh* meshlist[NUM_GEOMETRY];
 };
-
 #endif

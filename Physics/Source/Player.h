@@ -45,6 +45,8 @@ public:
 
 	void Collisioncheck(std::vector<Vector3> activeTileList);
 	void Hazardcheck(std::vector<Vector3> activeTileList);
+	void Exitcheck(std::vector<Vector3> activeTileList);
+
 
 	void Movement(double dt);
 
