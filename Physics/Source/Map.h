@@ -28,6 +28,8 @@ struct Tile {
 		TILE_ARCHER,
 		TILE_CYBORG,
 		TILE_SNIPER,
+
+		TILE_EXIT = 99,
 		
 		TILE_TOTAL
 	};

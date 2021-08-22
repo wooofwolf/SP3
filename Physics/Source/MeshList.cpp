@@ -32,6 +32,8 @@ MeshList::MeshList()
 	meshlist[GEO_SPHERE_BLUE] = MeshBuilder::GenerateSphere("Explosion", Color(175.f / 255.f, 238.f / 255.f, 238 / 255.f), 10, 10, 1.f);
 	
 	meshlist[GEO_HAZARD] = MeshBuilder::GenerateCube("hazard", Color(1, 0, 1), 2.f);
+	meshlist[GEO_EXIT] = MeshBuilder::GenerateCube("exit", Color(1, 1, 0), 2.f);
+
 }
 
 MeshList::~MeshList()
