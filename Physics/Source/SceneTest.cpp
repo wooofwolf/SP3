@@ -350,6 +350,8 @@ void SceneTest::Render()
 	}
 	modelStack.PopMatrix();
 
+
+
 	//std::cout << (x / w) * m_worldWidth << ' ' << m_worldHeight - (y / h) * m_worldHeight << std::endl;
 
 	//baseEnemy->active = true;

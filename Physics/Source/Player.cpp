@@ -28,6 +28,7 @@ void Player::Init(int m_worldWidth, int m_worldHeight, GunComponent* activeGun)
 	prevpos.Set(1, 1, 1);
 	scale.Set(3, 3, 3);
 	normal.Set(1, 0, 0);
+	vel.Set(0, 0, 0);
 	active = true;
 
 	m_speed = 1.f;
@@ -41,6 +42,8 @@ void Player::Init(int m_worldWidth, int m_worldHeight, GunComponent* activeGun)
 	this->activeGun = activeGun;
 
 	energy = 100.f;
+	dashCooldown = 0;
+	dash = false;
 }
 
 void Player::Update(double dt)
@@ -55,7 +58,8 @@ void Player::Update(double dt)
 			energy += 1.5 * dt;
 		}
 	}
-
+	pos += vel * dt;
+	vel *= 0.5;
 	// Ability 1
 	static bool b1ButtonState = false;
 	if (!b1ButtonState && Application::IsKeyPressed('1'))
@@ -136,19 +140,66 @@ void Player::Update(double dt)
 	if (Application::IsKeyPressed('W'))
 	{
 		pos.y += 30 * dt * m_speed;
+		if (Application::IsKeyPressed(' ') && !dash && dashCooldown <= 0)
+		{
+			dash = true;
+			vel.Set(0, 500, 0);
+			if (dash )
+			{
+				dashTimer = 0;
+			}
+		}
 	}	
 	if (Application::IsKeyPressed('S'))
 	{
 		pos.y -= 30 * dt * m_speed;
+		if (Application::IsKeyPressed(' ') && !dash && dashCooldown <= 0)
+		{
+			dash = true;
+			vel.Set(0, -500, 0);
+			if (dash)
+			{
+				dashTimer = 0;
+			}
+		}
 	}	
 	if (Application::IsKeyPressed('A'))
 	{
 		pos.x -= 30 * dt * m_speed;
+		if (Application::IsKeyPressed(' ') && !dash && dashCooldown <= 0)
+		{
+			dash = true;
+			vel.Set(-500, 0, 0);
+			if (dash)
+			{
+				dashTimer = 0;
+			}
+		}
 	}	
 	if (Application::IsKeyPressed('D'))
 	{
 		pos.x += 30 * dt * m_speed;
+		if (Application::IsKeyPressed(' ') && !dash && dashCooldown <= 0)
+		{
+			dash = true;
+			vel.Set(500, 0, 0);
+			if (dash)
+			{
+				dashTimer = 0;
+			}
+		}
 	}
+	if (dash)
+	{
+		dashTimer += dt;
+		if (dashTimer >= 1)
+		{
+			dashCooldown = 5;
+			dash = false;
+		}
+	}
+	dashCooldown -= dt;
+	std::cout << dashCooldown << std::endl;
 }
 
 void Player::Render()
@@ -236,6 +287,10 @@ void Player::Collisioncheck(std::vector<Vector3> activeTileList)
 		if ((pos - tilepos).Length() < scale.x + 2)
 		{
 			pos = prevpos;
+		}
+		if ((pos - tilepos).Length() < scale.x + 5)
+		{
+			vel.SetZero();
 		}
 	}
 }
