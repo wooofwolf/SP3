@@ -43,7 +43,20 @@ class SceneBase : public Scene
 		U_TEXT_COLOR,
 		U_TOTAL,
 	};
+
 public:
+	enum class SCENE_TYPE
+	{
+		SCENE_MAINMENU,
+		SCENE_LEVEL_1,
+		SCENE_LEVEL_3,
+		SCENE_TEST,
+
+
+
+		SCENE_TOTAL
+	};
+
 	SceneBase();
 	~SceneBase();
 
@@ -63,6 +76,8 @@ protected:
 	unsigned m_vertexArrayID;
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
+
+	SCENE_TYPE type;
 
 	Camera* camera;
 

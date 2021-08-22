@@ -31,6 +31,8 @@ SceneLevel1::~SceneLevel1()
 
 void SceneLevel1::Init()
 {
+	type = SceneBase::SCENE_TYPE::SCENE_LEVEL_1;
+
 	SceneBase::Init();
 
 	player = Player::GetInstance();

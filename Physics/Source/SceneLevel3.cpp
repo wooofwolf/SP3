@@ -16,21 +16,11 @@ SceneLevel3::SceneLevel3():map(nullptr)
 SceneLevel3::~SceneLevel3()
 {
 }
-//
-//BaseEnemy* SceneTest::SpawnEnemies()
-//{
-//	for (BaseEnemy* enemies : BasicEnemyList)
-//	{
-//		if (enemies->GetActive() == false)
-//		{
-//			enemies->active = true;
-//		}
-//	}
-//	return BasicEnemyList.back();
-//}
 
 void SceneLevel3::Init()
 {
+	type = SceneBase::SCENE_TYPE::SCENE_LEVEL_3;
+
 	SceneBase::Init();
 
 	player = Player::GetInstance();
