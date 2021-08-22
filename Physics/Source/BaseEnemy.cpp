@@ -1,5 +1,8 @@
 #include "BaseEnemy.h"
+
 #include <MyMath.h>
+#include <future>
+
 #include "Application.h"
 #include "Map.h"
 #include "Player.h" 
@@ -84,6 +87,10 @@ void BaseEnemy::CheckCollidedSide(DIRECTION direction , double dt)
 		}
 		collided = false;
 	}
+}
+
+void BaseEnemy::Attack() const
+{
 }
 
 void BaseEnemy::Render()
@@ -349,7 +356,9 @@ void CavemenMelee::Update(double dt)
 		}
 		case ATTACK:
 		{
-			path = Map::GetInstance()->AStarSearch(pos, Player::GetInstance()->GetPos());
+			Map* map = Map::GetInstance();
+			Player* p = Player::GetInstance();
+			std::future<void> future = std::async(std::launch::async, &Map::AStarSearch, map, pos, p->GetPos(), &path);
 			currentFSM = MOVE;
 			break;
 		}

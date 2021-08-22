@@ -2,6 +2,7 @@
 
 #include "Entity.h"
 #include "SingletonPattern.h"
+#include "BaseEnemy.h"
 
 class Boss : public Entity, public SingletonPattern<Boss>
 {
@@ -13,6 +14,8 @@ protected:
 	virtual ~Boss();
 
 	bool bossFightActive;
+	double spawnTimer;
+	BaseEnemy* baseEnemy;
 
 public:
 	void Init();
@@ -29,5 +32,6 @@ public:
 	bool GetFightActive();
 	float GetHP();
 	void SetHP(float hp);
+	void SpawnEnemies();
 };
 
