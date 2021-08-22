@@ -76,8 +76,8 @@ public:
 	bool IsUnblocked(Vector3 pos);
 	bool IsDestination(Vector3 pos, Vector3 dest);
 	double CalculateHValue(Vector3 pos, Vector3 dest);
-	std::stack<Vector3> TracePath(Vector3 dest);
-	std::stack<Vector3> AStarSearch(Vector3 src, Vector3 dest);
+	void TracePath(Vector3 dest, std::stack<Vector3>* path);
+	void AStarSearch(Vector3 src, Vector3 dest, std::stack<Vector3>* path);
 
 private:
 	// Variables

@@ -43,8 +43,8 @@ public:
 
 	std::vector <Vector3> activeTileList;
 	std::vector <Vector3> HazardTileList;
-	std::vector<Projectile*> projectileList;
-	std::vector<BaseEnemy*> enemyList;
+	/*std::vector<Projectile*> projectileList;
+	std::vector<BaseEnemy*> enemyList;*/
 	std::vector<Collectible*> collectibleList;
 
 	Player* player;

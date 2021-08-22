@@ -5,6 +5,7 @@
 #include <fstream>
 #include <set>
 #include <sstream>
+#include <mutex>
 
 #include "Application.h"
 #include "GL/glew.h"
@@ -16,6 +17,8 @@
 
 typedef std::pair<int, int> pair;
 typedef std::pair<double, pair> pPair;
+
+static std::mutex mutex;
 
 Map::Map()
 {
@@ -38,7 +41,7 @@ Map::~Map()
 
 void Map::Init(std::string fileName)
 {
-	Map::GetInstance()->ReadFile(fileName);
+	ReadFile(fileName);
 }
 
 void Map::RenderMap(std::string fileName)
@@ -171,52 +174,53 @@ double Map::CalculateHValue(Vector3 pos, Vector3 dest)
 	return sqrt(2 * (pos.x - dest.x) + (pos.y - dest.y) * 2);
 }
 
-std::stack<Vector3> Map::TracePath(Vector3 dest)
+void Map::TracePath(Vector3 dest, std::stack<Vector3>* path)
 {
 	int x = dest.x;
 	int y = dest.y;
 
-	std::stack<Vector3> path;
 	while (!(mapGrid[x][y].parent_i == x && mapGrid[x][y].parent_j == y))
 	{
-		path.push(Vector3(x, y, 1));
+		path->push(Vector3(x, y, 1));
 		int temp_x = mapGrid[x][y].parent_i;
 		int temp_y = mapGrid[x][y].parent_j;
 		x = temp_x;
 		y = temp_y;
 	}
 
-	path.push(Vector3(x, y, 1));
+	path->push(Vector3(x, y, 1));
 
-	return path;
+	return;
 }
 
-std::stack<Vector3> Map::AStarSearch(Vector3 source, Vector3 destination)
+void Map::AStarSearch(Vector3 source, Vector3 destination, std::stack<Vector3>* path)
 {
+	std::lock_guard<std::mutex> lock(mutex);
+
 	Vector3 src = Vector3((source.x - 2) / 4, (source.y - m_worldHeight + 2) / -4);
 	Vector3 dest = Vector3((destination.x - 2) / 4, (destination.y - m_worldHeight + 2) / -4);
 
 	if (IsValid(src) == false)
 	{
 		std::cout << "Source is invalid" << std::endl;
-		return std::stack<Vector3>();
+		return;
 	}
 	if (IsValid(dest) == false)
 	{
 		std::cout << "Destination is invalid" << std::endl;
-		return std::stack<Vector3>();
+		return;
 	}
 
 	if (IsUnblocked(src) == false || IsUnblocked(dest) == false)
 	{
 		std::cout << "Source or destination is blocked" << std::endl;
-		return std::stack<Vector3>();
+		return;
 	}
 
 	if (IsDestination(src, dest))
 	{
 		std::cout << "Already at destination" << std::endl;
-		return std::stack<Vector3>();
+		return;
 	}
 
 	bool closedList[200][200];
@@ -266,7 +270,8 @@ std::stack<Vector3> Map::AStarSearch(Vector3 source, Vector3 destination)
 				mapGrid[i - 1][j].parent_i = i;
 				mapGrid[i - 1][j].parent_j = j;
 				foundDest = true;
-				return TracePath(dest);
+				TracePath(dest, path);
+				return;
 			}
 			else if (closedList[i - 1][j] == false && IsUnblocked(Vector3(i - 1, j)) == true)
 			{
@@ -294,7 +299,8 @@ std::stack<Vector3> Map::AStarSearch(Vector3 source, Vector3 destination)
 				mapGrid[i + 1][j].parent_i = i;
 				mapGrid[i + 1][j].parent_j = j;
 				foundDest = true;
-				return TracePath(dest);
+				TracePath(dest, path);
+				return;
 			}
 			else if (closedList[i + 1][j] == false && IsUnblocked(Vector3(i + 1, j)) == true)
 			{
@@ -322,7 +328,8 @@ std::stack<Vector3> Map::AStarSearch(Vector3 source, Vector3 destination)
 				mapGrid[i][j + 1].parent_i = i;
 				mapGrid[i][j + 1].parent_j = j;
 				foundDest = true;
-				return TracePath(dest);
+				TracePath(dest, path);
+				return;
 			}
 			else if (closedList[i][j + 1] == false && IsUnblocked(Vector3(i, j + 1)) == true)
 			{
@@ -350,7 +357,8 @@ std::stack<Vector3> Map::AStarSearch(Vector3 source, Vector3 destination)
 				mapGrid[i][j - 1].parent_i = i;
 				mapGrid[i][j - 1].parent_j = j;
 				foundDest = true;
-				return TracePath(dest);
+				TracePath(dest, path);
+				return;
 			}
 			else if (closedList[i][j - 1] == false && IsUnblocked(Vector3(i, j - 1)) == true)
 			{
@@ -378,7 +386,8 @@ std::stack<Vector3> Map::AStarSearch(Vector3 source, Vector3 destination)
 				mapGrid[i - 1][j + 1].parent_i = i;
 				mapGrid[i - 1][j + 1].parent_j = j;
 				foundDest = true;
-				return TracePath(dest);
+				TracePath(dest, path);
+				return;
 			}
 			else if (closedList[i - 1][j + 1] == false && IsUnblocked(Vector3(i - 1, j + 1)) == true)
 			{
@@ -406,7 +415,8 @@ std::stack<Vector3> Map::AStarSearch(Vector3 source, Vector3 destination)
 				mapGrid[i - 1][j - 1].parent_i = i;
 				mapGrid[i - 1][j - 1].parent_j = j;
 				foundDest = true;
-				return TracePath(dest);
+				TracePath(dest, path);
+				return;
 			}
 			else if (closedList[i - 1][j - 1] == false && IsUnblocked(Vector3(i - 1, j - 1)) == true)
 			{
@@ -434,7 +444,8 @@ std::stack<Vector3> Map::AStarSearch(Vector3 source, Vector3 destination)
 				mapGrid[i + 1][j + 1].parent_i = i;
 				mapGrid[i + 1][j + 1].parent_j = j;
 				foundDest = true;
-				return TracePath(dest);
+				TracePath(dest, path);
+				return;
 			}
 			else if (closedList[i + 1][j + 1] == false && IsUnblocked(Vector3(i + 1, j + 1)) == true)
 			{
@@ -462,7 +473,8 @@ std::stack<Vector3> Map::AStarSearch(Vector3 source, Vector3 destination)
 				mapGrid[i + 1][j - 1].parent_i = i;
 				mapGrid[i + 1][j - 1].parent_j = j;
 				foundDest = true;
-				return TracePath(dest);
+				TracePath(dest, path);
+				return;
 			}
 			else if (closedList[i + 1][j - 1] == false && IsUnblocked(Vector3(i + 1, j - 1)) == true)
 			{
@@ -486,5 +498,5 @@ std::stack<Vector3> Map::AStarSearch(Vector3 source, Vector3 destination)
 	if (foundDest == false)
 		std::cout << "Failed to find the Destination Cell" << std::endl;
 
-	return std::stack<Vector3>();
+	return;
 }
