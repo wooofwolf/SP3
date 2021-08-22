@@ -28,17 +28,27 @@ void Boss::Init()
 
 void Boss::Update(double dt)
 {
-	if ((Player::GetInstance()->GetPos() - pos).Length() <= 50.f && !bossFightActive)
+	if (active)
 	{
-		bossFightActive = true;
-	}
-	if (bossFightActive)
-	{
-		spawnTimer += dt;
-		if (spawnTimer >= 15.0)
+		if ((Player::GetInstance()->GetPos() - pos).Length() <= 50.f && !bossFightActive)
 		{
-			SpawnEnemies();
-			spawnTimer = 0.0;
+			bossFightActive = true;
+		}
+		if (bossFightActive)
+		{
+			if (hp <= 0.f)
+			{
+				active = false;
+				bossFightActive = false;
+				return;
+			}
+
+			spawnTimer += dt;
+			if (spawnTimer >= 15.0)
+			{
+				SpawnEnemies();
+				spawnTimer = 0.0;
+			}
 		}
 	}
 }
