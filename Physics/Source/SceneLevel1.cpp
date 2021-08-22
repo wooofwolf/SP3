@@ -229,6 +229,7 @@ void SceneLevel1::Update(double dt)
 
 	Player::GetInstance()->Collisioncheck(activeTileList);
 	Player::GetInstance()->Hazardcheck(HazardTileList);
+	Player::GetInstance()->Exitcheck(ExitTileList);
 
 	for (Collectible* coll : collectibleList)
 	{
@@ -244,6 +245,7 @@ void SceneLevel1::Render()
 {
 	activeTileList.clear();
 	HazardTileList.clear();
+	ExitTileList.clear();
 
 	double x, y;
 	Application::GetCursorPos(&x, &y);
@@ -313,6 +315,27 @@ void SceneLevel1::Render()
 					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 0);
 					modelStack.Scale(2, 2, 2);
 					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_HAZARD), true);
+					modelStack.PopMatrix();
+					break;
+				}
+			}
+			case Tile::TILE_TYPE::TILE_EXIT:
+			{
+				Vector3 ExitPos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 0);
+				float width = (ExitPos - Camera::GetInstance()->position).Length();
+				float height = Camera::GetInstance()->position.z - ExitPos.z;
+				float hypotenuse = sqrtf(width * width + height * height);
+				float maxWidth = (Vector3(m_worldWidth / 2 + 2, 0, 1).Dot(Vector3(m_worldHeight / 2 + 2, 0, 1)) - Camera::GetInstance()->position.Length());
+				float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
+
+				// Occlusion Rendering
+				if (hypotenuse <= maxHypotenuse)
+				{
+					ExitTileList.push_back(ExitPos);
+					modelStack.PushMatrix();
+					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 0);
+					modelStack.Scale(2, 2, 2);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_EXIT), true);
 					modelStack.PopMatrix();
 					break;
 				}
