@@ -315,9 +315,18 @@ void Player::Exitcheck(std::vector<Vector3> activeTileList)
 	{
 		if ((pos - tilepos).Length() < scale.x + 2)
 		{
-			if (SceneManager::GetInstance()->GetActiveScene())
+			switch (SceneManager::GetInstance()->GetActiveScene()->GetSceneType())
+			{
+			case (SceneBase::SCENE_TYPE::SCENE_LEVEL_1):
 			{
 				SceneManager::GetInstance()->SetActiveScene("Level3");
+				break;
+			}
+			case (SceneBase::SCENE_TYPE::SCENE_LEVEL_3):
+			{
+				SceneManager::GetInstance()->SetActiveScene("Level1");
+				break;
+			}
 			}
 		}
 	}

@@ -68,7 +68,8 @@ public:
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 	void RenderMesh(Mesh *mesh, bool enableLight);
-	void RenderGO(GameObject *go);
+
+	SCENE_TYPE GetSceneType();
 
 	std::vector<Projectile*> projectileList;
 	std::vector<BaseEnemy*> enemyList;

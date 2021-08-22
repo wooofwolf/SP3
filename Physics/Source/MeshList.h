@@ -38,5 +38,4 @@ public:
 private:
 	Mesh* meshlist[NUM_GEOMETRY];
 };
-
 #endif

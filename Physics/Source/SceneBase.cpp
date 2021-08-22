@@ -237,3 +237,8 @@ void SceneBase::Exit()
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	glDeleteProgram(m_programID);
 }
+
+SceneBase::SCENE_TYPE SceneBase::GetSceneType()
+{
+	return type;
+}
