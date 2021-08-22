@@ -111,6 +111,15 @@ void SceneLevel3::Update(double dt)
 	//	entitylist[i]->pos += go->vel * player.GetGameSpeed() * dt;
 	//}
 
+	static bool bZPressed = false;
+	if (!bZPressed && Application::IsKeyPressed('Z'))
+	{
+		SceneManager::GetInstance()->SetActiveScene("TestScene");
+		bZPressed = true;
+	}
+	else if (bZPressed && !Application::IsKeyPressed('Z'))
+		bZPressed = false;
+
 	SceneBase::Update(dt);
 	
 	//camera->Update(dt);
@@ -469,9 +478,11 @@ void SceneLevel3::Exit()
 {
 	SceneBase::Exit();
 
-	delete map;
-
-	delete player;
+	map->Destroy();
+	map = nullptr;
+	
+	player->Destroy();
+	player = nullptr;
 
 	delete simpleGun;
 	delete revolver;
@@ -484,9 +495,12 @@ void SceneLevel3::Exit()
 	for (Collectible* coll : collectibleList)
 		delete coll;
 
+	collectibleList.clear();
+
 	for (BaseEnemy* enemy : enemyList)
 		delete enemy;
 
+	enemyList.clear();
 
 	sceneGUI->Exit();
 }
