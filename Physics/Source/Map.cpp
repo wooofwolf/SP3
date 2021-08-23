@@ -122,6 +122,14 @@ void Map::ReadFile(std::string fileName)
 					SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(CavemanMelee);
 					val = 0;
 				}
+				if (val == 6)
+				{
+					CavemenRanged* CavemanRanged = new CavemenRanged(baseEnemy);
+					CavemanRanged->Init();
+					CavemanRanged->SetEnemyPos(Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1));
+					SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(CavemanRanged);
+					val = 0;
+				}
 				if (val == 100)
 				{
 					Boss* boss = Boss::GetInstance();

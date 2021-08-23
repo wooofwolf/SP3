@@ -1,7 +1,8 @@
 #include "Projectile.h"
 #include "BaseEnemy.h"
 #include "Player.h"
-
+#include "Map.h"
+#include "SceneManager.h"
 Projectile::Projectile()
 {
 }
@@ -47,21 +48,6 @@ void Projectile::Init()
 		vel.SetZero();
 		damage = 10;
 		scale.Set(10.f, 10.f, 1.f);
-		break;
-	case PROJECTILE_TYPE::PROJECTILE_SPEARS:
-		vel = normal * 100;
-		damage = 10;
-		pos.Set(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
-		break;
-	case PROJECTILE_TYPE::PROJECTILE_ARROWS:
-		vel = normal * 125;
-		damage = 15;
-		pos.Set(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
-		break;
-	case PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET:
-		vel = normal * 150;
-		damage = 20;
-		pos.Set(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
 		break;
 	}
 }
@@ -117,6 +103,41 @@ void Projectile::Init(int shotgunID)
 	damage = 10;
 }
 
+void Projectile::Init(BaseEnemy* enemy)
+{
+	scale.Set(1, 1, 1);
+	hp = 1;
+	active = true;
+	switch (type)
+	{
+	case PROJECTILE_TYPE::PROJECTILE_SPEARS:
+		vel = normal * 100;
+		damage = 10;
+		pos.Set(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+		break;
+	case PROJECTILE_TYPE::PROJECTILE_ARROWS:
+		vel = normal * 125;
+		damage = 15;
+		pos.Set(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+		break;
+	case PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET:
+		vel = normal * 150;
+		damage = 20;
+		pos.Set(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+		break;
+	}
+}
+
+void Projectile::EnemyShoot(PROJECTILE_TYPE type , BaseEnemy* enemy)
+{
+	Vector3 shootingDir = (pos - Player::GetInstance()->GetPos()).Normalized();
+	Projectile* proj = new Projectile(type);
+	proj->Init(enemy);
+	proj->active = true;
+	proj->SetVelo(shootingDir);
+	SceneManager::GetInstance()->GetActiveScene()->projectileList.push_back(proj);
+}
+
 void Projectile::Movement(double dt)
 {
 }
@@ -136,6 +157,11 @@ void Projectile::Collisioncheck(std::vector<Vector3> activeTileList)
 				active = false;
 		}
 	}
+}
+
+void Projectile::SetVelo(Vector3 vel)
+{
+	this->vel = vel;
 }
 
 Vector3 Projectile::GetPos()
