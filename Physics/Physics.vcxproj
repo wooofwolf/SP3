@@ -170,6 +170,7 @@
     <ClCompile Include="Source\SceneLevel1.cpp" />
     <ClCompile Include="Source\SceneLevel2.cpp" />
     <ClCompile Include="Source\SceneLevel3.cpp" />
+    <ClCompile Include="Source\SceneLevel4.cpp" />
     <ClCompile Include="Source\SceneManager.cpp" />
     <ClCompile Include="Source\Guns.cpp" />
     <ClCompile Include="Source\LoadOBJ.cpp" />
@@ -206,6 +207,7 @@
     <ClInclude Include="Source\SceneLevel1.h" />
     <ClInclude Include="Source\SceneLevel2.h" />
     <ClInclude Include="Source\SceneLevel3.h" />
+    <ClInclude Include="Source\SceneLevel4.h" />
     <ClInclude Include="Source\SceneManager.h" />
     <ClInclude Include="Source\Guns.h" />
     <ClInclude Include="Source\Light.h" />

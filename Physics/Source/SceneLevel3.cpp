@@ -104,7 +104,7 @@ void SceneLevel3::Update(double dt)
 	static bool bZPressed = false;
 	if (!bZPressed && Application::IsKeyPressed('Z'))
 	{
-		SceneManager::GetInstance()->SetActiveScene("TestScene");
+		SceneManager::GetInstance()->SetActiveScene("Level4");
 		bZPressed = true;
 	}
 	else if (bZPressed && !Application::IsKeyPressed('Z'))
@@ -374,13 +374,18 @@ void SceneLevel3::Render()
 
 		for (BaseEnemy* enemy : enemyList)
 		{
-			if (projectile->active && (projectile->GetPos() - enemy->GetEnemyPos()).Length() < projectile->GetScale().x + 2)
+			if (projectile->active && (projectile->GetPos() - enemy->GetEnemyPos()).Length() < projectile->GetScale().x + 2 && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3)
 			{
 				projectile->active = false;
 				enemy->SetEnemyHP(enemy->GetEnemyHP() - projectile->damage);
 			}
-		}
+			if ((enemy->GetEnemyPos() - projectile->GetPos()).Length() < projectile->GetScale().x + 2 && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION)
+			{
+				enemy->moving = false;
+				enemy->stasisTimer = 0;
+			}
 
+		}
 		if (projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->detonateTimer >= 3)
 		{
 			projectile->type = Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION;

@@ -15,6 +15,7 @@
 #include "SceneLevel1.h"
 #include "SceneLevel2.h"
 #include "SceneLevel3.h"
+#include "SceneLevel4.h"
 
 #include "MenuScene.h"
 #include "SceneManager.h"
@@ -138,6 +139,7 @@ void Application::Init()
 	sceneManager->AddScene("Level1", SceneLevel1::GetInstance());
 	sceneManager->AddScene("Level2", SceneLevel2::GetInstance());
 	sceneManager->AddScene("Level3", SceneLevel3::GetInstance());
+	sceneManager->AddScene("Level4", SceneLevel4::GetInstance());
 
 	sceneManager->SetActiveScene("MenuScene");
 

@@ -43,9 +43,6 @@ void SceneLevel1::Init()
 	//baseEnemy->Init();	
 	//EntityList.push_back(player);
 
-	// Calculating aspect ratio
-	m_worldHeight = 100.f;
-	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 	
 	// Test guns
 	simpleGun = new ConcreteGunComponent();
@@ -386,13 +383,17 @@ void SceneLevel1::Render()
 
 		for (BaseEnemy* enemy : enemyList)
 		{
-			if (projectile->active && (projectile->GetPos() - enemy->GetEnemyPos()).Length() < projectile->GetScale().x + 2)
+			if (projectile->active && (projectile->GetPos() - enemy->GetEnemyPos()).Length() < projectile->GetScale().x + 2 && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3)
 			{
 				projectile->active = false;
 				enemy->SetEnemyHP(enemy->GetEnemyHP() - projectile->damage);
 			}
+			if ((enemy->GetEnemyPos() - projectile->GetPos()).Length() < projectile->GetScale().x + 2 && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION)
+			{
+				enemy->moving = false;
+				enemy->stasisTimer = 0;
+			}
 		}
-
 		if (projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->detonateTimer >= 3)
 		{
 			projectile->type = Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION;

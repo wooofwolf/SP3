@@ -411,12 +411,11 @@ void SceneLevel2::Render()
 				projectile->active = false;
 				enemy->SetEnemyHP(enemy->GetEnemyHP() - projectile->damage);
 			}
-
-		}
-		if (projectile->active && (projectile->GetPos() - boss->GetPos()).Length() < projectile->GetScale().x + boss->GetScale().x && boss->GetFightActive())
-		{
-			projectile->active = false;
-			boss->SetHP(boss->GetHP() - projectile->damage);
+			if ((enemy->GetEnemyPos() - projectile->GetPos()).Length() < projectile->GetScale().x + 2 && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION)
+			{
+				enemy->moving = false;
+				enemy->stasisTimer = 0;
+			}
 		}
 		if (projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->detonateTimer >= 3)
 		{

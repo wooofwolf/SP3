@@ -16,8 +16,6 @@ class SceneLevel1 : public SceneBase, public SingletonPattern<SceneLevel1>
 	friend SingletonPattern<SceneLevel1>;
 protected:
 	// Variables
-	float m_worldWidth;
-	float m_worldHeight;
 	Map* map;
 
 	bool NearXEdge = false;

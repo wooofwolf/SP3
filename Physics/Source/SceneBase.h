@@ -73,6 +73,10 @@ public:
 
 	std::vector<Projectile*> projectileList;
 	std::vector<BaseEnemy*> enemyList;
+
+	MS& GetModelStack();
+	float GetWorldWidth();
+	float GetWorldHeight();
 protected:
 	unsigned m_vertexArrayID;
 	unsigned m_programID;
@@ -91,6 +95,7 @@ protected:
 	bool bLightEnabled;
 
 	float fps;
+	float m_worldWidth, m_worldHeight;
 };
 
 #endif
