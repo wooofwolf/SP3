@@ -1,5 +1,8 @@
 #include "BaseEnemy.h"
+
 #include <MyMath.h>
+#include <future>
+
 #include "Application.h"
 #include "Map.h"
 #include "Player.h" 
@@ -85,6 +88,10 @@ void BaseEnemy::CheckCollidedSide(DIRECTION direction , double dt)
 		}
 		collided = false;
 	}
+}
+
+void BaseEnemy::Attack() const
+{
 }
 
 void BaseEnemy::Render()
@@ -315,28 +322,30 @@ void CavemenMelee::Update(double dt)
 	{
 		switch (currentFSM)
 		{
-			case IDLE:
+		case IDLE:
+		{
+			//std::cout << "IDLING" << std::endl;
+			//Movement(dt);
+			if ((pos - Player::GetInstance()->GetPos()).Length() < 50 && attackCD <= 0)
 			{
-				//std::cout << "IDLING" << std::endl;
-				//Movement(dt);
-				if ((pos - Player::GetInstance()->GetPos()).Length() < 50 && attackCD <= 0)
-				{
-					currentFSM = ATTACK;
-				}
-				/*std::cout << "lalala" << std::endl;*/
-				break;
+				currentFSM = ATTACK;
 			}
-			case ATTACK:
-			{
-				path = Map::GetInstance()->AStarSearch(pos, Player::GetInstance()->GetPos());
-				currentFSM = MOVE;
-				break;
-			}
-			case MOVE:
-			{
-				Movement(dt);
-				break;
-			}
+			/*std::cout << "lalala" << std::endl;*/
+			break;
+		}
+		case ATTACK:
+		{
+			Map* map = Map::GetInstance();
+			Player* p = Player::GetInstance();
+			std::future<void> future = std::async(std::launch::async, &Map::AStarSearch, map, pos, p->GetPos(), &path);
+			currentFSM = MOVE;
+			break;
+		}
+		case MOVE:
+		{
+			Movement(dt);
+			break;
+		}
 		}
 	}
 }
