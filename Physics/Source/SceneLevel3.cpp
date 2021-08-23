@@ -112,33 +112,30 @@ void SceneLevel3::Update(double dt)
 
 	SceneBase::Update(dt);
 	
-	//camera->Update(dt);
+	camera->Update(dt);
 
 	player->Update(dt);
-	// yes i hard found the values where the outside of the map starts to show
-	// theres probably a better way to find these values but i cant be bothered lol -yh
 
-	if ((player->GetPos().x > 89 && player->GetPos().x < 712))
+	int Xoffset = 88;
+	int Yoffset = 55;
+
+	if ((player->GetPos().x > 2 + 4 * 0 + Xoffset) && (player->GetPos().x < 4 * 200 - Xoffset))
 	{
 		NearXEdge = false;
 
 		camera->position.x = player->GetPos().x - m_worldWidth / 2;
 		camera->target.x = player->GetPos().x - m_worldWidth / 2;
-		//camera->position.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, 2);
-		//camera->target.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, player->GetPos().z);
 	}
 	else
 	{
 		NearXEdge = true;
 	}
-	if ((player->GetPos().y < 50 && player->GetPos().y > -653))
+	if ((player->GetPos().y < m_worldHeight - Yoffset + 10) && (player->GetPos().y > m_worldHeight - 2 - 4 * 200 + Yoffset))
 	{
 		NearYEdge = false;
 
 		camera->position.y = player->GetPos().y - m_worldHeight / 2;
 		camera->target.y = player->GetPos().y - m_worldHeight / 2;
-		//camera->position.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, 2);
-		//camera->target.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, player->GetPos().z);
 	}
 	else
 	{
@@ -349,7 +346,7 @@ void SceneLevel3::Render()
 		playerpos.Set(m_worldWidth * 0.5, m_worldHeight * 0.5);
 	}
 
-	//std::cout << player->GetPos().x << ' ' << player->GetPos().y << std::endl;
+	std::cout << player->GetPos().x << ' ' << player->GetPos().y << std::endl;
 
 	float mousePosX = (x / w) * m_worldWidth;
 	float mousePosY = m_worldHeight - (y / h) * m_worldHeight;

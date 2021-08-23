@@ -199,7 +199,7 @@ void Player::Update(double dt)
 		}
 	}
 	dashCooldown -= dt;
-	std::cout << dashCooldown << std::endl;
+	//std::cout << dashCooldown << std::endl;
 }
 
 void Player::Render()
