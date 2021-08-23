@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "Map.h"
 #include "Player.h" 
+#include "SceneBase.h"
 
 BaseEnemy::~BaseEnemy()
 {
@@ -92,20 +93,23 @@ void BaseEnemy::Render()
 
 void BaseEnemy::Movement(double dt)
 {
-	if (!pathfinding && !path.empty())
+	if (moving)
 	{
-		dest = Vector3(2 + 4 * path.top().x, Map::GetInstance()->m_worldHeight - 2 - 4 * path.top().y, 1);
-		path.pop();
-		pathfinding = true;
-	}
-	if (pathfinding)
-	{
-		movingTimer += dt;
-		if (movingTimer >= 0.2)
+		if (!pathfinding && !path.empty())
 		{
-			pos = dest;
-			pathfinding = false;
-			movingTimer = 0.0;
+			dest = Vector3(2 + 4 * path.top().x, Map::GetInstance()->m_worldHeight - 2 - 4 * path.top().y, 1);
+			path.pop();
+			pathfinding = true;
+		}
+		if (pathfinding)
+		{
+			movingTimer += dt;
+			if (movingTimer >= 0.2)
+			{
+				pos = dest;
+				pathfinding = false;
+				movingTimer = 0.0;
+			}
 		}
 	}
 }
@@ -149,23 +153,6 @@ void BaseEnemy::UpdatePosition()
 		{
 			pos.x--;
 		}
-		//// Constraint the enemy2D's position within the screen boundary
-		//CheckCollidedSide(LEFT,dt);
-		//// Find a feasible position for the enemy2D's current position
-		//if (CheckCollidedSide(LEFT,dt) == false)
-		//{
-		//	FlipHorizontalDirection();
-		//	i32vec2Index = i32vec2OldIndex;
-		//	i32vec2NumMicroSteps.x = 0;
-		//}
-		//// Check if enemy2D is in mid-air, such as walking off a platform
-		//if (IsMidAir() == true)
-		//{
-		//	cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
-		//}
-		////CS: Play the "left" animation
-		//animatedSprites->PlayAnimation("left", -1, 1.0f);
-		// Interact with the Player
 	}
 	else if (pathDir.x > 0)
 	{
@@ -175,23 +162,6 @@ void BaseEnemy::UpdatePosition()
 		{
 			pos.x++;
 		}
-		//// Constraint the enemy2D's position within the screen boundary
-		//Constraint(RIGHT);
-		//// Find a feasible position for the enemy2D's current position
-		//if (CheckPosition(RIGHT) == false)
-		//{
-		//	FlipHorizontalDirection();
-		//	i32vec2Index = i32vec2OldIndex;
-		//	i32vec2NumMicroSteps.x = 0;
-		//}
-		//// Check if enemy2D is in mid-air, such as walking off a platform
-		//if (IsMidAir() == true)
-		//{
-		//	cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
-		//}
-		////CS: Play the "right" animation
-		//animatedSprites->PlayAnimation("right", -1, 1.0f);
-		// Interact with the Player
 	}
 	// if the Player::GetInstance() is above the enemy2D, then jump to attack
 	if (pathDir.y > 0)
@@ -245,6 +215,15 @@ bool BaseEnemy::GetActive()
 Vector3 BaseEnemy::GetScale()
 {
 	return scale;	
+}
+
+Projectile* EnemyDecorator::Shoot(Projectile::PROJECTILE_TYPE type)
+{
+
+	Vector3 shootingDir = pos - Player::GetInstance()->GetPos();
+	Projectile* proj = new Projectile(type);
+	proj->active = true;
+	return new Projectile(Projectile::PROJECTILE_TYPE::PROJECTILE_NONE);
 }
 
 void BaseEnemy::Collisioncheck(std::vector<Vector3> activeTileList)
@@ -336,28 +315,28 @@ void CavemenMelee::Update(double dt)
 	{
 		switch (currentFSM)
 		{
-		case IDLE:
-		{
-			//std::cout << "IDLING" << std::endl;
-			//Movement(dt);
-			if ((pos - Player::GetInstance()->GetPos()).Length() < 50 && attackCD <= 0)
+			case IDLE:
 			{
-				currentFSM = ATTACK;
+				//std::cout << "IDLING" << std::endl;
+				//Movement(dt);
+				if ((pos - Player::GetInstance()->GetPos()).Length() < 50 && attackCD <= 0)
+				{
+					currentFSM = ATTACK;
+				}
+				/*std::cout << "lalala" << std::endl;*/
+				break;
 			}
-			/*std::cout << "lalala" << std::endl;*/
-			break;
-		}
-		case ATTACK:
-		{
-			path = Map::GetInstance()->AStarSearch(pos, Player::GetInstance()->GetPos());
-			currentFSM = MOVE;
-			break;
-		}
-		case MOVE:
-		{
-			Movement(dt);
-			break;
-		}
+			case ATTACK:
+			{
+				path = Map::GetInstance()->AStarSearch(pos, Player::GetInstance()->GetPos());
+				currentFSM = MOVE;
+				break;
+			}
+			case MOVE:
+			{
+				Movement(dt);
+				break;
+			}
 		}
 	}
 }
@@ -381,7 +360,7 @@ CavemenRanged::CavemenRanged(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 
 void CavemenRanged::Attack() const
 {
-	Player::GetInstance()->SetHealth(Player::GetInstance()->GetHealth() - 10);
+	//Shoot(Projectile::PROJECTILE_TYPE::PROJECTILE_SPEARS);
 	std::cout << "Cavemen Ranged Attack!!" << std::endl;
 }
 //Projectile* CavemenRanged::Shoot()

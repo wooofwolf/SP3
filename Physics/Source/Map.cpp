@@ -185,9 +185,10 @@ std::stack<Vector3> Map::TracePath(Vector3 dest)
 		x = temp_x;
 		y = temp_y;
 	}
-
+	std::cout << x << std::endl;
+	std::cout << y << std::endl;
 	path.push(Vector3(x, y, 1));
-
+	
 	return path;
 }
 
