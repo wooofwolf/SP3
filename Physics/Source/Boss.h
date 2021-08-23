@@ -15,6 +15,7 @@ public:
 		INVINCIBLE,
 		SPAWN_MINIONS,
 		ATTACK,
+		ATTACK_WAIT,
 		TOTAL_STATES
 	};
 
@@ -36,6 +37,7 @@ public:
 
 	void SpawnEnemies();
 	void Attack();
+	void SetAttacked(bool attacked);
 
 protected:
 	// Constructor
@@ -49,5 +51,28 @@ protected:
 	bool invincible;
 	double invincibleTimer;
 	FSM currentFSM;
+	bool attacked;
 };
 
+class BossAttack : public Entity, public SingletonPattern<BossAttack>
+{
+	friend SingletonPattern<BossAttack>;
+public:
+	void Init();
+	void Update(double dt);
+	void Render();
+	void Exit();
+
+	void Movement(double dt);
+	void Collisioncheck(std::vector<Vector3> activeTileList);
+
+	void DamagePlayer();
+
+protected:
+	// Constructor
+	BossAttack();
+	// Destructor
+	virtual ~BossAttack();
+
+	double targetTimer;
+};
