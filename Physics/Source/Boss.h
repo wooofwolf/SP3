@@ -7,17 +7,17 @@
 class Boss : public Entity, public SingletonPattern<Boss>
 {
 	friend SingletonPattern<Boss>;
-protected:
-	// Constructor
-	Boss();
-	// Destructor
-	virtual ~Boss();
-
-	bool bossFightActive;
-	double spawnTimer;
-	BaseEnemy* baseEnemy;
-
 public:
+	enum class FSM
+	{
+		INACTIVE = 0,
+		IDLE,
+		INVINCIBLE,
+		SPAWN_MINIONS,
+		ATTACK,
+		TOTAL_STATES
+	};
+
 	void Init();
 	void Update(double dt);
 	void Render();
@@ -32,6 +32,22 @@ public:
 	bool GetFightActive();
 	float GetHP();
 	void SetHP(float hp);
+	bool GetInvincible();
+
 	void SpawnEnemies();
+	void Attack();
+
+protected:
+	// Constructor
+	Boss();
+	// Destructor
+	virtual ~Boss();
+
+	bool bossFightActive;
+	double stateTimer;
+	BaseEnemy* baseEnemy;
+	bool invincible;
+	double invincibleTimer;
+	FSM currentFSM;
 };
 

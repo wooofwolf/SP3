@@ -31,6 +31,9 @@ protected:
 	float dashCooldown;
 	float dashTimer;
 	bool dash;
+
+	bool nearX;
+	bool nearY;
 public:
 	// Constructor
 	Player();
@@ -70,5 +73,8 @@ public:
 	void SetHealth(float hp);
 	float GetEnergy();
 	void SetEnergy(int energy);
+
+	bool nearXBoundary();
+	bool nearYBoundary();
 };
 

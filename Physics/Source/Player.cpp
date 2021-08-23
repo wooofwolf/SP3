@@ -44,6 +44,9 @@ void Player::Init(int m_worldWidth, int m_worldHeight, GunComponent* activeGun)
 	energy = 100.f;
 	dashCooldown = 0;
 	dash = false;
+
+	nearX = false;
+	nearY = false;
 }
 
 void Player::Update(double dt)
@@ -60,7 +63,7 @@ void Player::Update(double dt)
 	}
 	pos += vel * dt;
 	vel *= 0.5;
-	// Ability 1
+	// Ability 1: Wide Area Slow
 	static bool b1ButtonState = false;
 	if (!b1ButtonState && Application::IsKeyPressed('1'))
 	{
@@ -89,7 +92,7 @@ void Player::Update(double dt)
 		SlowSpeed = 1.f;
 	}
 
-	// Ability 2
+	// Ability 2: Movement Speed/Firerate Increase
 	static bool b2ButtonState = false;
 	if (!b2ButtonState && Application::IsKeyPressed('2') && energy >= 50)
 	{
@@ -200,6 +203,32 @@ void Player::Update(double dt)
 	}
 	dashCooldown -= dt;
 	//std::cout << dashCooldown << std::endl;
+
+	int Xoffset = 88;
+	int Yoffset = 55;
+
+	if ((pos.x > 2 + 4 * 0 + Xoffset) && (pos.x < 4 * 200 - Xoffset))
+	{
+		nearX = false;
+
+		Camera::GetInstance()->position.x = pos.x - m_worldWidth / 2;
+		Camera::GetInstance()->target.x = pos.x - m_worldWidth / 2;
+	}
+	else
+	{
+		nearX = true;
+	}
+	if ((pos.y < m_worldHeight - Yoffset + 5) && (pos.y > m_worldHeight - 2 - 4 * 200 + Yoffset))
+	{
+		nearY = false;
+
+		Camera::GetInstance()->position.y = pos.y - m_worldHeight / 2;
+		Camera::GetInstance()->target.y = pos.y - m_worldHeight / 2;
+	}
+	else
+	{
+		nearY = true;
+	}
 }
 
 void Player::Render()
@@ -335,4 +364,14 @@ void Player::Exitcheck(std::vector<Vector3> activeTileList)
 			}
 		}
 	}
+}
+
+bool Player::nearXBoundary()
+{
+	return nearX;
+}
+
+bool Player::nearYBoundary()
+{
+	return nearY;
 }

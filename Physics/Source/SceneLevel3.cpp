@@ -104,7 +104,7 @@ void SceneLevel3::Update(double dt)
 	static bool bZPressed = false;
 	if (!bZPressed && Application::IsKeyPressed('Z'))
 	{
-		SceneManager::GetInstance()->SetActiveScene("TestScene");
+		SceneManager::GetInstance()->SetActiveScene("Level4");
 		bZPressed = true;
 	}
 	else if (bZPressed && !Application::IsKeyPressed('Z'))
@@ -112,35 +112,9 @@ void SceneLevel3::Update(double dt)
 
 	SceneBase::Update(dt);
 	
-	camera->Update(dt);
+	//camera->Update(dt);
 
 	player->Update(dt);
-
-	int Xoffset = 88;
-	int Yoffset = 55;
-
-	if ((player->GetPos().x > 2 + 4 * 0 + Xoffset) && (player->GetPos().x < 4 * 200 - Xoffset))
-	{
-		NearXEdge = false;
-
-		camera->position.x = player->GetPos().x - m_worldWidth / 2;
-		camera->target.x = player->GetPos().x - m_worldWidth / 2;
-	}
-	else
-	{
-		NearXEdge = true;
-	}
-	if ((player->GetPos().y < m_worldHeight - Yoffset + 10) && (player->GetPos().y > m_worldHeight - 2 - 4 * 200 + Yoffset))
-	{
-		NearYEdge = false;
-
-		camera->position.y = player->GetPos().y - m_worldHeight / 2;
-		camera->target.y = player->GetPos().y - m_worldHeight / 2;
-	}
-	else
-	{
-		NearYEdge = true;
-	}
 
 	//baseEnemy->Update(dt);
 	revolver->UpdateFireRateTimer(dt);
@@ -334,13 +308,9 @@ void SceneLevel3::Render()
 
 	Vector3 playerpos;
 
-	if (NearXEdge == true || NearYEdge == true)
+	if (player->nearXBoundary() == true || player->nearYBoundary() == true)
 	{
-		// make code the do pls thank
-
-		playerpos = player->GetPos() - camera->position;
-		//playerpos.Set((w * player->GetPos().x) / m_worldWidth, h - (h * player->GetPos().y) / m_worldHeight);
-	}
+		playerpos = player->GetPos() - camera->position;	}
 	else
 	{
 		playerpos.Set(m_worldWidth * 0.5, m_worldHeight * 0.5);
@@ -376,20 +346,17 @@ void SceneLevel3::Render()
 				projectile->active = false;
 				enemy->SetEnemyHP(enemy->GetEnemyHP() - projectile->damage);
 			}
+			if ((enemy->GetEnemyPos() - projectile->GetPos()).Length() < projectile->GetScale().x + 2 && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION)
+			{
+				enemy->moving = false;
+				enemy->stasisTimer = 0;
+			}
 
 		}
 		if (projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->detonateTimer >= 3)
 		{
 			projectile->type = Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION;
 			projectile->SetScale(Vector3(20.f, 20.f, 1.f));
-		}
-		for (BaseEnemy* enemy : enemyList)
-		{
-			if ((enemy->GetEnemyPos() - projectile->GetPos()).Length() < projectile->GetScale().x + 2 && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION)
-			{
-				enemy->moving = false;
-				enemy->stasisTimer = 0;
-			}
 		}
 
 		if (projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION && projectile->explosionTimer >= 0.1)
