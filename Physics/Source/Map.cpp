@@ -106,7 +106,7 @@ void Map::ReadFile(std::string fileName)
 		while (std::getline(fin, str))
 		{
 			std::stringstream ss(str);
-
+				
 			while (ss >> val)
 			{
 				if (val == 2)
@@ -179,7 +179,8 @@ bool Map::IsDestination(Vector3 pos, Vector3 dest)
 
 double Map::CalculateHValue(Vector3 pos, Vector3 dest)
 {
-	return sqrt(2 * (pos.x - dest.x) + (pos.y - dest.y) * 2);
+	return  abs(pos.x - dest.x) +
+		abs(pos.y - dest.y);
 }
 
 void Map::TracePath(Vector3 dest, std::stack<Vector3>* path)

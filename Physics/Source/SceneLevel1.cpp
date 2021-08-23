@@ -124,35 +124,7 @@ void SceneLevel1::Update(double dt)
 	//camera->Update(dt);
 
 	player->Update(dt);
-	// yes i hard found the values where the outside of the map starts to show
-	// theres probably a better way to find these values but i cant be bothered lol -yh
 
-	if ((player->GetPos().x > 89 && player->GetPos().x < 712))
-	{
-		NearXEdge = false;
-
-		camera->position.x = player->GetPos().x - m_worldWidth / 2;
-		camera->target.x = player->GetPos().x - m_worldWidth / 2;
-		//camera->position.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, 2);
-		//camera->target.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, player->GetPos().z);
-	}
-	else
-	{
-		NearXEdge = true;
-	}
-	if ((player->GetPos().y < 50 && player->GetPos().y > -653))
-	{
-		NearYEdge = false;
-
-		camera->position.y = player->GetPos().y - m_worldHeight / 2;
-		camera->target.y = player->GetPos().y - m_worldHeight / 2;
-		//camera->position.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, 2);
-		//camera->target.Set(player->GetPos().x - m_worldWidth / 2, player->GetPos().y - m_worldHeight / 2, player->GetPos().z);
-	}
-	else
-	{
-		NearYEdge = true;
-	}
 
 	//baseEnemy->Update(dt);
 	revolver->UpdateFireRateTimer(dt);
@@ -346,7 +318,7 @@ void SceneLevel1::Render()
 
 	Vector3 playerpos;
 
-	if (NearXEdge == true || NearYEdge == true)
+	if (player->nearXBoundary() == true || player->nearYBoundary() == true)
 	{
 		// make code the do pls thank
 
