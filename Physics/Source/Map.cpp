@@ -106,7 +106,7 @@ void Map::ReadFile(std::string fileName)
 		while (std::getline(fin, str))
 		{
 			std::stringstream ss(str);
-
+				
 			while (ss >> val)
 			{
 				if (val == 2)
