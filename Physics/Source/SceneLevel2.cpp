@@ -7,7 +7,6 @@
 #include "Map.h"
 #include "Guns.h"
 #include "Projectile.h"
-#include "Boss.h"
 
 SceneLevel2::SceneLevel2():map(nullptr)
 {
@@ -17,7 +16,7 @@ SceneLevel2::~SceneLevel2()
 {
 }
 //
-//BaseEnemy* SceneTest::SpawnEnemies()
+//BaseEnemy* SceneLevel2::SpawnEnemies()
 //{
 //	for (BaseEnemy* enemies : BasicEnemyList)
 //	{
@@ -31,12 +30,13 @@ SceneLevel2::~SceneLevel2()
 
 void SceneLevel2::Init()
 {
+	type = SceneBase::SCENE_TYPE::SCENE_LEVEL_2;
+
 	SceneBase::Init();
 
 	player = Player::GetInstance();
 	player->Init();
 
-	Boss::GetInstance()->Init();
 	//baseEnemy = new ConcreteBaseEnemy();
 	//baseEnemy->Init();	
 	//EntityList.push_back(player);
@@ -54,9 +54,12 @@ void SceneLevel2::Init()
 	player = Player::GetInstance();
 	player->Init(m_worldWidth, m_worldHeight, revolver);
 
+	boss = Boss::GetInstance();
+	boss->Init();
+
 	// Test map
 	map = Map::GetInstance();
-	map->Init("Maps/Level1.csv");
+	map->Init("Maps/Level2.csv");
 
 	revolver->nextGun = shotgun;
 	revolver->prevGun = minigun;
@@ -73,6 +76,8 @@ void SceneLevel2::Init()
 
 	activeTileList.clear();
 	HazardTileList.clear();
+	ExitTileList.clear();
+
 
 	for (int y = 0; y < 200; ++y)
 	{
@@ -102,14 +107,19 @@ void SceneLevel2::Init()
 	sceneGUI = SceneGUI::GetInstance();
 	sceneGUI->Init();
 
+
 }
 
 void SceneLevel2::Update(double dt)
 {
-	//for (int i = 0; i < entitylist.size(); i++)
-	//{
-	//	entitylist[i]->pos += go->vel * player.GetGameSpeed() * dt;
-	//}
+	static bool bZPressed = false;
+	if (!bZPressed && Application::IsKeyPressed('Z'))
+	{
+		SceneManager::GetInstance()->SetActiveScene("Level3");
+		bZPressed = true;
+	}
+	else if (bZPressed && !Application::IsKeyPressed('Z'))
+		bZPressed = false;
 
 	SceneBase::Update(dt);
 	
@@ -192,13 +202,15 @@ void SceneLevel2::Update(double dt)
 
 	Player::GetInstance()->Collisioncheck(activeTileList);
 	Player::GetInstance()->Hazardcheck(HazardTileList);
+	Player::GetInstance()->Exitcheck(ExitTileList);
+
 
 	for (Collectible* coll : collectibleList)
 	{
 		coll->Collisioncheck(activeTileList);
 	}
 
-	Boss::GetInstance()->Update(dt);
+	boss->Update(dt);
 
 	sceneGUI->Update(dt);
 }
@@ -207,6 +219,8 @@ void SceneLevel2::Render()
 {
 	activeTileList.clear();
 	HazardTileList.clear();
+	ExitTileList.clear();
+
 
 	double x, y;
 	Application::GetCursorPos(&x, &y);
@@ -280,6 +294,27 @@ void SceneLevel2::Render()
 					break;
 				}
 			}
+			case Tile::TILE_TYPE::TILE_EXIT:
+			{
+				Vector3 ExitPos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 0);
+				float width = (ExitPos - Camera::GetInstance()->position).Length();
+				float height = Camera::GetInstance()->position.z - ExitPos.z;
+				float hypotenuse = sqrtf(width * width + height * height);
+				float maxWidth = (Vector3(m_worldWidth / 2 + 2, 0, 1).Dot(Vector3(m_worldHeight / 2 + 2, 0, 1)) - Camera::GetInstance()->position.Length());
+				float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
+
+				// Occlusion Rendering
+				if (hypotenuse <= maxHypotenuse)
+				{
+					ExitTileList.push_back(ExitPos);
+					modelStack.PushMatrix();
+					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 0);
+					modelStack.Scale(2, 2, 2);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_EXIT), true);
+					modelStack.PopMatrix();
+					break;
+				}
+			}
 			}
 		}
 	}
@@ -311,6 +346,29 @@ void SceneLevel2::Render()
 	}
 	modelStack.PopMatrix();
 
+
+
+	//std::cout << (x / w) * m_worldWidth << ' ' << m_worldHeight - (y / h) * m_worldHeight << std::endl;
+
+	//baseEnemy->active = true;
+
+
+	/*modelStack.PushMatrix();
+	modelStack.Translate(baseEnemy->GetEnemyPos().x, baseEnemy->GetEnemyPos().y, 1);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
+	modelStack.PopMatrix();*/
+
+
+	//modelStack.PushMatrix();
+	//modelStack.Translate(2 + 4 * baseEnemy->GetEnemyPos().x, m_worldHeight - 2 - 4 * baseEnemy->GetEnemyPos().y, 1);
+	//RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
+	//modelStack.PopMatrix();
+
+	//std::cout << (x / w) * m_worldWidth << ' ' << m_worldHeight - (y / h) * m_worldHeight << std::endl;
+
+	//baseEnemy->active = true;
+
 	std::vector<Projectile*>::iterator it = projectileList.begin();
 	for (; it != projectileList.end(); )
 	{
@@ -319,7 +377,7 @@ void SceneLevel2::Render()
 
 		for (BaseEnemy* enemy : enemyList)
 		{
-			if (projectile->active && (projectile->GetPos() - enemy->GetEnemyPos()).Length() < projectile->GetScale().x + 2)
+			if (projectile->active && (projectile->GetPos() - enemy->GetEnemyPos()).Length() < projectile->GetScale().x + 2 && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3)
 			{
 				projectile->active = false;
 				enemy->SetEnemyHP(enemy->GetEnemyHP() - projectile->damage);
@@ -330,11 +388,18 @@ void SceneLevel2::Render()
 				enemy->stasisTimer = 0;
 			}
 		}
-
 		if (projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->detonateTimer >= 3)
 		{
 			projectile->type = Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION;
 			projectile->SetScale(Vector3(20.f, 20.f, 1.f));
+		}
+		for (BaseEnemy* enemy : enemyList)
+		{
+			if ((enemy->GetEnemyPos() - projectile->GetPos()).Length() < projectile->GetScale().x + 2 && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION)
+			{
+				enemy->moving = false;
+				enemy->stasisTimer = 0;
+			}
 		}
 
 		if (projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION && projectile->explosionTimer >= 0.1)
@@ -404,6 +469,24 @@ void SceneLevel2::Render()
 		}
 	}
 
+	if (boss->active)
+	{
+		float width = (boss->GetPos() - Camera::GetInstance()->position).Length();
+		float height = Camera::GetInstance()->position.z - boss->GetPos().z;
+		float hypotenuse = sqrtf(width * width + height * height);
+		float maxWidth = (Vector3(m_worldWidth / 2 + 2, 0, 1).Dot(Vector3(m_worldHeight / 2 + 2, 0, 1)) - Camera::GetInstance()->position.Length());
+		float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
+			
+		if (hypotenuse <= maxHypotenuse)
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(boss->GetPos().x, boss->GetPos().y, boss->GetPos().z);
+			modelStack.Scale(boss->GetScale().x, boss->GetScale().y, boss->GetScale().z);
+			RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
+			modelStack.PopMatrix();
+		}
+	}
+
 	std::vector<Collectible*>::iterator it3 = collectibleList.begin();
 
 	for (; it3 != collectibleList.end(); )
@@ -441,9 +524,11 @@ void SceneLevel2::Exit()
 {
 	SceneBase::Exit();
 
-	delete map;
+	map->Destroy();
+	map = nullptr;
 
-	delete player;
+	player->Destroy();
+	player = nullptr;
 
 	delete simpleGun;
 	delete revolver;
@@ -456,9 +541,12 @@ void SceneLevel2::Exit()
 	for (Collectible* coll : collectibleList)
 		delete coll;
 
+	collectibleList.clear();
+
 	for (BaseEnemy* enemy : enemyList)
 		delete enemy;
 
+	enemyList.clear();
 
 	sceneGUI->Exit();
 }
