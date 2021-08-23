@@ -30,7 +30,7 @@ SceneLevel2::~SceneLevel2()
 
 void SceneLevel2::Init()
 {
-	type = SceneBase::SCENE_TYPE::SCENE_TEST;
+	type = SceneBase::SCENE_TYPE::SCENE_LEVEL_2;
 
 	SceneBase::Init();
 
@@ -76,6 +76,8 @@ void SceneLevel2::Init()
 
 	activeTileList.clear();
 	HazardTileList.clear();
+	ExitTileList.clear();
+
 
 	for (int y = 0; y < 200; ++y)
 	{
@@ -245,6 +247,8 @@ void SceneLevel2::Render()
 {
 	activeTileList.clear();
 	HazardTileList.clear();
+	ExitTileList.clear();
+
 
 	double x, y;
 	Application::GetCursorPos(&x, &y);
