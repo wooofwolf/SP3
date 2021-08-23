@@ -43,9 +43,6 @@ void SceneLevel1::Init()
 	//baseEnemy->Init();	
 	//EntityList.push_back(player);
 
-	// Calculating aspect ratio
-	m_worldHeight = 100.f;
-	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 	
 	// Test guns
 	simpleGun = new ConcreteGunComponent();

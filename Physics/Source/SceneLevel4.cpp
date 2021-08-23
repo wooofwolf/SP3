@@ -43,10 +43,6 @@ void SceneLevel4::Init()
 	//baseEnemy = new ConcreteBaseEnemy();
 	//baseEnemy->Init();	
 	//EntityList.push_back(player);
-
-	// Calculating aspect ratio
-	m_worldHeight = 100.f;
-	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 	
 	// Test guns
 	simpleGun = new ConcreteGunComponent();
@@ -401,7 +397,8 @@ void SceneLevel4::Render()
 		if (projectile->active && (projectile->GetPos() - boss->GetPos()).Length() < projectile->GetScale().x + boss->GetScale().x && boss->GetFightActive())
 		{
 			projectile->active = false;
-			boss->SetHP(boss->GetHP() - projectile->damage);
+			if (!boss->GetInvincible())
+				boss->SetHP(boss->GetHP() - projectile->damage);
 		}
 		if (projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->detonateTimer >= 3)
 		{
@@ -506,23 +503,7 @@ void SceneLevel4::Render()
 		}
 	}
 
-	if (boss->active)
-	{
-		float width = (boss->GetPos() - Camera::GetInstance()->position).Length();
-		float height = Camera::GetInstance()->position.z - boss->GetPos().z;
-		float hypotenuse = sqrtf(width * width + height * height);
-		float maxWidth = (Vector3(m_worldWidth / 2 + 2, 0, 1).Dot(Vector3(m_worldHeight / 2 + 2, 0, 1)) - Camera::GetInstance()->position.Length());
-		float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
-
-		if (hypotenuse <= maxHypotenuse)
-		{
-			modelStack.PushMatrix();
-			modelStack.Translate(boss->GetPos().x, boss->GetPos().y, boss->GetPos().z);
-			modelStack.Scale(boss->GetScale().x, boss->GetScale().y, boss->GetScale().z);
-			RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
-			modelStack.PopMatrix();
-		}
-	}
+	boss->Render();
 
 	sceneGUI->Render();
 }

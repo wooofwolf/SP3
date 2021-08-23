@@ -101,10 +101,16 @@ void SceneBase::Init()
 	camera->Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
 	bLightEnabled = false;
+
+	m_worldHeight = 100.f;
+	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 }
 
 void SceneBase::Update(double dt)
 {
+	m_worldHeight = 100.f;
+	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
+
 	//Keyboard Section
 	if(Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
@@ -241,4 +247,19 @@ void SceneBase::Exit()
 SceneBase::SCENE_TYPE SceneBase::GetSceneType()
 {
 	return type;
+}
+
+MS& SceneBase::GetModelStack()
+{
+	return modelStack;
+}
+
+float SceneBase::GetWorldWidth()
+{
+	return m_worldWidth;
+}
+
+float SceneBase::GetWorldHeight()
+{
+	return m_worldHeight;
 }
