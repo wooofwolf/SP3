@@ -42,7 +42,6 @@ public:
 	Vector3 GetScale();
 
 	Projectile* projectile;
-	Projectile Shoot();
 	bool active;
 	void Collisioncheck(std::vector <Vector3> activeTileList);
 	void Exit();
@@ -53,7 +52,7 @@ public:
 	float directionalCD;
 	virtual void Update(double dt);
 	bool collided;
-	bool changeDir;
+	//bool changeDir;
 	void Movement(double dt);
 	DIRECTION direction;
 	FSM currentFSM;
@@ -87,6 +86,7 @@ protected:
 public:
 	EnemyDecorator(BaseEnemy* baseEnemy);
 
+	Projectile* Shoot(Projectile::PROJECTILE_TYPE type);
 	void Attack() const override;
 	void Update(double dt) override;
 	void Init() override;

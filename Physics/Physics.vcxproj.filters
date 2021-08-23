@@ -76,6 +76,9 @@
     <ClCompile Include="Source\SceneLevel1.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="Source\SceneLevel2.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
     <ClCompile Include="Source\SceneLevel4.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
@@ -153,6 +156,9 @@
       <Filter>Scenes</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneLevel1.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneLevel2.h">
       <Filter>Scenes</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneLevel4.h">

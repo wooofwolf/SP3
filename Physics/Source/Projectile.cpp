@@ -1,5 +1,5 @@
 #include "Projectile.h"
-
+#include "BaseEnemy.h"
 #include "Player.h"
 
 Projectile::Projectile()
@@ -24,7 +24,7 @@ void Projectile::Init()
 	detonateTimer = 0;
 	explosionTimer = 0;
 	active = true;
-
+	BaseEnemy* enemy;
 	switch (type)
 	{
 	case PROJECTILE_TYPE::PROJECTILE_REVOLVER:
@@ -51,6 +51,17 @@ void Projectile::Init()
 	case PROJECTILE_TYPE::PROJECTILE_SPEARS:
 		vel = normal * 100;
 		damage = 10;
+		pos.Set(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+		break;
+	case PROJECTILE_TYPE::PROJECTILE_ARROWS:
+		vel = normal * 125;
+		damage = 15;
+		pos.Set(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+		break;
+	case PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET:
+		vel = normal * 150;
+		damage = 20;
+		pos.Set(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
 		break;
 	}
 }
