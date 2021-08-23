@@ -123,7 +123,7 @@ void SceneGUI::Update(double dt)
 				else
 					ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(229.f / 255.f, 101.f / 255.f, 46.f / 255.f, 1.0f));
 				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
-				ImGui::ProgressBar(Boss::GetInstance()->GetHP() / 1000.f, ImVec2(1000.f, 80.f), "");
+				ImGui::ProgressBar(Boss::GetInstance()->GetHP() / 1500.f, ImVec2(1000.f, 80.f), "");
 				ImGui::PopStyleColor();
 				ImGui::PopStyleColor();
 			ImGui::End();
