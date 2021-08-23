@@ -104,7 +104,7 @@ void SceneLevel3::Update(double dt)
 	static bool bZPressed = false;
 	if (!bZPressed && Application::IsKeyPressed('Z'))
 	{
-		SceneManager::GetInstance()->SetActiveScene("TestScene");
+		SceneManager::GetInstance()->SetActiveScene("Level4");
 		bZPressed = true;
 	}
 	else if (bZPressed && !Application::IsKeyPressed('Z'))
