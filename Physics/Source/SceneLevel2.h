@@ -10,6 +10,7 @@
 #include "Collectible.h"
 #include "SceneGUI.h"
 #include "SingletonPattern.h"
+#include "Boss.h"
 
 class SceneLevel2 : public SceneBase, public SingletonPattern<SceneLevel2>
 {
@@ -42,11 +43,14 @@ public:
 
 	std::vector <Vector3> activeTileList;
 	std::vector <Vector3> HazardTileList;
-	//std::vector<Projectile*> projectileList;
-	//std::vector<BaseEnemy*> enemyList;
+	std::vector <Vector3> ExitTileList;
+
+	/*std::vector<Projectile*> projectileList;
+	std::vector<BaseEnemy*> enemyList;*/
 	std::vector<Collectible*> collectibleList;
 
 	Player* player;
+	Boss* boss;
 
 	virtual void Init();
 	virtual void Update(double dt);

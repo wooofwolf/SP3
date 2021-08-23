@@ -317,19 +317,19 @@ void Player::Exitcheck(std::vector<Vector3> activeTileList)
 		{
 			switch (SceneManager::GetInstance()->GetActiveScene()->GetSceneType())
 			{
-			case (SceneBase::SCENE_TYPE::SCENE_TEST):
+			case (SceneBase::SCENE_TYPE::SCENE_LEVEL_1):
 			{
-				SceneManager::GetInstance()->SetActiveScene("Level1");
+				SceneManager::GetInstance()->SetActiveScene("Level2");
 				break;
 			}
-			case (SceneBase::SCENE_TYPE::SCENE_LEVEL_1):
+			case (SceneBase::SCENE_TYPE::SCENE_LEVEL_2):
 			{
 				SceneManager::GetInstance()->SetActiveScene("Level3");
 				break;
 			}
 			case (SceneBase::SCENE_TYPE::SCENE_LEVEL_3):
 			{
-				SceneManager::GetInstance()->SetActiveScene("TestScene");
+				SceneManager::GetInstance()->SetActiveScene("Level4");
 				break;
 			}
 			}
