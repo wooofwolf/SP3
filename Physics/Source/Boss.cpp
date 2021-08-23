@@ -1,6 +1,8 @@
 #include "Boss.h"
 
 #include "Player.h"
+#include "BaseEnemy.h"
+#include "SceneManager.h"
 
 Boss::Boss()
 {
@@ -21,13 +23,33 @@ void Boss::Init()
 	active = true;
 
 	bossFightActive = false;
+	spawnTimer = 0.0;
 }
 
 void Boss::Update(double dt)
 {
-	if ((Player::GetInstance()->GetPos() - pos).Length() <= 50.f)
+	if (active)
 	{
-		bossFightActive = true;
+		if ((Player::GetInstance()->GetPos() - pos).Length() <= 50.f && !bossFightActive)
+		{
+			bossFightActive = true;
+		}
+		if (bossFightActive)
+		{
+			if (hp <= 0.f)
+			{
+				active = false;
+				bossFightActive = false;
+				return;
+			}
+
+			spawnTimer += dt;
+			if (spawnTimer >= 15.0)
+			{
+				SpawnEnemies();
+				spawnTimer = 0.0;
+			}
+		}
 	}
 }
 
@@ -75,4 +97,18 @@ float Boss::GetHP()
 void Boss::SetHP(float hp)
 {
 	this->hp = hp;
+}
+
+void Boss::SpawnEnemies()
+{
+	int randInt = Math::RandIntMinMax(5, 10);
+	for (int i = 0; i < randInt; ++i)
+	{
+		float randAngle = Math::RandFloatMinMax(0.f, Math::TWO_PI);
+		Vector3 unitVector = Vector3(cosf(randAngle), sinf(randAngle));
+		CavemenMelee* enemy = new CavemenMelee(baseEnemy);
+		enemy->Init();
+		enemy->SetEnemyPos(pos + (unitVector * Math::RandFloatMinMax(30.f, 60.f)));
+		SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(enemy);
+	}
 }

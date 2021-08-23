@@ -308,3 +308,31 @@ void Player::Hazardcheck(std::vector<Vector3> activeTileList)
 		}
 	}
 }
+
+void Player::Exitcheck(std::vector<Vector3> activeTileList)
+{
+	for (Vector3 tilepos : activeTileList)
+	{
+		if ((pos - tilepos).Length() < scale.x + 2)
+		{
+			switch (SceneManager::GetInstance()->GetActiveScene()->GetSceneType())
+			{
+			case (SceneBase::SCENE_TYPE::SCENE_TEST):
+			{
+				SceneManager::GetInstance()->SetActiveScene("Level1");
+				break;
+			}
+			case (SceneBase::SCENE_TYPE::SCENE_LEVEL_1):
+			{
+				SceneManager::GetInstance()->SetActiveScene("Level3");
+				break;
+			}
+			case (SceneBase::SCENE_TYPE::SCENE_LEVEL_3):
+			{
+				SceneManager::GetInstance()->SetActiveScene("TestScene");
+				break;
+			}
+			}
+		}
+	}
+}

@@ -43,7 +43,20 @@ class SceneBase : public Scene
 		U_TEXT_COLOR,
 		U_TOTAL,
 	};
+
 public:
+	enum class SCENE_TYPE
+	{
+		SCENE_MAINMENU,
+		SCENE_LEVEL_1,
+		SCENE_LEVEL_3,
+		SCENE_TEST,
+
+
+
+		SCENE_TOTAL
+	};
+
 	SceneBase();
 	~SceneBase();
 
@@ -55,7 +68,8 @@ public:
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 	void RenderMesh(Mesh *mesh, bool enableLight);
-	void RenderGO(GameObject *go);
+
+	SCENE_TYPE GetSceneType();
 
 	std::vector<Projectile*> projectileList;
 	std::vector<BaseEnemy*> enemyList;
@@ -63,6 +77,8 @@ protected:
 	unsigned m_vertexArrayID;
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
+
+	SCENE_TYPE type;
 
 	Camera* camera;
 

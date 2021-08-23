@@ -30,6 +30,8 @@ SceneTest::~SceneTest()
 
 void SceneTest::Init()
 {
+	type = SceneBase::SCENE_TYPE::SCENE_TEST;
+
 	SceneBase::Init();
 
 	player = Player::GetInstance();
@@ -108,10 +110,15 @@ void SceneTest::Init()
 
 void SceneTest::Update(double dt)
 {
-	//for (int i = 0; i < entitylist.size(); i++)
-	//{
-	//	entitylist[i]->pos += go->vel * player.GetGameSpeed() * dt;
-	//}
+	static bool bZPressed = false;
+	if (!bZPressed && Application::IsKeyPressed('Z'))
+	{
+		SceneManager::GetInstance()->SetActiveScene("Level1");
+		bZPressed = true;
+	}
+	else if (bZPressed && !Application::IsKeyPressed('Z'))
+		bZPressed = false;
+
 	SceneBase::Update(dt);
 	
 	//camera->Update(dt);
@@ -221,6 +228,8 @@ void SceneTest::Update(double dt)
 
 	Player::GetInstance()->Collisioncheck(activeTileList);
 	Player::GetInstance()->Hazardcheck(HazardTileList);
+	Player::GetInstance()->Exitcheck(ExitTileList);
+
 
 	for (Collectible* coll : collectibleList)
 	{
@@ -305,6 +314,27 @@ void SceneTest::Render()
 					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 0);
 					modelStack.Scale(2, 2, 2);
 					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_HAZARD), true);
+					modelStack.PopMatrix();
+					break;
+				}
+			}
+			case Tile::TILE_TYPE::TILE_EXIT:
+			{
+				Vector3 ExitPos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 0);
+				float width = (ExitPos - Camera::GetInstance()->position).Length();
+				float height = Camera::GetInstance()->position.z - ExitPos.z;
+				float hypotenuse = sqrtf(width * width + height * height);
+				float maxWidth = (Vector3(m_worldWidth / 2 + 2, 0, 1).Dot(Vector3(m_worldHeight / 2 + 2, 0, 1)) - Camera::GetInstance()->position.Length());
+				float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
+
+				// Occlusion Rendering
+				if (hypotenuse <= maxHypotenuse)
+				{
+					ExitTileList.push_back(ExitPos);
+					modelStack.PushMatrix();
+					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 0);
+					modelStack.Scale(2, 2, 2);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_EXIT), true);
 					modelStack.PopMatrix();
 					break;
 				}
@@ -524,9 +554,11 @@ void SceneTest::Exit()
 {
 	SceneBase::Exit();
 
-	delete map;
+	map->Destroy();
+	map = nullptr;
 
-	delete player;
+	player->Destroy();
+	player = nullptr;
 
 	delete simpleGun;
 	delete revolver;
@@ -539,9 +571,12 @@ void SceneTest::Exit()
 	for (Collectible* coll : collectibleList)
 		delete coll;
 
+	collectibleList.clear();
+
 	for (BaseEnemy* enemy : enemyList)
 		delete enemy;
 
+	enemyList.clear();
 
 	sceneGUI->Exit();
 }

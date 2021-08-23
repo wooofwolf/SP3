@@ -32,8 +32,8 @@ void MenuScene::Update(const double dt)
 	static bool bEnterPressed = false;
 	if (!bEnterPressed && Application::IsKeyPressed(VK_RETURN))
 	{
-		//SceneManager::GetInstance()->SetActiveScene("TestScene");
-		SceneManager::GetInstance()->SetActiveScene("Level1");
+		SceneManager::GetInstance()->SetActiveScene("TestScene");
+		//SceneManager::GetInstance()->SetActiveScene("Level1");
 		bEnterPressed = true;
 	}
 	else if (bEnterPressed && !Application::IsKeyPressed(VK_RETURN))
