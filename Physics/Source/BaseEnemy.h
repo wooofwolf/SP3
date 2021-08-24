@@ -66,7 +66,7 @@ public:
 	bool bPathFind;
 	float attackCD;
 	bool attacked;
-	std::stack<Vector3> path;
+	std::vector<Vector3> path;
 	bool pathfinding;
 	double movingTimer;
 	Vector3 dest;
