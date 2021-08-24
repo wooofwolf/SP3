@@ -111,9 +111,10 @@ void Projectile::Init(BaseEnemy* enemy)
 	switch (type)
 	{
 	case PROJECTILE_TYPE::PROJECTILE_SPEARS:
-		vel = normal * 100;
 		damage = 10;
 		pos.Set(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+		normal.Set(enemy->GetNormal().x, enemy->GetNormal().y, enemy->GetNormal().z);
+		vel = normal * 100;
 		break;
 	case PROJECTILE_TYPE::PROJECTILE_ARROWS:
 		vel = normal * 125;
@@ -130,11 +131,12 @@ void Projectile::Init(BaseEnemy* enemy)
 
 void Projectile::EnemyShoot(PROJECTILE_TYPE type , BaseEnemy* enemy)
 {
-	Vector3 shootingDir = (pos - Player::GetInstance()->GetPos()).Normalized();
+
+	std::cout << Player::GetInstance()->GetPos() << std::endl;
 	Projectile* proj = new Projectile(type);
+	enemy->active = true;
 	proj->Init(enemy);
 	proj->active = true;
-	proj->SetVelo(shootingDir);
 	SceneManager::GetInstance()->GetActiveScene()->projectileList.push_back(proj);
 }
 

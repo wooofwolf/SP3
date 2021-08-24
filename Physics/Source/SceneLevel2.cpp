@@ -126,7 +126,22 @@ void SceneLevel2::Update(double dt)
 	//camera->Update(dt);
 
 	player->Update(dt);
-
+	//std::vector<Projectile*>::iterator it = projectileList.begin();
+	//for (; it != projectileList.end(); )
+	//{
+	//	Projectile* projectile = (Projectile*)*it;
+	//	projectile->Collisioncheck(activeTileList);
+	//	if ((projectile->GetPos() - player->GetPos()).Length() <= projectile->GetScale().x && projectile->active == true && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_SPEARS || projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ARROWS || projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET)
+	//	{
+	//		projectile->active = false;
+	//		player->SetHealth(player->GetHealth() - projectile->damage);
+	//	}
+	//	if (!projectile->active)
+	//	{
+	//		it = projectileList.erase(it);
+	//	}
+	//	++it;
+	//}
 
 	//baseEnemy->Update(dt);
 	revolver->UpdateFireRateTimer(dt);
@@ -348,27 +363,6 @@ void SceneLevel2::Render()
 
 
 
-	//std::cout << (x / w) * m_worldWidth << ' ' << m_worldHeight - (y / h) * m_worldHeight << std::endl;
-
-	//baseEnemy->active = true;
-
-
-	/*modelStack.PushMatrix();
-	modelStack.Translate(baseEnemy->GetEnemyPos().x, baseEnemy->GetEnemyPos().y, 1);
-	modelStack.Scale(10, 10, 10);
-	RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
-	modelStack.PopMatrix();*/
-
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(2 + 4 * baseEnemy->GetEnemyPos().x, m_worldHeight - 2 - 4 * baseEnemy->GetEnemyPos().y, 1);
-	//RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
-	//modelStack.PopMatrix();
-
-	//std::cout << (x / w) * m_worldWidth << ' ' << m_worldHeight - (y / h) * m_worldHeight << std::endl;
-
-	//baseEnemy->active = true;
-
 	std::vector<Projectile*>::iterator it = projectileList.begin();
 	for (; it != projectileList.end(); )
 	{
@@ -377,7 +371,7 @@ void SceneLevel2::Render()
 
 		for (BaseEnemy* enemy : enemyList)
 		{
-			if (projectile->active && (projectile->GetPos() - enemy->GetEnemyPos()).Length() < projectile->GetScale().x + 2 && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3)
+			if (projectile->active && (projectile->GetPos() - enemy->GetEnemyPos()).Length() < projectile->GetScale().x + 2 && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_SPEARS && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ARROWS && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET)
 			{
 				projectile->active = false;
 				enemy->SetEnemyHP(enemy->GetEnemyHP() - projectile->damage);
@@ -387,6 +381,11 @@ void SceneLevel2::Render()
 				enemy->moving = false;
 				enemy->stasisTimer = 0;
 			}
+		}
+		if ((projectile->GetPos() - player->GetPos()).Length() <= projectile->GetScale().x && projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_SPEARS || projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ARROWS || projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET)
+		{
+			projectile->active = false;
+			player->SetHealth(player->GetHealth() - projectile->damage);
 		}
 		if (projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->detonateTimer >= 3)
 		{
@@ -459,11 +458,23 @@ void SceneLevel2::Render()
 
 			if (hypotenuse <= maxHypotenuse)
 			{
-				modelStack.PushMatrix();
-				modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
-				modelStack.Scale(3, 3, 3);
-				RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
-				modelStack.PopMatrix();
+				if (dynamic_cast<CavemenMelee*>(enemy) != nullptr)
+				{
+					modelStack.PushMatrix();
+					modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+					modelStack.Scale(3, 3, 3);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_KNIGHT), false);
+					modelStack.PopMatrix();
+				}
+				else if (dynamic_cast<CavemenRanged*>(enemy) != nullptr)
+				{
+					modelStack.PushMatrix();
+					modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+					modelStack.Rotate(Math::RadianToDegree(atan2f(enemy->GetNormal().y, enemy->GetNormal().x)), 0, 0, 1);
+					modelStack.Scale(3, 3, 3);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_ARCHER), false);
+					modelStack.PopMatrix();
+				}
 			}
 			it2++;
 		}
@@ -482,7 +493,7 @@ void SceneLevel2::Render()
 			modelStack.PushMatrix();
 			modelStack.Translate(boss->GetPos().x, boss->GetPos().y, boss->GetPos().z);
 			modelStack.Scale(boss->GetScale().x, boss->GetScale().y, boss->GetScale().z);
-			RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
+			RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CAVEMAN), false);
 			modelStack.PopMatrix();
 		}
 	}

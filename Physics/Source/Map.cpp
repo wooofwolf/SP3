@@ -130,6 +130,38 @@ void Map::ReadFile(std::string fileName)
 					SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(CavemanRanged);
 					val = 0;
 				}
+				if (val == 7)
+				{
+					Knights* knight = new Knights(baseEnemy);
+					knight->Init();
+					knight->SetEnemyPos(Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1));
+					SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(knight);
+					val = 0;
+				}
+				if (val == 8)
+				{
+					Archer* archers = new Archer(baseEnemy);
+					archers->Init();
+					archers->SetEnemyPos(Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1));
+					SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(archers);
+					val = 0;
+				}
+				if (val == 9)
+				{
+					Cyborg* cyborg = new Cyborg(baseEnemy);
+					cyborg->Init();
+					cyborg->SetEnemyPos(Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1));
+					SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(cyborg);
+					val = 0;
+				}
+				if (val == 10)
+				{
+					Sniper* snipers = new Sniper(baseEnemy);
+					snipers->Init();
+					snipers->SetEnemyPos(Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1));
+					SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(snipers);
+					val = 0;
+				}
 				if (val == 100)
 				{
 					Boss* boss = Boss::GetInstance();

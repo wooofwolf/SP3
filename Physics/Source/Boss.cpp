@@ -117,7 +117,7 @@ void Boss::Render()
 			scene->GetModelStack().PushMatrix();
 			scene->GetModelStack().Translate(pos.x, pos.y, pos.z);
 			scene->GetModelStack().Scale(scale.x, scale.y, scale.z);
-			scene->RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
+			scene->RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CAVEMAN), false);
 			scene->GetModelStack().PopMatrix();
 		}
 
