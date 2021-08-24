@@ -40,6 +40,8 @@ public:
 	bool GetActive();
 
 	Vector3 GetScale();
+
+	Vector3 GetNormal();
 	bool active;
 	void Collisioncheck(std::vector <Vector3> activeTileList);
 	void Exit();

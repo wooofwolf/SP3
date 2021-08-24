@@ -113,7 +113,7 @@ void SceneLevel1::Update(double dt)
 	static bool bZPressed = false;
 	if (!bZPressed && Application::IsKeyPressed('Z'))
 	{
-		SceneManager::GetInstance()->SetActiveScene("Level3");
+		SceneManager::GetInstance()->SetActiveScene("Level2");
 		bZPressed = true;
 	}
 	else if (bZPressed && !Application::IsKeyPressed('Z'))
@@ -429,11 +429,23 @@ void SceneLevel1::Render()
 
 			if (hypotenuse <= maxHypotenuse)
 			{
-				modelStack.PushMatrix();
-				modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
-				modelStack.Scale(3, 3, 3);
-				RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
-				modelStack.PopMatrix();
+				if (dynamic_cast<CavemenMelee*>(enemy) != nullptr)
+				{
+					modelStack.PushMatrix();
+					modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+					modelStack.Scale(3, 3, 3);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CAVEMAN), false);
+					modelStack.PopMatrix();
+				}
+				else if (dynamic_cast<CavemenRanged*>(enemy) != nullptr)
+				{
+					modelStack.PushMatrix();
+					modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+					modelStack.Rotate(Math::RadianToDegree(atan2f(enemy->GetNormal().y, enemy->GetNormal().x)), 0, 0, 1);
+					modelStack.Scale(3, 3, 3);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_SPEARMAN), false);
+					modelStack.PopMatrix();
+				}
 			}
 			it2++;
 		}
