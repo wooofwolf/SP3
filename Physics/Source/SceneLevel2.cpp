@@ -382,7 +382,7 @@ void SceneLevel2::Render()
 				enemy->stasisTimer = 0;
 			}
 		}
-		if ((projectile->GetPos() - player->GetPos()).Length() <= projectile->GetScale().x && projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_SPEARS || projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ARROWS || projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET)
+		if ((projectile->GetPos() - player->GetPos()).Length() <= projectile->GetScale().x && projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ARROWS)
 		{
 			projectile->active = false;
 			player->SetHealth(player->GetHealth() - projectile->damage);
@@ -458,7 +458,7 @@ void SceneLevel2::Render()
 
 			if (hypotenuse <= maxHypotenuse)
 			{
-				if (dynamic_cast<CavemenMelee*>(enemy) != nullptr)
+				if (dynamic_cast<Knights*>(enemy) != nullptr)
 				{
 					modelStack.PushMatrix();
 					modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
@@ -466,7 +466,7 @@ void SceneLevel2::Render()
 					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_KNIGHT), false);
 					modelStack.PopMatrix();
 				}
-				else if (dynamic_cast<CavemenRanged*>(enemy) != nullptr)
+				else if (dynamic_cast<Archer*>(enemy) != nullptr)
 				{
 					modelStack.PushMatrix();
 					modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);

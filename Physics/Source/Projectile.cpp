@@ -117,14 +117,16 @@ void Projectile::Init(BaseEnemy* enemy)
 		vel = normal * 100;
 		break;
 	case PROJECTILE_TYPE::PROJECTILE_ARROWS:
-		vel = normal * 125;
 		damage = 15;
 		pos.Set(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+		normal.Set(enemy->GetNormal().x, enemy->GetNormal().y, enemy->GetNormal().z);
+		vel = normal * 125;
 		break;
 	case PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET:
-		vel = normal * 150;
 		damage = 20;
 		pos.Set(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+		normal.Set(enemy->GetNormal().x, enemy->GetNormal().y, enemy->GetNormal().z);
+		vel = normal * 140;
 		break;
 	}
 }

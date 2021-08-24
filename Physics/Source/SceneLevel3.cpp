@@ -341,7 +341,7 @@ void SceneLevel3::Render()
 
 		for (BaseEnemy* enemy : enemyList)
 		{
-			if (projectile->active && (projectile->GetPos() - enemy->GetEnemyPos()).Length() < projectile->GetScale().x + 2 && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3)
+			if (projectile->active && (projectile->GetPos() - enemy->GetEnemyPos()).Length() < projectile->GetScale().x + 2 && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_SPEARS && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ARROWS && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET)
 			{
 				projectile->active = false;
 				enemy->SetEnemyHP(enemy->GetEnemyHP() - projectile->damage);
@@ -358,7 +358,11 @@ void SceneLevel3::Render()
 			projectile->type = Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION;
 			projectile->SetScale(Vector3(20.f, 20.f, 1.f));
 		}
-
+		if ((projectile->GetPos() - player->GetPos()).Length() <= projectile->GetScale().x && projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET)
+		{
+			projectile->active = false;
+			player->SetHealth(player->GetHealth() - projectile->damage);
+		}
 		if (projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION && projectile->explosionTimer >= 0.1)
 		{
 			projectile->active = false;
@@ -416,7 +420,7 @@ void SceneLevel3::Render()
 
 			if (hypotenuse <= maxHypotenuse)
 			{
-				if (dynamic_cast<CavemenMelee*>(enemy) != nullptr)
+				if (dynamic_cast<Cyborg*>(enemy) != nullptr)
 				{
 					modelStack.PushMatrix();
 					modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
@@ -424,7 +428,7 @@ void SceneLevel3::Render()
 					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CYBORG), false);
 					modelStack.PopMatrix();
 				}
-				else if (dynamic_cast<CavemenRanged*>(enemy) != nullptr)
+				else if (dynamic_cast<Sniper*>(enemy) != nullptr)
 				{
 					modelStack.PushMatrix();
 					modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);

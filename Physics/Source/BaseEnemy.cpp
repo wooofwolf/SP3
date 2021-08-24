@@ -457,6 +457,71 @@ void Knights::Attack()
 
 void Knights::Update(double dt)
 {
+	if (hp <= 0)
+	{
+		active = false;
+	}
+	if (!moving)
+	{
+		stasisTimer += dt;
+		std::cout << stasisTimer << std::endl;
+	}
+	if (stasisTimer >= 5)
+	{
+		moving = false;
+	}
+	//Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1)
+	//Vector3 unOffsetPlayerPos = ((Player::GetInstance()->GetPos().x - 2) / 4, (Player::GetInstance()->GetPos().y - map->m_worldHeight + 2) / -4);
+	if (attacked)
+	{
+		attackCD = 5;
+		attacked = false;
+	}
+	attackCD -= dt;
+	//std::cout << attackCD << std::endl;
+	//std::cout << "IM BEING USED" << std::endl;
+	if (moving)
+	{
+		switch (currentFSM)
+		{
+		case IDLE:
+		{
+			//std::cout << "IDLING" << std::endl;
+			//Movement(dt);
+			if ((pos - Player::GetInstance()->GetPos()).Length() < 50 && attackCD <= 0)
+			{
+				currentFSM = PATHFIND;
+			}
+			/*std::cout << "lalala" << std::endl;*/
+			break;
+		}
+		case ATTACK:
+		{
+			Attack();
+			attacked = true;
+			currentFSM = IDLE;
+			break;
+		}
+		case PATHFIND:
+		{
+
+			Map* map = Map::GetInstance();
+			Player* p = Player::GetInstance();
+			std::future<void> future = std::async(std::launch::async, &Map::AStarSearch, map, pos, p->GetPos(), &path);
+			currentFSM = MOVE;
+			break;
+		}
+		case MOVE:
+		{
+			Movement(dt);
+			if ((pos - Player::GetInstance()->GetPos()).Length() < 10)
+			{
+				currentFSM = ATTACK;
+			}
+			break;
+		}
+		}
+	}
 }
 
 void Knights::Init()
@@ -557,6 +622,7 @@ void Archer::Init()
 
 Cyborg::Cyborg(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 {
+
 }
 
 void Cyborg::Attack()
@@ -567,6 +633,71 @@ void Cyborg::Attack()
 
 void Cyborg::Update(double dt)
 {
+	if (hp <= 0)
+	{
+		active = false;
+	}
+	if (!moving)
+	{
+		stasisTimer += dt;
+		std::cout << stasisTimer << std::endl;
+	}
+	if (stasisTimer >= 5)
+	{
+		moving = false;
+	}
+	//Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1)
+	//Vector3 unOffsetPlayerPos = ((Player::GetInstance()->GetPos().x - 2) / 4, (Player::GetInstance()->GetPos().y - map->m_worldHeight + 2) / -4);
+	if (attacked)
+	{
+		attackCD = 5;
+		attacked = false;
+	}
+	attackCD -= dt;
+	//std::cout << attackCD << std::endl;
+	//std::cout << "IM BEING USED" << std::endl;
+	if (moving)
+	{
+		switch (currentFSM)
+		{
+		case IDLE:
+		{
+			//std::cout << "IDLING" << std::endl;
+			//Movement(dt);
+			if ((pos - Player::GetInstance()->GetPos()).Length() < 50 && attackCD <= 0)
+			{
+				currentFSM = PATHFIND;
+			}
+			/*std::cout << "lalala" << std::endl;*/
+			break;
+		}
+		case ATTACK:
+		{
+			Attack();
+			attacked = true;
+			currentFSM = IDLE;
+			break;
+		}
+		case PATHFIND:
+		{
+
+			Map* map = Map::GetInstance();
+			Player* p = Player::GetInstance();
+			std::future<void> future = std::async(std::launch::async, &Map::AStarSearch, map, pos, p->GetPos(), &path);
+			currentFSM = MOVE;
+			break;
+		}
+		case MOVE:
+		{
+			Movement(dt);
+			if ((pos - Player::GetInstance()->GetPos()).Length() < 10)
+			{
+				currentFSM = ATTACK;
+			}
+			break;
+		}
+		}
+	}
 }
 
 void Cyborg::Init()
@@ -632,7 +763,7 @@ void Sniper::Update(double dt)
 		{
 			std::cout << "FUCK" << std::endl;
 			Projectile* proj = new Projectile();
-			proj->EnemyShoot(Projectile::PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET, this);
+			proj->EnemyShoot(Projectile::PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET, this);	
 			currentFSM = IDLE;
 			attacked = true;
 			break;

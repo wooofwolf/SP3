@@ -355,7 +355,7 @@ void SceneLevel1::Render()
 
 		for (BaseEnemy* enemy : enemyList)
 		{
-			if (projectile->active && (projectile->GetPos() - enemy->GetEnemyPos()).Length() < projectile->GetScale().x + 2 && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3)
+			if (projectile->active && (projectile->GetPos() - enemy->GetEnemyPos()).Length() < projectile->GetScale().x + 2 && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_SPEARS && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ARROWS && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET)
 			{
 				projectile->active = false;
 				enemy->SetEnemyHP(enemy->GetEnemyHP() - projectile->damage);
@@ -376,7 +376,11 @@ void SceneLevel1::Render()
 		{
 			projectile->active = false;
 		}
-
+		if ((projectile->GetPos() - player->GetPos()).Length() <= projectile->GetScale().x && projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_SPEARS)
+		{
+			projectile->active = false;
+			player->SetHealth(player->GetHealth() - projectile->damage);
+		}
 		if (!projectile->active)
 		{
 			it = projectileList.erase(it);
