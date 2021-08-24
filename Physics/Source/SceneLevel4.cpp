@@ -378,7 +378,7 @@ void SceneLevel4::Render()
 
 		for (BaseEnemy* enemy : enemyList)
 		{
-			if (projectile->active && (projectile->GetPos() - enemy->GetEnemyPos()).Length() < projectile->GetScale().x + 2)
+			if (projectile->active && (projectile->GetPos() - enemy->GetEnemyPos()).Length() < projectile->GetScale().x + 2 && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_SPEARS && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ARROWS && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET)
 			{
 				projectile->active = false;
 				enemy->SetEnemyHP(enemy->GetEnemyHP() - projectile->damage);
@@ -389,11 +389,10 @@ void SceneLevel4::Render()
 				enemy->stasisTimer = 0;
 			}
 		}
-		if (projectile->active && (projectile->GetPos() - boss->GetPos()).Length() < projectile->GetScale().x + boss->GetScale().x && boss->GetFightActive())
+		if ((projectile->GetPos() - player->GetPos()).Length() <= projectile->GetScale().x && projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ARROWS && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_SPEARS && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET)
 		{
 			projectile->active = false;
-			if (!boss->GetInvincible())
-				boss->SetHP(boss->GetHP() - projectile->damage);
+			player->SetHealth(player->GetHealth() - projectile->damage);
 		}
 		if (projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->detonateTimer >= 3)
 		{
@@ -406,6 +405,12 @@ void SceneLevel4::Render()
 			projectile->active = false;
 		}
 
+		if (projectile->active && (projectile->GetPos() - boss->GetPos()).Length() < projectile->GetScale().x + boss->GetScale().x && boss->GetFightActive())
+		{
+			projectile->active = false;
+			if (!boss->GetInvincible())
+				boss->SetHP(boss->GetHP() - projectile->damage);
+		}
 		if (!projectile->active)
 		{
 			it = projectileList.erase(it);
@@ -458,11 +463,54 @@ void SceneLevel4::Render()
 
 			if (hypotenuse <= maxHypotenuse)
 			{
-				modelStack.PushMatrix();
-				modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
-				modelStack.Scale(3, 3, 3);
-				RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CAVEMAN), false);
-				modelStack.PopMatrix();
+				if (dynamic_cast<CavemenMelee*>(enemy) != nullptr)
+				{
+					modelStack.PushMatrix();
+					modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+					modelStack.Scale(3, 3, 3);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CAVEMAN), false);
+					modelStack.PopMatrix();
+				}
+				else if (dynamic_cast<CavemenRanged*>(enemy) != nullptr)
+				{
+					modelStack.PushMatrix();
+					modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+					modelStack.Scale(3, 3, 3);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_SPEARMAN), false);
+					modelStack.PopMatrix();
+				}
+				else if (dynamic_cast<Knights*>(enemy) != nullptr)
+				{
+					modelStack.PushMatrix();
+					modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+					modelStack.Scale(3, 3, 3);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_KNIGHT), false);
+					modelStack.PopMatrix();
+				}
+				else if (dynamic_cast<Archer*>(enemy) != nullptr)
+				{
+					modelStack.PushMatrix();
+					modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+					modelStack.Scale(3, 3, 3);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_ARCHER), false);
+					modelStack.PopMatrix();
+				}
+				else if (dynamic_cast<Cyborg*>(enemy) != nullptr)
+				{
+					modelStack.PushMatrix();
+					modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+					modelStack.Scale(3, 3, 3);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CYBORG), false);
+					modelStack.PopMatrix();
+				}
+				else if (dynamic_cast<Sniper*>(enemy) != nullptr)
+				{
+					modelStack.PushMatrix();
+					modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+					modelStack.Scale(3, 3, 3);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_SNIPER), false);
+					modelStack.PopMatrix();
+				}
 			}
 			it2++;
 		}
