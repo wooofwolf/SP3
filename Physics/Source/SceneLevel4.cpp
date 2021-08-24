@@ -389,7 +389,7 @@ void SceneLevel4::Render()
 				enemy->stasisTimer = 0;
 			}
 		}
-		if ((projectile->GetPos() - player->GetPos()).Length() <= projectile->GetScale().x && projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ARROWS && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_SPEARS && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET)
+		if ((projectile->GetPos() - player->GetPos()).Length() <= projectile->GetScale().x + player->GetScale().x && projectile->active && (projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ARROWS || projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_SPEARS || projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET))
 		{
 			projectile->active = false;
 			player->SetHealth(player->GetHealth() - projectile->damage);
