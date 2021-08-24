@@ -99,21 +99,23 @@ void BaseEnemy::Movement(double dt)
 	{
 		if (!pathfinding && !path.empty())
 		{
-			dest = Vector3(2 + 4 * path.top().x, Map::GetInstance()->m_worldHeight - 2 - 4 * path.top().y, 1);
-			path.pop();
+			dest = Vector3(2 + 4 * path.back().x, Map::GetInstance()->m_worldHeight - 2 - 4 * path.back().y, 1);
+			path.pop_back();
 			pathfinding = true;
 		}
 		if (pathfinding)
 		{
 			if (pos == dest)
 			{
-				path.pop();
+				path.pop_back();
 				pathfinding = false;
 			}
 			if ((dest - pos).Length() > 0.2f)
 				pos += (dest - pos).Normalized() * dt * 10;
 			else
+			{
 				pathfinding = false;
+			}
 		}
 	}
 }
@@ -322,7 +324,7 @@ void CavemenMelee::Update(double dt)
 		}
 		case PATHFIND:
 		{
-
+			path.clear();
 			Map* map = Map::GetInstance();
 			Player* p = Player::GetInstance();
 			std::future<void> future = std::async(std::launch::async, &Map::AStarSearch, map, pos, p->GetPos(), &path);
@@ -335,6 +337,10 @@ void CavemenMelee::Update(double dt)
 			if ((pos - Player::GetInstance()->GetPos()).Length() < 10)
 			{
 				currentFSM = ATTACK;
+			}
+			else if (path.empty())
+			{
+				currentFSM = IDLE;
 			}
 			break;
 		}

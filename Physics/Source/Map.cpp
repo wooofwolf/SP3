@@ -215,26 +215,26 @@ double Map::CalculateHValue(Vector3 pos, Vector3 dest)
 		abs(pos.y - dest.y);
 }
 
-void Map::TracePath(Vector3 dest, std::stack<Vector3>* path)
+void Map::TracePath(Vector3 dest, std::vector<Vector3>* path)
 {
 	int x = dest.x;
 	int y = dest.y;
 
 	while (!(mapGrid[x][y].parent_i == x && mapGrid[x][y].parent_j == y))
 	{
-		path->push(Vector3(x, y, 1));
+		path->push_back(Vector3(x, y, 1));
 		int temp_x = mapGrid[x][y].parent_i;
 		int temp_y = mapGrid[x][y].parent_j;
 		x = temp_x;
 		y = temp_y;
 	}
 
-	path->push(Vector3(x, y, 1));
+	path->push_back(Vector3(x, y, 1));
 
 	return;
 }
 
-void Map::AStarSearch(Vector3 source, Vector3 destination, std::stack<Vector3>* path)
+void Map::AStarSearch(Vector3 source, Vector3 destination, std::vector<Vector3>* path)
 {
 	std::lock_guard<std::mutex> lock(mutex);
 
