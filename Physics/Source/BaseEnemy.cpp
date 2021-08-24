@@ -97,7 +97,7 @@ void BaseEnemy::Movement(double dt)
 {
 	if (moving)
 	{
-		if (/*!pathfinding &&*/ !path.empty())
+		if (!pathfinding && !path.empty())
 		{
 			dest = Vector3(2 + 4 * path.top().x, Map::GetInstance()->m_worldHeight - 2 - 4 * path.top().y, 1);
 			path.pop();
@@ -105,18 +105,15 @@ void BaseEnemy::Movement(double dt)
 		}
 		if (pathfinding)
 		{
-			/*movingTimer += dt;
-			if (movingTimer >= 0.2)
-			{*/
-			Vector3 moveDir = dest - pos;
-			pos +=moveDir * dt * 3;
-			if ((pos - dest).Length() <= 1)
+			if (pos == dest)
 			{
-				//pos = dest;
-				//pathfinding = false;
-				movingTimer = 0.0;
+				path.pop();
+				pathfinding = false;
 			}
-			/*}*/
+			if ((dest - pos).Length() > 0.2f)
+				pos += (dest - pos).Normalized() * dt * 10;
+			else
+				pathfinding = false;
 		}
 	}
 }
@@ -339,11 +336,6 @@ void CavemenMelee::Update(double dt)
 			{
 				currentFSM = ATTACK;
 			}
-			//FSMcounter++;
-			//if (Player::GetInstance()->GetPos() != dest)
-			//{
-			//	currentFSM =PATHFIND;
-			//}
 			break;
 		}
 		}
