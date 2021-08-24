@@ -510,7 +510,7 @@ void Knights::Update(double dt)
 		}
 		case PATHFIND:
 		{
-
+			path.clear();
 			Map* map = Map::GetInstance();
 			Player* p = Player::GetInstance();
 			std::future<void> future = std::async(std::launch::async, &Map::AStarSearch, map, pos, p->GetPos(), &path);
@@ -523,6 +523,10 @@ void Knights::Update(double dt)
 			if ((pos - Player::GetInstance()->GetPos()).Length() < 10)
 			{
 				currentFSM = ATTACK;
+			}
+			else if (path.empty())
+			{
+				currentFSM = IDLE;
 			}
 			break;
 		}
@@ -538,6 +542,9 @@ void Knights::Init()
 	attackCD = 0;
 	bPathFind = true;
 	attacked = false;
+	pathfinding = false;
+	dest.SetZero();
+	movingTimer = 0;
 }
 
 Archer::Archer(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
@@ -686,7 +693,7 @@ void Cyborg::Update(double dt)
 		}
 		case PATHFIND:
 		{
-
+			path.clear();
 			Map* map = Map::GetInstance();
 			Player* p = Player::GetInstance();
 			std::future<void> future = std::async(std::launch::async, &Map::AStarSearch, map, pos, p->GetPos(), &path);
@@ -699,6 +706,10 @@ void Cyborg::Update(double dt)
 			if ((pos - Player::GetInstance()->GetPos()).Length() < 10)
 			{
 				currentFSM = ATTACK;
+			}
+			else if (path.empty())
+			{
+				currentFSM = IDLE;
 			}
 			break;
 		}
@@ -714,6 +725,9 @@ void Cyborg::Init()
 	attackCD = 0;
 	bPathFind = true;
 	attacked = false;
+	pathfinding = false;
+	dest.SetZero();
+	movingTimer = 0;
 }
 
 Sniper::Sniper(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
