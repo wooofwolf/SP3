@@ -107,6 +107,21 @@ bool SceneManager::SetActiveScene(const std::string& sceneName)
 	return true;
 }
 
+bool SceneManager::SetActiveScene(SceneBase* scene)
+{
+	//// Check if this _name does not exists in the map...
+	//if (!CheckSceneExists(sceneName))
+	//{
+	//	// If it does not exist, then unable to proceed
+	//	return false;
+	//}
+
+	// Scene exist, set the next scene pointer to that scene
+	nextScene = scene;
+
+	return true;
+}
+
 bool SceneManager::CheckSceneExists(const std::string& sceneName)
 {
 	return sceneMap.count(sceneName) != 0;
@@ -115,6 +130,11 @@ bool SceneManager::CheckSceneExists(const std::string& sceneName)
 SceneBase* SceneManager::GetActiveScene()
 {
 	return activeScene;
+}
+
+SceneBase* SceneManager::GetPrevScene()
+{
+	return prevScene;
 }
 
 SceneManager::SceneManager()
