@@ -15,7 +15,7 @@ Boss::~Boss()
 
 void Boss::Init()
 {
-	hp = 1000;
+	hp = 1500;
 	pos.SetZero();
 	prevpos = pos;
 	vel.SetZero();
@@ -24,7 +24,7 @@ void Boss::Init()
 	active = true;
 
 	bossFightActive = false;
-	stateTimer = 10.0;
+	stateTimer = 5.0;
 	currentFSM = FSM::INACTIVE;
 	invincible = false;
 	invincibleTimer = 0.0;
@@ -38,7 +38,7 @@ void Boss::Update(double dt)
 		switch (currentFSM)
 		{
 		case FSM::INACTIVE:
-			if ((Player::GetInstance()->GetPos() - pos).Length() <= 50.f && !bossFightActive && hp == 1000)
+			if ((Player::GetInstance()->GetPos() - pos).Length() <= 50.f && !bossFightActive && hp == 1500)
 			{
 				bossFightActive = true;
 				currentFSM = FSM::IDLE;
@@ -56,7 +56,7 @@ void Boss::Update(double dt)
 			}
 
 			stateTimer += dt;
-			if (stateTimer >= 15.0)
+			if (stateTimer >= 10.0)
 			{
 				// Random state
 				currentFSM = static_cast<FSM>(Math::RandIntMinMax(3, 4));
@@ -73,7 +73,7 @@ void Boss::Update(double dt)
 		case FSM::INVINCIBLE:
 			invincible = true;
 			invincibleTimer += dt;
-			if (invincibleTimer >= 15.0)
+			if (invincibleTimer >= 10.0)
 			{
 				invincible = false;
 				currentFSM = FSM::IDLE;
@@ -225,9 +225,9 @@ void BossAttack::Init()
 
 void BossAttack::Update(double dt)
 {
-	if (targetTimer < 5.0)
+	if (targetTimer < 3.0)
 		Movement(dt);
-	if (targetTimer >= 7.0)
+	if (targetTimer >= 5.0)
 	{
 		DamagePlayer();
 		Boss::GetInstance()->SetAttacked(true);

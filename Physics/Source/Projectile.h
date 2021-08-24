@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Entity.h"
-
+#include <stdlib.h>
+#include "BaseEnemy.h"
 struct Projectile: public Entity
 {
 	enum class PROJECTILE_TYPE
@@ -29,15 +30,19 @@ struct Projectile: public Entity
 
 	void Init();
 	void Init(int shotgunID);
+	void Init(BaseEnemy* enemy);
+	void EnemyShoot(PROJECTILE_TYPE type , BaseEnemy* enemy);
 	void Update(double dt);
 	void Render();
 	void Exit();
 	void Movement(double dt);
 	void Collisioncheck(std::vector <Vector3> activeTileList);
-
+	void SetVelo(Vector3 vel);
 	Vector3 GetPos();
 	void SetPos(Vector3 pos);
 	Vector3 GetScale();
 	void SetScale(Vector3 scale);
+
+
 };
 

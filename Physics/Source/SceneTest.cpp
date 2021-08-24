@@ -484,11 +484,22 @@ void SceneTest::Render()
 
 			if (hypotenuse <= maxHypotenuse)
 			{
-				modelStack.PushMatrix();
-				modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
-				modelStack.Scale(3, 3, 3);
-				RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
-				modelStack.PopMatrix();
+				if (dynamic_cast<CavemenMelee*>(enemy) != nullptr)
+				{
+					modelStack.PushMatrix();
+					modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+					modelStack.Scale(3, 3, 3);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BASEENEMY), false);
+					modelStack.PopMatrix();
+				}
+				else if (dynamic_cast<CavemenRanged*>(enemy) != nullptr)
+				{
+					modelStack.PushMatrix();
+					modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+					modelStack.Scale(3, 3, 3);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_SPEARMAN), false);
+					modelStack.PopMatrix();
+				}
 			}
 			it2++;
 		}

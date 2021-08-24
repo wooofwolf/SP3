@@ -89,11 +89,6 @@ void BaseEnemy::CheckCollidedSide(DIRECTION direction , double dt)
 		collided = false;
 	}
 }
-
-void BaseEnemy::Attack() const
-{
-}
-
 void BaseEnemy::Render()
 {
 }
@@ -102,7 +97,7 @@ void BaseEnemy::Movement(double dt)
 {
 	if (moving)
 	{
-		if (!pathfinding && !path.empty())
+		if (/*!pathfinding &&*/ !path.empty())
 		{
 			dest = Vector3(2 + 4 * path.top().x, Map::GetInstance()->m_worldHeight - 2 - 4 * path.top().y, 1);
 			path.pop();
@@ -110,13 +105,18 @@ void BaseEnemy::Movement(double dt)
 		}
 		if (pathfinding)
 		{
-			movingTimer += dt;
+			/*movingTimer += dt;
 			if (movingTimer >= 0.2)
+			{*/
+			Vector3 moveDir = dest - pos;
+			pos +=moveDir * dt * 3;
+			if ((pos - dest).Length() <= 1)
 			{
-				pos = dest;
-				pathfinding = false;
+				//pos = dest;
+				//pathfinding = false;
 				movingTimer = 0.0;
 			}
+			/*}*/
 		}
 	}
 }
@@ -224,15 +224,6 @@ Vector3 BaseEnemy::GetScale()
 	return scale;	
 }
 
-Projectile* EnemyDecorator::Shoot(Projectile::PROJECTILE_TYPE type)
-{
-
-	Vector3 shootingDir = pos - Player::GetInstance()->GetPos();
-	Projectile* proj = new Projectile(type);
-	proj->active = true;
-	return new Projectile(Projectile::PROJECTILE_TYPE::PROJECTILE_NONE);
-}
-
 void BaseEnemy::Collisioncheck(std::vector<Vector3> activeTileList)
 {
 	for (Vector3 tilePos : activeTileList)
@@ -247,12 +238,6 @@ void BaseEnemy::Collisioncheck(std::vector<Vector3> activeTileList)
 void BaseEnemy::Exit()
 {
 }
-
-void ConcreteBaseEnemy::Attack() const
-{
-	std::cout << "ConcreteBaseEnemy Attack!!" << std::endl;
-}
-
 void ConcreteBaseEnemy::Update(double dt)
 {
 
@@ -267,10 +252,6 @@ EnemyDecorator::EnemyDecorator(BaseEnemy* baseEnemy): baseEnemy(baseEnemy)
 {
 }
 
-void EnemyDecorator::Attack() const
-{
-	std::cout << "EnemyDecorator Attack!!" << std::endl;
-}
 
 void EnemyDecorator::Update(double dt)
 {
@@ -284,7 +265,7 @@ CavemenMelee::CavemenMelee(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 {
 }
 
-void CavemenMelee::Attack() const
+void CavemenMelee::Attack()
 {
 	Player::GetInstance()->SetHealth(Player::GetInstance()->GetHealth() - 5);
 	std::cout << "Cavemen Melee Attack!!" << std::endl;
@@ -292,12 +273,9 @@ void CavemenMelee::Attack() const
 
 void CavemenMelee::Update(double dt)
 {
-	if (!moving || moving)
+	if (hp <= 0)
 	{
-		if (hp <= 0)
-		{
-			active = false;
-		}
+		active = false;
 	}
 	if (!moving)
 	{
@@ -328,13 +306,21 @@ void CavemenMelee::Update(double dt)
 			//Movement(dt);
 			if ((pos - Player::GetInstance()->GetPos()).Length() < 50 && attackCD <= 0)
 			{
-				currentFSM = ATTACK;
+				currentFSM = PATHFIND;
 			}
 			/*std::cout << "lalala" << std::endl;*/
 			break;
 		}
 		case ATTACK:
 		{
+			Attack();
+			attacked = true;
+			currentFSM = IDLE;
+			break;
+		}
+		case PATHFIND:
+		{
+
 			Map* map = Map::GetInstance();
 			Player* p = Player::GetInstance();
 			std::future<void> future = std::async(std::launch::async, &Map::AStarSearch, map, pos, p->GetPos(), &path);
@@ -344,10 +330,20 @@ void CavemenMelee::Update(double dt)
 		case MOVE:
 		{
 			Movement(dt);
+			if ((pos - Player::GetInstance()->GetPos()).Length() < 10)
+			{
+				currentFSM = ATTACK;
+			}
+			//FSMcounter++;
+			//if (Player::GetInstance()->GetPos() != dest)
+			//{
+			//	currentFSM =PATHFIND;
+			//}
 			break;
 		}
 		}
 	}
+
 }
 
 void CavemenMelee::Init()
@@ -367,11 +363,6 @@ CavemenRanged::CavemenRanged(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 {
 }
 
-void CavemenRanged::Attack() const
-{
-	//Shoot(Projectile::PROJECTILE_TYPE::PROJECTILE_SPEARS);
-	std::cout << "Cavemen Ranged Attack!!" << std::endl;
-}
 //Projectile* CavemenRanged::Shoot()
 //{
 //	player->SetHealth(player->GetHealth() - 10);
@@ -380,6 +371,71 @@ void CavemenRanged::Attack() const
 
 void CavemenRanged::Update(double dt)
 {
+	if (hp <= 0)
+	{
+		active = false;
+	}
+	if (!moving)
+	{
+		stasisTimer += dt;
+		std::cout << stasisTimer << std::endl;
+	}
+	if (stasisTimer >= 5)
+	{
+		moving = false;
+	}
+	if ((pos - Player::GetInstance()->GetPos()).Length() <= 30)
+	{
+		std::cout << "FUCK" << std::endl;
+		Projectile* proj = new Projectile();
+		proj->EnemyShoot(Projectile::PROJECTILE_TYPE::PROJECTILE_SPEARS,this);
+	}
+	//Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1)
+	//Vector3 unOffsetPlayerPos = ((Player::GetInstance()->GetPos().x - 2) / 4, (Player::GetInstance()->GetPos().y - map->m_worldHeight + 2) / -4);
+	//if (attacked)
+	//{
+	//	attackCD = 5;
+	//	attacked = false;
+	//}
+	//attackCD -= dt;
+	////std::cout << attackCD << std::endl;
+	////std::cout << "IM BEING USED" << std::endl;
+	//if (moving)
+	//{
+	//	switch (currentFSM)
+	//	{
+	//	case IDLE:
+	//	{
+	//		//std::cout << "IDLING" << std::endl;
+	//		//Movement(dt);
+	//		if ((pos - Player::GetInstance()->GetPos()).Length() < 50 && attackCD <= 0)
+	//		{
+	//			currentFSM = MOVE;
+	//		}
+	//		/*std::cout << "lalala" << std::endl;*/
+	//		break;
+	//	}
+	//	case ATTACK:
+	//	{
+	//		Attack();
+	//		currentFSM = IDLE;
+	//		break;
+	//	}
+	//	case MOVE:
+	//	{
+	//		Map* map = Map::GetInstance();
+	//		Player* p = Player::GetInstance();
+	//		std::future<void> future = std::async(std::launch::async, &Map::AStarSearch, map, pos, p->GetPos(), &path);
+	//		Movement(dt);
+	//		if ((pos - Player::GetInstance()->GetPos()).Length() < 10)
+	//		{
+	//			currentFSM = ATTACK;
+	//		}
+	//		break;
+	//	}
+	//	}
+	//}
+
 }
 
 void CavemenRanged::Init()
@@ -397,7 +453,7 @@ Knights::Knights(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 
 }
 
-void Knights::Attack() const
+void Knights::Attack()
 {
 	Player::GetInstance()->SetHealth(Player::GetInstance()->GetHealth() - 15);
 	std::cout << "Knights Attack!!" << std::endl;
@@ -421,12 +477,6 @@ Archer::Archer(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 {
 }
 
-void Archer::Attack() const
-{
-	Player::GetInstance()->SetHealth(Player::GetInstance()->GetHealth() - 10);
-	std::cout << "Archer Attack!!" << std::endl;
-}
-
 void Archer::Update(double dt)
 {
 }
@@ -445,7 +495,7 @@ Cyborg::Cyborg(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 {
 }
 
-void Cyborg::Attack() const
+void Cyborg::Attack()
 {
 	Player::GetInstance()->SetHealth(Player::GetInstance()->GetHealth() - 25);
 	std::cout << "Cyborg Attack!!" << std::endl;
@@ -467,12 +517,6 @@ void Cyborg::Init()
 
 Sniper::Sniper(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 {
-}
-
-void Sniper::Attack() const
-{
-	Player::GetInstance()->SetHealth(Player::GetInstance()->GetHealth() - 15);
-	std::cout << "Sniper Attack!!" << std::endl;
 }
 
 void Sniper::Update(double dt)

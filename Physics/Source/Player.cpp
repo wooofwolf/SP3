@@ -53,6 +53,11 @@ void Player::Update(double dt)
 {
 	prevpos = pos;
 	
+	if (hp <= 0)
+	{
+		SceneManager::GetInstance()->SetActiveScene("LoseScene");
+		std::cout << "lost detected" << std::endl;
+	}
 	// Energy Regeneration
 	if (energy < 100.f)
 	{

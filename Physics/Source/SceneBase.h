@@ -48,6 +48,7 @@ public:
 	enum class SCENE_TYPE
 	{
 		SCENE_MAINMENU,
+		SCENE_LOSE,
 		SCENE_LEVEL_1,
 		SCENE_LEVEL_2,
 		SCENE_LEVEL_3,
