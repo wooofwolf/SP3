@@ -1,4 +1,5 @@
 #include "SceneManager.h"
+#include "Application.h"
 
 void SceneManager::Destroy()
 {
@@ -17,6 +18,16 @@ void SceneManager::Destroy()
 
 void SceneManager::Update(double dt)
 {
+	// Reset level
+	static bool bRKeyPressed = false;
+	if (!bRKeyPressed && Application::IsKeyPressed('R'))
+	{
+		ResetActiveScene();
+		bRKeyPressed = true;
+	}
+	else if (bRKeyPressed && !Application::IsKeyPressed('R'))
+		bRKeyPressed = false;
+
 	// Check for change of scene
 	if (nextScene != activeScene)
 	{
@@ -39,7 +50,6 @@ void SceneManager::Update(double dt)
 	{
 		activeScene->Update(dt);
 	}
-
 }
 
 void SceneManager::Render()
@@ -125,6 +135,12 @@ bool SceneManager::SetActiveScene(SceneBase* scene)
 bool SceneManager::CheckSceneExists(const std::string& sceneName)
 {
 	return sceneMap.count(sceneName) != 0;
+}
+
+void SceneManager::ResetActiveScene()
+{
+	activeScene->Exit();
+	activeScene->Init();
 }
 
 SceneBase* SceneManager::GetActiveScene()
