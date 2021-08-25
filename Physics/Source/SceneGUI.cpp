@@ -33,7 +33,7 @@ void SceneGUI::Init()
 void SceneGUI::Update(double dt)
 {
 	SceneBase::Update(dt);
-
+	
 	// Start the Dear ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();

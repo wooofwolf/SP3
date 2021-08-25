@@ -44,7 +44,7 @@ void Player::Init(int m_worldWidth, int m_worldHeight, GunComponent* activeGun)
 	energy = 100.f;
 	dashCooldown = 0;
 	dash = false;
-
+	lose = false;
 	nearX = false;
 	nearY = false;
 }
@@ -57,6 +57,7 @@ void Player::Update(double dt)
 	{
 		SceneManager::GetInstance()->SetActiveScene("LoseScene");
 		std::cout << "lost detected" << std::endl;
+		lose = true;
 	}
 	// Energy Regeneration
 	if (energy < 100.f)
