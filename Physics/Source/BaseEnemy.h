@@ -22,11 +22,11 @@ protected:
 		ATTACK = 0,
 		IDLE = 1,
 		MOVE = 2,
-		PATHFIND = 3,
 		NUM_FSM
 	};
 	void CheckCollidedSide(DIRECTION direction , double dt);
 	void Attack();
+	float movementSpeed;
 public:
 	std::vector<BaseEnemy*> BasicEnemyList;
 	~BaseEnemy();
@@ -54,6 +54,7 @@ public:
 	bool collided;
 	//bool changeDir;
 	void Movement(double dt);
+	void FindPath();
 	DIRECTION direction;
 	FSM currentFSM;
 	Vector3 destination;
