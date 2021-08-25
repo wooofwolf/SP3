@@ -367,6 +367,38 @@ void SceneLevel4::Render()
 		modelStack.Rotate(Math::RadianToDegree(atan2f(dir.y, dir.x)), 0, 0, 1);
 		modelStack.Scale(player->GetScale().x, player->GetScale().y, player->GetScale().z);
 		RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE_RED), false);
+
+		modelStack.Translate(1, 0, 0);
+
+		if (dynamic_cast<Revolver*>(Player::GetInstance()->GetActiveGun()) != nullptr)
+		{
+			modelStack.PushMatrix();
+			{
+				modelStack.Translate(0, 0, 1);
+				modelStack.Scale(1.3, 1.5, 1.5);
+				RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_REVOLVER), false);
+			}
+			modelStack.PopMatrix();
+		}
+		else if (dynamic_cast<Shotgun*>(Player::GetInstance()->GetActiveGun()) != nullptr)
+		{
+			modelStack.PushMatrix();
+			{
+				modelStack.Translate(0.4, 0.1, 1);
+				modelStack.Scale(1.3, 1.5, 1.5);
+				RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_SHOTGUN), false);
+			}
+			modelStack.PopMatrix();
+		}
+		else
+		{
+			modelStack.PushMatrix();
+			{
+				modelStack.Translate(-0.3, 0.2, 0);
+				RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_MINIGUN), false);
+			}
+			modelStack.PopMatrix();
+		}
 	}
 	modelStack.PopMatrix();
 
