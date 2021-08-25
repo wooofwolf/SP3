@@ -26,12 +26,10 @@ void LoseScene::Init()
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	GLFWwindow* pWindow;
+	// Setup Platform/Renderer bindings
 
 	ImGui::StyleColorsDark();
-	// Bind window
-	ImGui_ImplGlfw_InitForOpenGL(Application::GetInstance().GetWindow(), true);
-	const char* glsl_version = "#version 330";
-	ImGui_ImplOpenGL3_Init(glsl_version);
 
 	windowFlags = 0;
 	windowFlags |= ImGuiWindowFlags_NoBackground;
@@ -39,6 +37,10 @@ void LoseScene::Init()
 	windowFlags |= ImGuiWindowFlags_NoMove;
 	windowFlags |= ImGuiWindowFlags_NoResize;
 	windowFlags |= ImGuiWindowFlags_NoCollapse;
+
+	CImageLoader* il = CImageLoader::GetInstance();
+	restartButtonData.fileName = "Image\\RestartButton.png";
+	restartButtonData.textureID = il->LoadTextureGetID(restartButtonData.fileName.c_str(), false);
 
 }
 
@@ -72,7 +74,9 @@ void LoseScene::Update(const double dt)
 		ImGui::SetWindowPos(ImVec2(m_worldWidth/2 +200, 700));
 		ImGui::SetWindowSize(ImVec2(50.0f, 100.0f));
 		ImGui::SetWindowFontScale(3.f);
-		if (ImGui::ImageButton("..//Image//RestartButton.png", ImVec2(400, 200), ImVec2(0, 0), ImVec2(0, 0), 1, ImVec4(1, 1, 1, 1), ImVec4(1, 0, 1, 1)))
+		ImGuiStyle& style = ImGui::GetStyle();
+		style.FrameRounding = 200.0f;
+		if (ImGui::ImageButton((ImTextureID)restartButtonData.textureID, ImVec2(400, 200), ImVec2(0, 0), ImVec2(1, 1), 1))
 		{
 			SceneManager::GetInstance()->SetActiveScene(SceneManager::GetInstance()->GetPrevScene());
 			ImGuiIO& io = ImGui::GetIO(); (void)io;
