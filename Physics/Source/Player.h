@@ -26,7 +26,6 @@ protected:
 	float energy;
 
 	float cooldownTimer2;
-	float cooldownTimer3;
 
 	float dashCooldown;
 	float dashTimer;
