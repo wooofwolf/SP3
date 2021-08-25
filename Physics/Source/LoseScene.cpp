@@ -39,7 +39,7 @@ void LoseScene::Init()
 	windowFlags |= ImGuiWindowFlags_NoCollapse;
 
 	CImageLoader* il = CImageLoader::GetInstance();
-	restartButtonData.fileName = "Image\\RestartButton.png";
+	restartButtonData.fileName = "Image\\retrybutton.png";
 	restartButtonData.textureID = il->LoadTextureGetID(restartButtonData.fileName.c_str(), false);
 
 }
@@ -70,8 +70,8 @@ void LoseScene::Update(const double dt)
 			ImGuiWindowFlags_NoCollapse |
 			ImGuiWindowFlags_NoScrollbar;
 		
-		ImGui::Begin("Gun", NULL, Playbutton);
-		ImGui::SetWindowPos(ImVec2(m_worldWidth/2 +200, 700));
+		ImGui::Begin("lose", NULL, Playbutton);
+		ImGui::SetWindowPos(ImVec2(750, 600));
 		ImGui::SetWindowSize(ImVec2(50.0f, 100.0f));
 		ImGui::SetWindowFontScale(3.f);
 		ImGuiStyle& style = ImGui::GetStyle();
@@ -121,9 +121,12 @@ void LoseScene::Render(void)
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
 
-	std::ostringstream ss;
-	ss << "You Lose ! L ";
-	RenderTextOnScreen(MeshList::GetInstance()->GetMesh(MeshList::GEO_TEXT), ss.str(), Color(0, 1, 0), 3, 8, 30);
+	modelStack.PushMatrix();
+	modelStack.Translate(m_worldWidth / 2, (m_worldHeight / 2) + 10, 0);
+	modelStack.Rotate(-180, 0, 0, 1);
+	modelStack.Scale(50, 6, 2);
+	RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_LOSE), true);
+	modelStack.PopMatrix();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

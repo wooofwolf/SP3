@@ -41,6 +41,11 @@ void HowtoScene::Init()
 	windowFlags |= ImGuiWindowFlags_NoMove;
 	windowFlags |= ImGuiWindowFlags_NoResize;
 	windowFlags |= ImGuiWindowFlags_NoCollapse;
+
+	CImageLoader* il = CImageLoader::GetInstance();
+	returnButtonData.fileName = "Image\\return.png";
+	returnButtonData.textureID = il->LoadTextureGetID(returnButtonData.fileName.c_str(), false);
+
 }
 
 void HowtoScene::Update(const double dt)
@@ -59,10 +64,8 @@ void HowtoScene::Update(const double dt)
 		ImGui::SetWindowSize(ImVec2((float)Application::GetInstance().GetWindowWidth(), (float)Application::GetInstance().GetWindowHeight()));
 		ImGui::SetWindowFontScale(3.f);
 
-		// Display the FPS
-		ImGui::TextColored(ImVec4(0, 1, 0, 1), "FPS: %f", fps);
 		// Render which gun the player is holding
-		ImGuiWindowFlags menubutton = ImGuiWindowFlags_AlwaysAutoResize |
+		ImGuiWindowFlags howto = ImGuiWindowFlags_AlwaysAutoResize |
 			ImGuiWindowFlags_NoBackground |
 			ImGuiWindowFlags_NoTitleBar |
 			ImGuiWindowFlags_NoMove |
@@ -70,12 +73,12 @@ void HowtoScene::Update(const double dt)
 			ImGuiWindowFlags_NoCollapse |
 			ImGuiWindowFlags_NoScrollbar;
 
-		ImGui::Begin("Play", NULL, menubutton);
+		ImGui::Begin("exit", NULL, howto);
 		{
 			ImGui::SetWindowPos(ImVec2(0, 0));
 			ImGui::SetWindowSize(ImVec2(50.0f, 50.0f));
 			ImGui::SetWindowFontScale(3.f);
-			if (ImGui::ImageButton("..//Image//RestartButton.png", ImVec2(100, 100), ImVec2(0, 0), ImVec2(0, 0), 1, ImVec4(1, 1, 1, 1), ImVec4(1, 0, 1, 1)))
+			if (ImGui::ImageButton((ImTextureID)returnButtonData.textureID, ImVec2(100, 100), ImVec2(0, 0), ImVec2(1, 1), 1))
 			{
 				SceneManager::GetInstance()->SetActiveScene("MenuScene");
 				ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -85,19 +88,32 @@ void HowtoScene::Update(const double dt)
 			}
 		}
 		ImGui::End();
+
+		ImGui::Begin("howtotext", NULL, howto);
+		{
+			ImGui::SetWindowPos(ImVec2(0, 100));
+			ImGui::SetWindowSize(ImVec2(300.0f, 100.0f));
+			ImGui::SetWindowFontScale(10.f);
+			ImGui::TextColored(ImVec4(1, 1, 1, 1), "Controls:");
+			ImGui::SetWindowFontScale(3.f);
+			ImGui::TextColored(ImVec4(1, 1, 1, 1), "WASD  -  Moving Up, Down, Left and Right.");
+			ImGui::TextColored(ImVec4(1, 1, 1, 1), "E/Q  -  Cycling weapons forwards or backwards respectively.");
+			ImGui::TextColored(ImVec4(1, 1, 1, 1), "SPACEBAR  -  Dash towards movement direction.");
+			ImGui::TextColored(ImVec4(1, 1, 1, 1), "1  -  Slow time down to slow enemies at the cost of a constant drain.");
+			ImGui::TextColored(ImVec4(1, 1, 1, 1), "2  -  Use 50 energy to boost your movement and firing speed for a burst of damage.");
+			ImGui::TextColored(ImVec4(1, 1, 1, 1), "3  -  Use 90 energy to throw a bomb that detonates and freezes enemies.");
+			ImGui::SetWindowFontScale(10.f);
+			ImGui::TextColored(ImVec4(1, 1, 1, 1), "Tips & Tricks:");
+			ImGui::SetWindowFontScale(3.f);
+			ImGui::TextColored(ImVec4(1, 1, 1, 1), "Maintaining your energy throughout a room can help clear them faster.");
+			ImGui::TextColored(ImVec4(1, 1, 1, 1), "Your energy regenerates at a slow rate so try not to spam it too much.");
+			ImGui::TextColored(ImVec4(1, 1, 1, 1), "If you activate your first ability, you will not have any energy regen.");
+			ImGui::TextColored(ImVec4(1, 1, 1, 1), "Switching weapons can provide a good damage boost if you are low on energy.");
+
+		}
+		ImGui::End();
 	}
 	ImGui::End();
-
-
-	static bool bEnterPressed = false;
-	if (!bEnterPressed && Application::IsKeyPressed(VK_RETURN))
-	{
-		SceneManager::GetInstance()->SetActiveScene("Level1");
-		//SceneManager::GetInstance()->SetActiveScene("Level1");
-		bEnterPressed = true;
-	}
-	else if (bEnterPressed && !Application::IsKeyPressed(VK_RETURN))
-		bEnterPressed = false;
 }
 
 void HowtoScene::Render(void)
@@ -120,11 +136,6 @@ void HowtoScene::Render(void)
 
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
-
-	std::ostringstream ss;
-	ss << "among us";
-	RenderTextOnScreen(MeshList::GetInstance()->
-		GetMesh(MeshList::GEO_TEXT), ss.str(), Color(0, 1, 0), 3, 8, 30);
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

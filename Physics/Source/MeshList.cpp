@@ -25,6 +25,8 @@ MeshList::MeshList()
 	meshlist[GEO_MINIGUN] = MeshBuilder::GenerateQuad("minigun", Color(1, 1, 1), 4.f);
 	meshlist[GEO_MINIGUN]->textureID = LoadTGA("Image//minigun.tga");
 
+	meshlist[GEO_LOSE] = MeshBuilder::GenerateQuad("lose", Color(1, 1, 1), 3.f);
+	meshlist[GEO_LOSE]->textureID = LoadTGA("Image//youlose.tga");
 
 	meshlist[GEO_CUBE_GREEN] = MeshBuilder::GenerateCube("cube3", Color(0, 1, 0), 2.f);
 	meshlist[GEO_CYLINDER] = MeshBuilder::GenerateCylinder("cylinder", Color(1, 1, 1), 8, 1.f, 1.f);

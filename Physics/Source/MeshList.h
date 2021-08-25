@@ -34,6 +34,7 @@ public:
 		GEO_WIN_1,
 		GEO_WIN_2,
 		GEO_HAZARD,
+		GEO_LOSE,
 		GEO_EXIT,
 
 		NUM_GEOMETRY,
