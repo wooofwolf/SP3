@@ -166,6 +166,7 @@
     <ClCompile Include="Source\Collectible.cpp" />
     <ClCompile Include="Source\Entity.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
+    <ClCompile Include="Source\HowtoScene.cpp" />
     <ClCompile Include="Source\LoseScene.cpp" />
     <ClCompile Include="Source\SceneGUI.cpp" />
     <ClCompile Include="Source\SceneLevel1.cpp" />
@@ -204,6 +205,7 @@
     <ClInclude Include="Source\Collectible.h" />
     <ClInclude Include="Source\Entity.h" />
     <ClInclude Include="Source\GameObject.h" />
+    <ClInclude Include="Source\HowtoScene.h" />
     <ClInclude Include="Source\LoseScene.h" />
     <ClInclude Include="Source\SceneGUI.h" />
     <ClInclude Include="Source\SceneLevel1.h" />
