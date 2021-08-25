@@ -20,7 +20,6 @@ void BaseEnemy::Init()
 	scale.Set(3, 3, 3);
 	normal.Set(0, 1, 0);
 	prevpos = pos;
-	Math::InitRNG();
 	currentFSM = IDLE;
 	moving = false;
 	dest.SetZero();

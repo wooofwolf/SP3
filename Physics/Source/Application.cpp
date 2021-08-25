@@ -20,6 +20,7 @@
 #include "LoseScene.h"
 #include "MenuScene.h"
 #include "SceneManager.h"
+#include <MyMath.h>
 
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
@@ -84,6 +85,8 @@ Application::~Application()
 
 void Application::Init()
 {
+	Math::InitRNG();
+
 	//Set the error callback
 	glfwSetErrorCallback(error_callback);
 

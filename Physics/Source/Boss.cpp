@@ -173,15 +173,71 @@ void Boss::SetHP(float hp)
 
 void Boss::SpawnEnemies()
 {
-	int randInt = Math::RandIntMinMax(5, 10);
-	for (int i = 0; i < randInt; ++i)
+	int randInt = Math::RandIntMinMax(1, 3);
+	int randInt2 = Math::RandIntMinMax(2, 4);
+	int randInt3 = Math::RandIntMinMax(2, 4);
+	switch (randInt)
 	{
-		float randAngle = Math::RandFloatMinMax(0.f, Math::TWO_PI);
-		Vector3 unitVector = Vector3(cosf(randAngle), sinf(randAngle));
-		CavemenMelee* enemy = new CavemenMelee(baseEnemy);
-		enemy->Init();
-		enemy->SetEnemyPos(pos + (unitVector * Math::RandFloatMinMax(20.f, 50.f)));
-		SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(enemy);
+	case 1:
+		for (int i = 0; i < randInt2; ++i)
+		{
+			float randAngle = Math::RandFloatMinMax(0.f, Math::TWO_PI);
+			Vector3 unitVector = Vector3(cosf(randAngle), sinf(randAngle));
+			CavemenMelee* enemy = new CavemenMelee(baseEnemy);
+			enemy->Init();
+			enemy->SetEnemyPos(pos + (unitVector * Math::RandFloatMinMax(20.f, 50.f)));
+			SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(enemy);
+		}
+		for (int i = 0; i < randInt3; ++i)
+		{
+			float randAngle = Math::RandFloatMinMax(0.f, Math::TWO_PI);
+			Vector3 unitVector = Vector3(cosf(randAngle), sinf(randAngle));
+			CavemenRanged* enemy = new CavemenRanged(baseEnemy);
+			enemy->Init();
+			enemy->SetEnemyPos(pos + (unitVector * Math::RandFloatMinMax(20.f, 50.f)));
+			SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(enemy);
+		}
+		break;
+	case 2:
+		for (int i = 0; i < randInt2; ++i)
+		{
+			float randAngle = Math::RandFloatMinMax(0.f, Math::TWO_PI);
+			Vector3 unitVector = Vector3(cosf(randAngle), sinf(randAngle));
+			Knights* enemy = new Knights(baseEnemy);
+			enemy->Init();
+			enemy->SetEnemyPos(pos + (unitVector * Math::RandFloatMinMax(20.f, 50.f)));
+			SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(enemy);
+		}
+		for (int i = 0; i < randInt3; ++i)
+		{
+			float randAngle = Math::RandFloatMinMax(0.f, Math::TWO_PI);
+			Vector3 unitVector = Vector3(cosf(randAngle), sinf(randAngle));
+			Archer* enemy = new Archer(baseEnemy);
+			enemy->Init();
+			enemy->SetEnemyPos(pos + (unitVector * Math::RandFloatMinMax(20.f, 50.f)));
+			SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(enemy);
+		}
+		break;
+	case 3:
+		for (int i = 0; i < randInt2; ++i)
+		{
+			float randAngle = Math::RandFloatMinMax(0.f, Math::TWO_PI);
+			Vector3 unitVector = Vector3(cosf(randAngle), sinf(randAngle));
+			Cyborg* enemy = new Cyborg(baseEnemy);
+			enemy->Init();
+			enemy->SetEnemyPos(pos + (unitVector * Math::RandFloatMinMax(20.f, 50.f)));
+			SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(enemy);
+		}
+		for (int i = 0; i < randInt3; ++i)
+		{
+			float randAngle = Math::RandFloatMinMax(0.f, Math::TWO_PI);
+			Vector3 unitVector = Vector3(cosf(randAngle), sinf(randAngle));
+			Sniper* enemy = new Sniper(baseEnemy);
+			enemy->Init();
+			enemy->SetEnemyPos(pos + (unitVector * Math::RandFloatMinMax(20.f, 50.f)));
+			SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(enemy);
+		}
+		break;
 	}
 }
 

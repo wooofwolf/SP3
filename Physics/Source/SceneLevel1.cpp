@@ -376,7 +376,7 @@ void SceneLevel1::Render()
 		{
 			projectile->active = false;
 		}
-		if ((projectile->GetPos() - player->GetPos()).Length() <= projectile->GetScale().x && projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_SPEARS)
+		if ((projectile->GetPos() - player->GetPos()).Length() <= projectile->GetScale().x + player->GetScale().x && projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_SPEARS)
 		{
 			projectile->active = false;
 			player->SetHealth(player->GetHealth() - projectile->damage);

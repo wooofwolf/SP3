@@ -358,7 +358,7 @@ void SceneLevel3::Render()
 			projectile->type = Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION;
 			projectile->SetScale(Vector3(20.f, 20.f, 1.f));
 		}
-		if ((projectile->GetPos() - player->GetPos()).Length() <= projectile->GetScale().x && projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET)
+		if ((projectile->GetPos() - player->GetPos()).Length() <= projectile->GetScale().x + player->GetScale().x && projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET)
 		{
 			projectile->active = false;
 			player->SetHealth(player->GetHealth() - projectile->damage);

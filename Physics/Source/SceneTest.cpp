@@ -420,7 +420,7 @@ void SceneTest::Render()
 		}
 		for (BaseEnemy* enemy : enemyList)
 		{
-			if ((enemy->GetEnemyPos() - projectile->GetPos()).Length() < projectile->GetScale().x + 2 && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION)
+			if ((enemy->GetEnemyPos() - projectile->GetPos()).Length() < projectile->GetScale().x + player->GetScale().x && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION)
 			{
 				enemy->moving = false;
 				enemy->stasisTimer = 0;
