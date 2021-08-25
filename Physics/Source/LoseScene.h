@@ -1,7 +1,7 @@
 #pragma once
 
 #include "SceneBase.h"
-
+#include "SceneGUI.h"
 #include "../includes/irrKlang.h"
 
 
@@ -11,7 +11,10 @@ private:
 	// Variables
 	float m_worldWidth;
 	float m_worldHeight;
+	// Flags for IMGUI
+	ImGuiWindowFlags windowFlags;
 
+	bool goback = false;
 public:
 	// Constructor
 	LoseScene();
