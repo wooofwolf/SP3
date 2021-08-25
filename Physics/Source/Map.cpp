@@ -217,6 +217,7 @@ double Map::CalculateHValue(Vector3 pos, Vector3 dest)
 
 void Map::TracePath(Vector3 dest, std::vector<Vector3>* path)
 {
+	path->clear();
 	int x = dest.x;
 	int y = dest.y;
 
@@ -228,8 +229,6 @@ void Map::TracePath(Vector3 dest, std::vector<Vector3>* path)
 		x = temp_x;
 		y = temp_y;
 	}
-
-	path->push_back(Vector3(x, y, 1));
 
 	return;
 }
@@ -249,12 +248,6 @@ void Map::AStarSearch(Vector3 source, Vector3 destination, std::vector<Vector3>*
 	if (IsValid(dest) == false)
 	{
 		std::cout << "Destination is invalid" << std::endl;
-		return;
-	}
-
-	if (IsUnblocked(src) == false || IsUnblocked(dest) == false)
-	{
-		std::cout << "Source or destination is blocked" << std::endl;
 		return;
 	}
 

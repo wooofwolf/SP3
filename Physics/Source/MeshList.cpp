@@ -15,7 +15,17 @@ MeshList::MeshList()
 	meshlist[GEO_AXES] = MeshBuilder::GenerateAxes("reference", 1000, 1000, 1000);
 	meshlist[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(1, 1, 0), 10, 10, 1.f);
 	meshlist[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 1, 1), 2.f);
-	meshlist[GEO_CUBE_RED] = MeshBuilder::GenerateCube("cube2", Color(1, 0, 0), 2.f);
+	meshlist[GEO_CUBE_RED] = MeshBuilder::GenerateQuad("player", Color(1, 1, 1), 2.f);
+	meshlist[GEO_CUBE_RED]->textureID = LoadTGA("Image//player.tga");	
+	
+	meshlist[GEO_REVOLVER] = MeshBuilder::GenerateQuad("revolver", Color(1, 1, 1), 2.f);
+	meshlist[GEO_REVOLVER]->textureID = LoadTGA("Image//revolver.tga");	
+	meshlist[GEO_SHOTGUN] = MeshBuilder::GenerateQuad("shotgun", Color(1, 1, 1), 2.f);
+	meshlist[GEO_SHOTGUN]->textureID = LoadTGA("Image//shotgun.tga");	
+	meshlist[GEO_MINIGUN] = MeshBuilder::GenerateQuad("minigun", Color(1, 1, 1), 4.f);
+	meshlist[GEO_MINIGUN]->textureID = LoadTGA("Image//minigun.tga");
+
+
 	meshlist[GEO_CUBE_GREEN] = MeshBuilder::GenerateCube("cube3", Color(0, 1, 0), 2.f);
 	meshlist[GEO_CYLINDER] = MeshBuilder::GenerateCylinder("cylinder", Color(1, 1, 1), 8, 1.f, 1.f);
 	meshlist[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);

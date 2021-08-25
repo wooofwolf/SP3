@@ -203,7 +203,7 @@ void Player::Update(double dt)
 		dashTimer += dt;
 		if (dashTimer >= 1)
 		{
-			dashCooldown = 5;
+			dashCooldown = 3;
 			dash = false;
 		}
 	}
