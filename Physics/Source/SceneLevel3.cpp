@@ -493,6 +493,8 @@ void SceneLevel3::Exit()
 	for (Projectile* proj : projectileList)
 		delete proj;
 	
+	projectileList.clear();
+
 	for (Collectible* coll : collectibleList)
 		delete coll;
 

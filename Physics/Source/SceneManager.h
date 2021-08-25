@@ -20,6 +20,7 @@ public:
 	bool SetActiveScene(const std::string& sceneName);
 	bool SetActiveScene(SceneBase* scene);
 	bool CheckSceneExists(const std::string& sceneName);
+	void ResetActiveScene();
 	SceneBase* GetActiveScene();
 	SceneBase* GetPrevScene();
 
