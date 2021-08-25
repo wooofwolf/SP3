@@ -43,11 +43,15 @@ MeshList::MeshList()
 	meshlist[GEO_SPEARMAN] = MeshBuilder::GenerateQuad("BaseEnemy/Spearman", Color(1, 1, 1), 2.f);
 	meshlist[GEO_SPEARMAN]->textureID = LoadTGA("Image//cavemanRanged.tga");
 	
-	meshlist[GEO_KNIGHT] = MeshBuilder::GenerateCube("BaseEnemy/Caveman", Color(1, 1, 0), 2.f);
-	meshlist[GEO_ARCHER] = MeshBuilder::GenerateCube("BaseEnemy/Archer", Color(0, 1, 0), 2.f);
+	meshlist[GEO_KNIGHT] = MeshBuilder::GenerateQuad("BaseEnemy/Knight", Color(1, 1, 1), 2.f);
+	meshlist[GEO_KNIGHT]->textureID = LoadTGA("Image//medievalMelee.tga");
+	meshlist[GEO_ARCHER] = MeshBuilder::GenerateQuad("BaseEnemy/Archer", Color(1, 1, 1), 2.f);
+	meshlist[GEO_ARCHER]->textureID = LoadTGA("Image//medievalRanged.tga");
 	
-	meshlist[GEO_CYBORG]= MeshBuilder::GenerateCube("BaseEnemy/Caveman", Color(1, 1, 0), 2.f);
-	meshlist[GEO_SNIPER] = MeshBuilder::GenerateCube("BaseEnemy/Archer", Color(0, 1, 1), 2.f);
+	meshlist[GEO_CYBORG]= MeshBuilder::GenerateQuad("BaseEnemy/Cyborg", Color(1, 1, 1), 2.f);
+	meshlist[GEO_CYBORG]->textureID = LoadTGA("Image//futureMelee.tga");
+	meshlist[GEO_SNIPER] = MeshBuilder::GenerateQuad("BaseEnemy/Sniper", Color(1, 1, 1), 2.f);
+	meshlist[GEO_SNIPER]->textureID = LoadTGA("Image//futureRanged.tga");
 	
 	meshlist[GEO_SPHERE_BLUE] = MeshBuilder::GenerateSphere("Explosion", Color(175.f / 255.f, 238.f / 255.f, 238 / 255.f), 10, 10, 1.f);
 	
