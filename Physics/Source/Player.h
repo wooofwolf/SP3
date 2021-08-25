@@ -65,7 +65,7 @@ public:
 	
 	bool power1active;
 	bool power2active;
-
+	bool lose;
 	GunComponent* GetActiveGun();
 	void SetActiveGun(GunComponent* activeGun);
 
