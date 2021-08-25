@@ -107,7 +107,7 @@ void BaseEnemy::Movement(double dt)
 		if (pathfinding)
 		{
 			Vector3 dir = (dest - pos).Normalized();
-			pos += dir * dt * movementSpeed;
+			pos += dir * dt * movementSpeed * Player::GetInstance()->GetSlowSpeed();
 			normal.Set(dir.x, dir.y, dir.z);
 			if ((dest - pos).Length() <= 1.f)
 			{

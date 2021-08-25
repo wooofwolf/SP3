@@ -385,7 +385,7 @@ void SceneLevel3::Render()
 			}
 
 		}
-		if (projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->detonateTimer >= 3)
+		if (projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->detonateTimer >= 1)
 		{
 			projectile->type = Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION;
 			projectile->SetScale(Vector3(20.f, 20.f, 1.f));
