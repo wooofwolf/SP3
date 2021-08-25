@@ -494,6 +494,7 @@ void SceneLevel2::Render()
 				{
 					modelStack.PushMatrix();
 					modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+					modelStack.Rotate(Math::RadianToDegree(atan2f(enemy->GetNormal().y, enemy->GetNormal().x)), 0, 0, 1);
 					modelStack.Scale(3, 3, 3);
 					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_KNIGHT), false);
 					modelStack.PopMatrix();
@@ -509,24 +510,6 @@ void SceneLevel2::Render()
 				}
 			}
 			it2++;
-		}
-	}
-
-	if (boss->active)
-	{
-		float width = (boss->GetPos() - Camera::GetInstance()->position).Length();
-		float height = Camera::GetInstance()->position.z - boss->GetPos().z;
-		float hypotenuse = sqrtf(width * width + height * height);
-		float maxWidth = (Vector3(m_worldWidth / 2 + 2, 0, 1).Dot(Vector3(m_worldHeight / 2 + 2, 0, 1)) - Camera::GetInstance()->position.Length());
-		float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
-			
-		if (hypotenuse <= maxHypotenuse)
-		{
-			modelStack.PushMatrix();
-			modelStack.Translate(boss->GetPos().x, boss->GetPos().y, boss->GetPos().z);
-			modelStack.Scale(boss->GetScale().x, boss->GetScale().y, boss->GetScale().z);
-			RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CAVEMAN), false);
-			modelStack.PopMatrix();
 		}
 	}
 

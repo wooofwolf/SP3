@@ -456,6 +456,7 @@ void SceneLevel3::Render()
 				{
 					modelStack.PushMatrix();
 					modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+					modelStack.Rotate(Math::RadianToDegree(atan2f(enemy->GetNormal().y, enemy->GetNormal().x)), 0, 0, 1);
 					modelStack.Scale(3, 3, 3);
 					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CYBORG), false);
 					modelStack.PopMatrix();
