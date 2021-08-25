@@ -24,6 +24,7 @@ void BaseEnemy::Init()
 	moving = false;
 	dest.SetZero();
 	movingTimer = 0;
+	movementSpeed = 0.f;
 }
 
 void BaseEnemy::Update(double dt)
@@ -96,7 +97,8 @@ void BaseEnemy::Movement(double dt)
 {
 	if (moving)
 	{
-		if (!pathfinding && !path.empty())
+		FindPath();
+		if (!path.empty() && !pathfinding)
 		{
 			dest = Vector3(2 + 4 * path.back().x, Map::GetInstance()->m_worldHeight - 2 - 4 * path.back().y, 1);
 			path.pop_back();
@@ -104,19 +106,23 @@ void BaseEnemy::Movement(double dt)
 		}
 		if (pathfinding)
 		{
-			if (pos == dest)
-			{
-				path.pop_back();
-				pathfinding = false;
-			}
-			if ((dest - pos).Length() > 0.2f)
-				pos += (dest - pos).Normalized() * dt * 10;
-			else
+			Vector3 dir = (dest - pos).Normalized();
+			pos += dir * dt * movementSpeed * Player::GetInstance()->GetSlowSpeed();
+			normal.Set(dir.x, dir.y, dir.z);
+			if ((dest - pos).Length() <= 1.f)
 			{
 				pathfinding = false;
 			}
 		}
 	}
+}
+
+void BaseEnemy::FindPath()
+{
+	path.clear();
+	Map* map = Map::GetInstance();
+	Player* p = Player::GetInstance();
+	std::future<void> future = std::async(std::launch::async, &Map::AStarSearch, map, pos, p->GetPos(), &path);
 }
 
 void BaseEnemy::UpdateDirection()
@@ -293,7 +299,7 @@ void CavemenMelee::Update(double dt)
 	//Vector3 unOffsetPlayerPos = ((Player::GetInstance()->GetPos().x - 2) / 4, (Player::GetInstance()->GetPos().y - map->m_worldHeight + 2) / -4);
 	if (attacked)
 	{
-		attackCD = 5;
+		attackCD = 1.5f;
 		attacked = false;
 	}
 	attackCD -= dt;
@@ -309,7 +315,7 @@ void CavemenMelee::Update(double dt)
 			//Movement(dt);
 			if ((pos - Player::GetInstance()->GetPos()).Length() < 50 && attackCD <= 0)
 			{
-				currentFSM = PATHFIND;
+				currentFSM = MOVE;
 			}
 			/*std::cout << "lalala" << std::endl;*/
 			break;
@@ -321,25 +327,15 @@ void CavemenMelee::Update(double dt)
 			currentFSM = IDLE;
 			break;
 		}
-		case PATHFIND:
-		{
-			path.clear();
-			Map* map = Map::GetInstance();
-			Player* p = Player::GetInstance();
-			std::future<void> future = std::async(std::launch::async, &Map::AStarSearch, map, pos, p->GetPos(), &path);
-			currentFSM = MOVE;
-			break;
-		}
 		case MOVE:
 		{
-			Movement(dt);
-			if ((pos - Player::GetInstance()->GetPos()).Length() < 10)
+			if ((pos - Player::GetInstance()->GetPos()).Length() < 50)
+			{
+				Movement(dt);
+			}
+			if ((pos - Player::GetInstance()->GetPos()).Length() <= 10)
 			{
 				currentFSM = ATTACK;
-			}
-			else if (path.empty())
-			{
-				currentFSM = IDLE;
 			}
 			break;
 		}
@@ -359,6 +355,7 @@ void CavemenMelee::Init()
 	pathfinding = false;
 	dest.SetZero();
 	movingTimer = 0;
+	movementSpeed = 20.f;
 }
 
 CavemenRanged::CavemenRanged(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
@@ -385,7 +382,7 @@ void CavemenRanged::Update(double dt)
 	//Vector3 unOffsetPlayerPos = ((Player::GetInstance()->GetPos().x - 2) / 4, (Player::GetInstance()->GetPos().y - map->m_worldHeight + 2) / -4);
 	if (attacked)
 	{
-		attackCD = 5;
+		attackCD = 3;
 		attacked = false;
 	}
 	attackCD -= dt;
@@ -393,41 +390,33 @@ void CavemenRanged::Update(double dt)
 	//std::cout << "IM BEING USED" << std::endl;
 	if (moving)
 	{
+		Vector3 shootingDir = (Player::GetInstance()->GetPos() - pos).Normalized();
+		normal.Set(shootingDir.x, shootingDir.y, shootingDir.z);
 		switch (currentFSM)
 		{
 		case IDLE:
 		{
-			if ((pos - Player::GetInstance()->GetPos()).Length() < 75)
+			if ((pos - Player::GetInstance()->GetPos()).Length() < 75 && attackCD <= 0)
 			{
-				Vector3 shootingDir = (Player::GetInstance()->GetPos() - pos).Normalized();
-				normal.Set(shootingDir.x, shootingDir.y, shootingDir.z);
-				//std::cout << "IDLING" << std::endl;
-				//Movement(dt);
-				if (attackCD <= 0)
-				{
-					currentFSM = MOVE;
-				}
+				currentFSM = MOVE;
 			}
 			/*std::cout << "lalala" << std::endl;*/
 			break;
 		}
 		case ATTACK:
 		{
-			std::cout << "FUCK" << std::endl;
 			Projectile* proj = new Projectile();
 			proj->EnemyShoot(Projectile::PROJECTILE_TYPE::PROJECTILE_SPEARS,this);
-			currentFSM = IDLE;
 			attacked = true;
+			currentFSM = IDLE;
 			break;
 		}
 		case MOVE:
 		{
-			Vector3 shootingDir = (Player::GetInstance()->GetPos() - pos).Normalized();
-			normal.Set(shootingDir.x, shootingDir.y, shootingDir.z);
-			//Map* map = Map::GetInstance();
-			//Player* p = Player::GetInstance();
-			//std::future<void> future = std::async(std::launch::async, &Map::AStarSearch, map, pos, p->GetPos(), &path);
-		/*	Movement(dt);*/
+			if ((pos - Player::GetInstance()->GetPos()).Length() >= 50 && (pos - Player::GetInstance()->GetPos()).Length() < 75)
+			{
+				Movement(dt);
+			}
 			if ((pos - Player::GetInstance()->GetPos()).Length() < 50)
 			{
 				currentFSM = ATTACK;
@@ -447,6 +436,9 @@ void CavemenRanged::Init()
 	attackCD = 0;
 	bPathFind = true;
 	attacked = false;
+	pathfinding = false;
+	dest.SetZero();
+	movementSpeed = 15.f;
 }
 
 Knights::Knights(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
@@ -495,7 +487,7 @@ void Knights::Update(double dt)
 			//Movement(dt);
 			if ((pos - Player::GetInstance()->GetPos()).Length() < 50 && attackCD <= 0)
 			{
-				currentFSM = PATHFIND;
+				currentFSM = MOVE;
 			}
 			/*std::cout << "lalala" << std::endl;*/
 			break;
@@ -507,25 +499,15 @@ void Knights::Update(double dt)
 			currentFSM = IDLE;
 			break;
 		}
-		case PATHFIND:
-		{
-			path.clear();
-			Map* map = Map::GetInstance();
-			Player* p = Player::GetInstance();
-			std::future<void> future = std::async(std::launch::async, &Map::AStarSearch, map, pos, p->GetPos(), &path);
-			currentFSM = MOVE;
-			break;
-		}
 		case MOVE:
 		{
-			Movement(dt);
-			if ((pos - Player::GetInstance()->GetPos()).Length() < 10)
+			if ((pos - Player::GetInstance()->GetPos()).Length() < 50)
+			{
+				Movement(dt);
+			}
+			if ((pos - Player::GetInstance()->GetPos()).Length() <= 10)
 			{
 				currentFSM = ATTACK;
-			}
-			else if (path.empty())
-			{
-				currentFSM = IDLE;
 			}
 			break;
 		}
@@ -544,6 +526,7 @@ void Knights::Init()
 	pathfinding = false;
 	dest.SetZero();
 	movingTimer = 0;
+	movementSpeed = 15.f;
 }
 
 Archer::Archer(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
@@ -577,41 +560,33 @@ void Archer::Update(double dt)
 	//std::cout << "IM BEING USED" << std::endl;
 	if (moving)
 	{
+		Vector3 shootingDir = (Player::GetInstance()->GetPos() - pos).Normalized();
+		normal.Set(shootingDir.x, shootingDir.y, shootingDir.z);
 		switch (currentFSM)
 		{
 		case IDLE:
 		{
-			if ((pos - Player::GetInstance()->GetPos()).Length() < 75)
+			if ((pos - Player::GetInstance()->GetPos()).Length() < 75 && attackCD <= 0)
 			{
-				Vector3 shootingDir = (Player::GetInstance()->GetPos() - pos).Normalized();
-				normal.Set(shootingDir.x, shootingDir.y, shootingDir.z);
-				//std::cout << "IDLING" << std::endl;
-				//Movement(dt);
-				if (attackCD <= 0)
-				{
-					currentFSM = MOVE;
-				}
+				currentFSM = MOVE;
 			}
 			/*std::cout << "lalala" << std::endl;*/
 			break;
 		}
 		case ATTACK:
 		{
-			std::cout << "FUCK" << std::endl;
 			Projectile* proj = new Projectile();
 			proj->EnemyShoot(Projectile::PROJECTILE_TYPE::PROJECTILE_ARROWS, this);
-			currentFSM = IDLE;
 			attacked = true;
+			currentFSM = IDLE;
 			break;
 		}
 		case MOVE:
 		{
-			Vector3 shootingDir = (Player::GetInstance()->GetPos() - pos).Normalized();
-			normal.Set(shootingDir.x, shootingDir.y, shootingDir.z);
-			//Map* map = Map::GetInstance();
-			//Player* p = Player::GetInstance();
-			//std::future<void> future = std::async(std::launch::async, &Map::AStarSearch, map, pos, p->GetPos(), &path);
-		/*	Movement(dt);*/
+			if ((pos - Player::GetInstance()->GetPos()).Length() >= 50 && (pos - Player::GetInstance()->GetPos()).Length() < 75)
+			{
+				Movement(dt);
+			}
 			if ((pos - Player::GetInstance()->GetPos()).Length() < 50)
 			{
 				currentFSM = ATTACK;
@@ -630,6 +605,9 @@ void Archer::Init()
 	attackCD = 0;
 	bPathFind = true;
 	attacked = false;
+	pathfinding = false;
+	dest.SetZero();
+	movementSpeed = 10.f;
 }
 
 Cyborg::Cyborg(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
@@ -678,7 +656,7 @@ void Cyborg::Update(double dt)
 			//Movement(dt);
 			if ((pos - Player::GetInstance()->GetPos()).Length() < 50 && attackCD <= 0)
 			{
-				currentFSM = PATHFIND;
+				currentFSM = MOVE;
 			}
 			/*std::cout << "lalala" << std::endl;*/
 			break;
@@ -690,25 +668,15 @@ void Cyborg::Update(double dt)
 			currentFSM = IDLE;
 			break;
 		}
-		case PATHFIND:
-		{
-			path.clear();
-			Map* map = Map::GetInstance();
-			Player* p = Player::GetInstance();
-			std::future<void> future = std::async(std::launch::async, &Map::AStarSearch, map, pos, p->GetPos(), &path);
-			currentFSM = MOVE;
-			break;
-		}
 		case MOVE:
 		{
-			Movement(dt);
-			if ((pos - Player::GetInstance()->GetPos()).Length() < 10)
+			if ((pos - Player::GetInstance()->GetPos()).Length() < 50)
+			{
+				Movement(dt);
+			}
+			if ((pos - Player::GetInstance()->GetPos()).Length() <= 10)
 			{
 				currentFSM = ATTACK;
-			}
-			else if (path.empty())
-			{
-				currentFSM = IDLE;
 			}
 			break;
 		}
@@ -727,6 +695,7 @@ void Cyborg::Init()
 	pathfinding = false;
 	dest.SetZero();
 	movingTimer = 0;
+	movementSpeed = 10.f;
 }
 
 Sniper::Sniper(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
@@ -760,41 +729,33 @@ void Sniper::Update(double dt)
 	//std::cout << "IM BEING USED" << std::endl;
 	if (moving)
 	{
+		Vector3 shootingDir = (Player::GetInstance()->GetPos() - pos).Normalized();
+		normal.Set(shootingDir.x, shootingDir.y, shootingDir.z);
 		switch (currentFSM)
 		{
 		case IDLE:
 		{
-			if ((pos - Player::GetInstance()->GetPos()).Length() < 75)
+			if ((pos - Player::GetInstance()->GetPos()).Length() < 75 && attackCD <= 0)
 			{
-				Vector3 shootingDir = (Player::GetInstance()->GetPos() - pos).Normalized();
-				normal.Set(shootingDir.x, shootingDir.y, shootingDir.z);
-				//std::cout << "IDLING" << std::endl;
-				//Movement(dt);
-				if (attackCD <= 0)
-				{
-					currentFSM = MOVE;
-				}
+				currentFSM = MOVE;
 			}
 			/*std::cout << "lalala" << std::endl;*/
 			break;
 		}
 		case ATTACK:
 		{
-			std::cout << "FUCK" << std::endl;
 			Projectile* proj = new Projectile();
-			proj->EnemyShoot(Projectile::PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET, this);	
-			currentFSM = IDLE;
+			proj->EnemyShoot(Projectile::PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET, this);
 			attacked = true;
+			currentFSM = IDLE;
 			break;
 		}
 		case MOVE:
 		{
-			Vector3 shootingDir = (Player::GetInstance()->GetPos() - pos).Normalized();
-			normal.Set(shootingDir.x, shootingDir.y, shootingDir.z);
-			//Map* map = Map::GetInstance();
-			//Player* p = Player::GetInstance();
-			//std::future<void> future = std::async(std::launch::async, &Map::AStarSearch, map, pos, p->GetPos(), &path);
-		/*	Movement(dt);*/
+			if ((pos - Player::GetInstance()->GetPos()).Length() >= 50 && (pos - Player::GetInstance()->GetPos()).Length() < 75)
+			{
+				Movement(dt);
+			}
 			if ((pos - Player::GetInstance()->GetPos()).Length() < 50)
 			{
 				currentFSM = ATTACK;
@@ -812,5 +773,8 @@ void Sniper::Init()
 	currentFSM = IDLE;
 	attackCD = 0;
 	bPathFind = true;
+	pathfinding = false;
+	dest.SetZero();
 	attacked = false;
+	movementSpeed = 7.5f;
 }

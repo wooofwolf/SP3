@@ -16,6 +16,7 @@
 #include "SceneLevel2.h"
 #include "SceneLevel3.h"
 #include "SceneLevel4.h"
+#include "HowtoScene.h"
 
 #include "LoseScene.h"
 #include "MenuScene.h"
@@ -140,6 +141,7 @@ void Application::Init()
 
 	sceneManager->AddScene("MenuScene", new MenuScene());
 	sceneManager->AddScene("LoseScene", new LoseScene());
+	sceneManager->AddScene("HowtoScene", new HowtoScene());
 	sceneManager->AddScene("TestScene", SceneTest::GetInstance());
 	sceneManager->AddScene("Level1", SceneLevel1::GetInstance());
 	sceneManager->AddScene("Level2", SceneLevel2::GetInstance());
