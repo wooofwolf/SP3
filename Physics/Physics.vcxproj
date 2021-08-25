@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\ImGui\ImageLoader.cpp" />
     <ClCompile Include="..\ImGui\imgui.cpp" />
     <ClCompile Include="..\ImGui\imgui_demo.cpp" />
     <ClCompile Include="..\ImGui\imgui_draw.cpp" />
@@ -166,6 +167,7 @@
     <ClCompile Include="Source\Collectible.cpp" />
     <ClCompile Include="Source\Entity.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
+    <ClCompile Include="Source\HowtoScene.cpp" />
     <ClCompile Include="Source\LoseScene.cpp" />
     <ClCompile Include="Source\SceneGUI.cpp" />
     <ClCompile Include="Source\SceneLevel1.cpp" />
@@ -192,6 +194,8 @@
     <ClCompile Include="Source\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\ImGui\filesystem.h" />
+    <ClInclude Include="..\ImGui\ImageLoader.h" />
     <ClInclude Include="..\ImGui\imconfig.h" />
     <ClInclude Include="..\ImGui\imgui.h" />
     <ClInclude Include="..\ImGui\imgui_impl_glfw.h" />
@@ -204,6 +208,7 @@
     <ClInclude Include="Source\Collectible.h" />
     <ClInclude Include="Source\Entity.h" />
     <ClInclude Include="Source\GameObject.h" />
+    <ClInclude Include="Source\HowtoScene.h" />
     <ClInclude Include="Source\LoseScene.h" />
     <ClInclude Include="Source\SceneGUI.h" />
     <ClInclude Include="Source\SceneLevel1.h" />

@@ -49,7 +49,7 @@ public:
 	void Hazardcheck(std::vector<Vector3> activeTileList);
 	void Exitcheck(std::vector<Vector3> activeTileList);
 
-
+	char* logl_root;
 	void Movement(double dt);
 
 	Vector3 GetPos();

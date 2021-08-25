@@ -12,7 +12,7 @@
 
 #include "Projectile.h"
 #include "BaseEnemy.h"
-
+#include "ImageLoader.h"
 class SceneBase : public Scene
 {
 	enum UNIFORM_TYPE
@@ -48,6 +48,7 @@ public:
 	enum class SCENE_TYPE
 	{
 		SCENE_MAINMENU,
+		SCENE_HOWTO,
 		SCENE_LOSE,
 		SCENE_LEVEL_1,
 		SCENE_LEVEL_2,
@@ -58,6 +59,12 @@ public:
 
 
 		SCENE_TOTAL
+	};
+
+	struct ButtonData
+	{
+		std::string fileName;
+		unsigned textureID;
 	};
 
 	SceneBase();
@@ -80,6 +87,7 @@ public:
 	MS& GetModelStack();
 	float GetWorldWidth();
 	float GetWorldHeight();
+
 protected:
 	unsigned m_vertexArrayID;
 	unsigned m_programID;
