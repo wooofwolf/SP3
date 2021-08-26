@@ -28,6 +28,15 @@ void SceneGUI::Init()
 	windowFlags |= ImGuiWindowFlags_NoCollapse;
 
 	player = Player::GetInstance();
+	CImageLoader* il = CImageLoader::GetInstance();
+	abilityOneData.fileName = "Image\\Ability1.png";
+	abilityOneData.textureID = il->LoadTextureGetID(abilityOneData.fileName.c_str(), false);
+	abilityTwoData.fileName = "Image\\Ability2.png";
+	abilityTwoData.textureID = il->LoadTextureGetID(abilityTwoData.fileName.c_str(), false);
+	abilityThreeData.fileName = "Image\\Ability3.png";
+	abilityThreeData.textureID = il->LoadTextureGetID(abilityThreeData.fileName.c_str(), false);
+	dashData.fileName = "Image\\dash.png";
+	dashData.textureID = il->LoadTextureGetID(dashData.fileName.c_str(), false);
 }
 
 void SceneGUI::Update(double dt)
@@ -103,7 +112,52 @@ void SceneGUI::Update(double dt)
 			ImGui::PopStyleColor();
 			ImGui::PopStyleColor();
 		ImGui::End();
-
+		// Render which ability is available to use
+		ImGuiWindowFlags abilityWindowFlags = ImGuiWindowFlags_AlwaysAutoResize |
+			ImGuiWindowFlags_NoBackground |
+			ImGuiWindowFlags_NoTitleBar |
+			ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoResize |
+			ImGuiWindowFlags_NoCollapse |
+			ImGuiWindowFlags_NoScrollbar;
+		ImGui::Begin("Ability", NULL, abilityWindowFlags);
+			ImGui::SetWindowPos(ImVec2(1415.0f, 800.0f));
+			ImGui::SetWindowSize(ImVec2(400.0f, 100.0f));
+			ImGui::SetWindowFontScale(3.f);
+			if (player->power1active)
+			{
+				ImGui::Image((ImTextureID)abilityOneData.textureID, ImVec2(100, 100), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0.3f, 0.3f, 0.3f, 0.7f));
+			}
+			else
+				ImGui::Image((ImTextureID)abilityOneData.textureID, ImVec2(100, 100), ImVec2(0, 0), ImVec2(1, 1));
+			ImGui::SameLine();
+			if (player->GetEnergy() >= 50)
+			{
+				ImGui::Image((ImTextureID)abilityTwoData.textureID, ImVec2(100, 100), ImVec2(0, 0), ImVec2(1, 1));
+			}
+			else
+			{
+				ImGui::Image((ImTextureID)abilityTwoData.textureID, ImVec2(100, 100), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0.3f, 0.3f, 0.3f, 0.7f));
+			}
+			ImGui::SameLine();
+			if (player->GetEnergy() >= 70)
+			{
+				ImGui::Image((ImTextureID)abilityThreeData.textureID, ImVec2(100, 100), ImVec2(0, 0), ImVec2(1, 1));
+			}
+			else
+			{
+				ImGui::Image((ImTextureID)abilityThreeData.textureID, ImVec2(100, 100), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0.3f, 0.3f, 0.3f, 0.7f));
+			}
+			ImGui::SameLine();
+			if (player->dashCooldown <= 0)
+			{
+				ImGui::Image((ImTextureID)dashData.textureID, ImVec2(100, 100), ImVec2(0, 0), ImVec2(1, 1));
+			}
+			else
+			{
+				ImGui::Image((ImTextureID)dashData.textureID, ImVec2(100, 100), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0.3f, 0.3f, 0.3f, 0.7f));
+			}
+		ImGui::End();
 		// Render the boss bar
 		if (Boss::GetInstance()->GetFightActive())
 		{
