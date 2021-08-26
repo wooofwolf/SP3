@@ -46,6 +46,8 @@ void HowtoScene::Init()
 	returnButtonData.fileName = "Image\\return.png";
 	returnButtonData.textureID = il->LoadTextureGetID(returnButtonData.fileName.c_str(), false);
 
+	soundController = SoundController::GetInstance();
+	soundController->PlaySoundFile("Sounds/Music_mainmenu.wav", true);
 }
 
 void HowtoScene::Update(const double dt)
@@ -99,6 +101,7 @@ void HowtoScene::Update(const double dt)
 			ImGui::TextColored(ImVec4(1, 1, 1, 1), "WASD  -  Moving Up, Down, Left and Right.");
 			ImGui::TextColored(ImVec4(1, 1, 1, 1), "E/Q  -  Cycling weapons forwards or backwards respectively.");
 			ImGui::TextColored(ImVec4(1, 1, 1, 1), "SPACEBAR  -  Dash towards movement direction.");
+			ImGui::TextColored(ImVec4(1, 1, 1, 1), "LMB  -  Shoot gun, thats it.");
 			ImGui::TextColored(ImVec4(1, 1, 1, 1), "1  -  Slow time down to slow enemies at the cost of a constant drain.");
 			ImGui::TextColored(ImVec4(1, 1, 1, 1), "2  -  Use 50 energy to boost your movement and firing speed for a burst of damage.");
 			ImGui::TextColored(ImVec4(1, 1, 1, 1), "3  -  Use 90 energy to throw a bomb that detonates and freezes enemies.");
@@ -148,6 +151,7 @@ void HowtoScene::Render(void)
 
 void HowtoScene::Destroy(void)
 {
+	soundController->StopAllSounds();
 	SceneBase::Exit();
 	SceneGUI::GetInstance()->Exit();
 
