@@ -54,6 +54,8 @@ void MenuScene::Init()
 	quitButtonData.fileName = "Image\\quitbutton.png";
 	quitButtonData.textureID = il->LoadTextureGetID(quitButtonData.fileName.c_str(), false);
 
+	soundController = SoundController::GetInstance();
+	soundController->PlaySoundFile("Sounds/Music_mainmenu.wav", true);
 }
 
 void MenuScene::Update(const double dt)
@@ -122,7 +124,7 @@ void MenuScene::Update(const double dt)
 			ImGui::SetWindowFontScale(3.f);
 			if (ImGui::ImageButton((ImTextureID)quitButtonData.textureID, ImVec2(600, 150), ImVec2(0, 0), ImVec2(1, 1), 1))
 			{
-				Application::GetInstance().Exit();
+				Application::GetInstance().quitgame = true;
 				ImGuiIO& io = ImGui::GetIO(); (void)io;
 				io.WantCaptureMouse = false;
 				Player::GetInstance()->lose = false;
@@ -171,7 +173,7 @@ void MenuScene::Render(void)
 
 void MenuScene::Destroy(void)
 {
+	soundController->StopAllSounds();
 	SceneBase::Exit();
 	SceneGUI::GetInstance()->Exit();
-
 }

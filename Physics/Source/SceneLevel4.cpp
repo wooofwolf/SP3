@@ -107,6 +107,8 @@ void SceneLevel4::Init()
 
 void SceneLevel4::Update(double dt)
 {
+	
+
 	//for (int i = 0; i < entitylist.size(); i++)
 	//{
 	//	entitylist[i]->pos += go->vel * player.GetGameSpeed() * dt;
@@ -248,7 +250,15 @@ void SceneLevel4::Update(double dt)
 
 	boss->Update(dt);
 
+	if (boss->GetFightActive() && (musicstart == false))
+	{
+		soundController->PlaySoundFile("Sounds/Music_lvl3.wav", true);
+		musicstart = true;
+	}
+
 	sceneGUI->Update(dt);
+
+	
 }
 
 void SceneLevel4::Render()
@@ -451,7 +461,7 @@ void SceneLevel4::Render()
 				projectile->active = false;
 		}
 
-		if (projectile->active && (projectile->GetPos() - boss->GetPos()).Length() < projectile->GetScale().x + boss->GetScale().x && boss->GetFightActive())
+		if (projectile->active && (projectile->GetPos() - boss->GetPos()).Length() < projectile->GetScale().x + boss->GetScale().x && boss->GetFightActive() && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION)
 		{
 			projectile->active = false;
 			if (!boss->GetInvincible())
@@ -632,6 +642,7 @@ void SceneLevel4::Exit()
 		delete enemy;
 
 	enemyList.clear();
+	soundController->StopAllSounds();
 
 	sceneGUI->Exit();
 

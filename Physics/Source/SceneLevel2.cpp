@@ -79,6 +79,7 @@ void SceneLevel2::Init()
 	ExitTileList.clear();
 
 	soundController = SoundController::GetInstance();
+	soundController->PlaySoundFile("Sounds/Music_lvl2.wav", true);
 
 	for (int y = 0; y < 200; ++y)
 	{
@@ -587,6 +588,7 @@ void SceneLevel2::Exit()
 		delete enemy;
 
 	enemyList.clear();
+	soundController->StopAllSounds();
 
 	sceneGUI->Exit();
 

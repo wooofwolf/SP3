@@ -24,6 +24,8 @@ protected:
 	bool NearXEdge = false;
 	bool NearYEdge = false;
 
+	bool musicstart = false;
+
 	SceneGUI* sceneGUI;
 
 	// Constructor
