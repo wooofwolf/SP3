@@ -23,6 +23,11 @@ void SoundController::StopSoundFile(std::string fileName)
 	soundEngine->removeSoundSource(fileName.c_str());
 }
 
+void SoundController::StopAllSounds()
+{
+	soundEngine->stopAllSounds();
+}
+
 void SoundController::Exit()
 {
 	soundEngine->drop();
