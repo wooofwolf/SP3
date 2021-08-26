@@ -128,24 +128,6 @@ void SceneGUI::Update(double dt)
 				ImGui::PopStyleColor();
 			ImGui::End();
 		}
-
-		// Render progress through the level
-		else
-		{
-			ImGuiWindowFlags progressWindowFlag = ImGuiWindowFlags_AlwaysAutoResize |
-				ImGuiWindowFlags_NoBackground |
-				ImGuiWindowFlags_NoTitleBar |
-				ImGuiWindowFlags_NoMove |
-				ImGuiWindowFlags_NoResize |
-				ImGuiWindowFlags_NoCollapse |
-				ImGuiWindowFlags_NoScrollbar;
-			ImGui::Begin("progress", NULL, progressWindowFlag);
-				ImGui::SetWindowPos(ImVec2(1500.0f, 10.0f));
-				ImGui::SetWindowSize(ImVec2(50.0f, 100.0f));
-				ImGui::SetWindowFontScale(3.f);
-				ImGui::TextColored(ImVec4(0, 1, 0, 1), "Enemies left: %i", SceneManager::GetInstance()->GetActiveScene()->enemyList.size());
-			ImGui::End();
-		}
 	ImGui::End();
 }
 

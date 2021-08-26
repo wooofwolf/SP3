@@ -17,23 +17,7 @@ MeshList::MeshList()
 	meshlist[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 1, 1), 2.f);
 	meshlist[GEO_CUBE_RED] = MeshBuilder::GenerateQuad("player", Color(1, 1, 1), 2.f);
 	meshlist[GEO_CUBE_RED]->textureID = LoadTGA("Image//player.tga");	
-
-
-
-	meshlist[GEO_LEVEL1_WALL] = MeshBuilder::GenerateQuad("walltile1", Color(1, 1, 1), 2.f);
-	meshlist[GEO_LEVEL1_WALL]->textureID = LoadTGA("Image//cavemanWallTile.tga");
-	meshlist[GEO_LEVEL2_WALL] = MeshBuilder::GenerateQuad("walltile2", Color(1, 1, 1), 2.f);
-	meshlist[GEO_LEVEL2_WALL]->textureID = LoadTGA("Image//medievalWallTile.tga");
-	meshlist[GEO_LEVEL3_WALL] = MeshBuilder::GenerateQuad("walltile3", Color(1, 1, 1), 2.f);
-	meshlist[GEO_LEVEL3_WALL]->textureID = LoadTGA("Image//futureWallTile.tga");
 	
-	meshlist[GEO_LEVEL1_HAZARD] = MeshBuilder::GenerateQuad("hazardtile1", Color(1, 1, 1), 2.f);
-	meshlist[GEO_LEVEL1_HAZARD]->textureID = LoadTGA("Image//cavemanHazardTile.tga");
-	meshlist[GEO_LEVEL2_HAZARD] = MeshBuilder::GenerateQuad("hazardtile2", Color(1, 1, 1), 2.f);
-	meshlist[GEO_LEVEL2_HAZARD]->textureID = LoadTGA("Image//medievalHazardTile.tga");
-	meshlist[GEO_LEVEL3_HAZARD] = MeshBuilder::GenerateQuad("hazardtile3", Color(1, 1, 1), 2.f);
-	meshlist[GEO_LEVEL3_HAZARD]->textureID = LoadTGA("Image//futureHazardTile.tga");
-
 	meshlist[GEO_REVOLVER] = MeshBuilder::GenerateQuad("revolver", Color(1, 1, 1), 2.f);
 	meshlist[GEO_REVOLVER]->textureID = LoadTGA("Image//revolver.tga");	
 	meshlist[GEO_SHOTGUN] = MeshBuilder::GenerateQuad("shotgun", Color(1, 1, 1), 2.f);

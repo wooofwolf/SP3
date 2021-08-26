@@ -52,8 +52,6 @@ void Boss::Update(double dt)
 				active = false;
 				bossFightActive = false;
 				currentFSM = FSM::INACTIVE;
-				Player::GetInstance()->win = true;
-				SceneManager::GetInstance()->SetActiveScene("WinScene");
 				break;
 			}
 
