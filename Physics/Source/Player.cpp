@@ -37,7 +37,6 @@ void Player::Init(int m_worldWidth, int m_worldHeight, GunComponent* activeGun)
 	power1active = false;
 	power2active = false;
 	cooldownTimer2 = 0;
-	cooldownTimer3 = 30;
 
 	this->activeGun = activeGun;
 
@@ -82,11 +81,11 @@ void Player::Update(double dt)
 
 	if (power1active == true)
 	{
-		SlowSpeed = 0.5f;
+		SlowSpeed = 0.35f;
 		
 		if (energy > 0)
 		{
-			energy -= 2 * dt;
+			energy -= 7 * dt;
 		}
 		else
 		{
@@ -129,17 +128,14 @@ void Player::Update(double dt)
 	}
 
 	// Ability 3: Time Grenade
-	cooldownTimer3 += dt;
-
 	static bool bAbility3Pressed = false;
-	if (!bAbility3Pressed && Application::IsKeyPressed('3') && cooldownTimer3 >= 30.f && energy >= 90)
+	if (!bAbility3Pressed && Application::IsKeyPressed('3') && energy >= 90)
 	{
 		Projectile* proj = new Projectile(Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3);
 		proj->Init();
 		SceneManager::GetInstance()->GetActiveScene()->projectileList.push_back(proj);
 
-		energy -= 90; 
-		cooldownTimer3 = 0;
+		energy -= 90;
 		bAbility3Pressed = true;
 	}
 	else if (bAbility3Pressed && !Application::IsKeyPressed('3'))
@@ -203,7 +199,7 @@ void Player::Update(double dt)
 		dashTimer += dt;
 		if (dashTimer >= 1)
 		{
-			dashCooldown = 3;
+			dashCooldown = 1;
 			dash = false;
 		}
 	}

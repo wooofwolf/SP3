@@ -78,6 +78,7 @@ void SceneLevel2::Init()
 	HazardTileList.clear();
 	ExitTileList.clear();
 
+	soundController = SoundController::GetInstance();
 
 	for (int y = 0; y < 200; ++y)
 	{
@@ -174,6 +175,14 @@ void SceneLevel2::Update(double dt)
 			if (proj != nullptr)
 			{
 				proj->Init();
+				if (player->GetActiveGun() == minigun)
+				{
+					soundController->PlaySoundFile("Sounds/Sound_minigun.ogg");
+				}
+				if (player->GetActiveGun() == revolver)
+				{
+					soundController->PlaySoundFile("Sounds/Sound_revolver.ogg");
+				}
 				projectileList.push_back(proj);
 			}
 		}
@@ -190,6 +199,7 @@ void SceneLevel2::Update(double dt)
 						projectileList.push_back(proj);
 					}
 				}
+				soundController->PlaySoundFile("Sounds/Sound_shotgun.ogg");
 				player->GetActiveGun()->fireRateTimer = 0;
 			}
 		}
@@ -419,7 +429,7 @@ void SceneLevel2::Render()
 			projectile->active = false;
 			player->SetHealth(player->GetHealth() - projectile->damage);
 		}
-		if (projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->detonateTimer >= 3)
+		if (projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->detonateTimer >= 1)
 		{
 			projectile->type = Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION;
 			projectile->SetScale(Vector3(20.f, 20.f, 1.f));
@@ -494,6 +504,7 @@ void SceneLevel2::Render()
 				{
 					modelStack.PushMatrix();
 					modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+					modelStack.Rotate(Math::RadianToDegree(atan2f(enemy->GetNormal().y, enemy->GetNormal().x)), 0, 0, 1);
 					modelStack.Scale(3, 3, 3);
 					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_KNIGHT), false);
 					modelStack.PopMatrix();
@@ -509,24 +520,6 @@ void SceneLevel2::Render()
 				}
 			}
 			it2++;
-		}
-	}
-
-	if (boss->active)
-	{
-		float width = (boss->GetPos() - Camera::GetInstance()->position).Length();
-		float height = Camera::GetInstance()->position.z - boss->GetPos().z;
-		float hypotenuse = sqrtf(width * width + height * height);
-		float maxWidth = (Vector3(m_worldWidth / 2 + 2, 0, 1).Dot(Vector3(m_worldHeight / 2 + 2, 0, 1)) - Camera::GetInstance()->position.Length());
-		float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
-			
-		if (hypotenuse <= maxHypotenuse)
-		{
-			modelStack.PushMatrix();
-			modelStack.Translate(boss->GetPos().x, boss->GetPos().y, boss->GetPos().z);
-			modelStack.Scale(boss->GetScale().x, boss->GetScale().y, boss->GetScale().z);
-			RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CAVEMAN), false);
-			modelStack.PopMatrix();
 		}
 	}
 
@@ -594,4 +587,5 @@ void SceneLevel2::Exit()
 	enemyList.clear();
 
 	sceneGUI->Exit();
+
 }

@@ -64,6 +64,8 @@ void SceneLevel3::Init()
 	activeTileList.clear();
 	HazardTileList.clear();
 
+	soundController = SoundController::GetInstance();
+
 	for (int y = 0; y < 200; ++y)
 	{
 		for (int x = 0; x < 200; ++x)
@@ -147,6 +149,14 @@ void SceneLevel3::Update(double dt)
 			if (proj != nullptr)
 			{
 				proj->Init();
+				if (player->GetActiveGun() == minigun)
+				{
+					soundController->PlaySoundFile("Sounds/Sound_minigun.ogg");
+				}
+				if (player->GetActiveGun() == revolver)
+				{
+					soundController->PlaySoundFile("Sounds/Sound_revolver.ogg");
+				}
 				projectileList.push_back(proj);
 			}
 		}
@@ -163,6 +173,7 @@ void SceneLevel3::Update(double dt)
 						projectileList.push_back(proj);
 					}
 				}
+				soundController->PlaySoundFile("Sounds/Sound_shotgun.ogg");
 				player->GetActiveGun()->fireRateTimer = 0;
 			}
 		}
@@ -385,7 +396,7 @@ void SceneLevel3::Render()
 			}
 
 		}
-		if (projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->detonateTimer >= 3)
+		if (projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->detonateTimer >= 1)
 		{
 			projectile->type = Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION;
 			projectile->SetScale(Vector3(20.f, 20.f, 1.f));
@@ -456,6 +467,7 @@ void SceneLevel3::Render()
 				{
 					modelStack.PushMatrix();
 					modelStack.Translate(enemy->GetEnemyPos().x, enemy->GetEnemyPos().y, enemy->GetEnemyPos().z);
+					modelStack.Rotate(Math::RadianToDegree(atan2f(enemy->GetNormal().y, enemy->GetNormal().x)), 0, 0, 1);
 					modelStack.Scale(3, 3, 3);
 					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CYBORG), false);
 					modelStack.PopMatrix();
@@ -538,4 +550,5 @@ void SceneLevel3::Exit()
 	enemyList.clear();
 
 	sceneGUI->Exit();
+
 }

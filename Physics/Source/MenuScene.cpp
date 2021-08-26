@@ -41,6 +41,19 @@ void MenuScene::Init()
 	windowFlags |= ImGuiWindowFlags_NoMove;
 	windowFlags |= ImGuiWindowFlags_NoResize;
 	windowFlags |= ImGuiWindowFlags_NoCollapse;
+
+	CImageLoader* il = CImageLoader::GetInstance();
+	playButtonData.fileName = "Image\\playbutton.png";
+	playButtonData.textureID = il->LoadTextureGetID(playButtonData.fileName.c_str(), false);
+	
+	CImageLoader* il2 = CImageLoader::GetInstance();
+	howtoButtonData.fileName = "Image\\howtobutton.png";
+	howtoButtonData.textureID = il->LoadTextureGetID(howtoButtonData.fileName.c_str(), false);
+
+	CImageLoader* il3 = CImageLoader::GetInstance();
+	quitButtonData.fileName = "Image\\quitbutton.png";
+	quitButtonData.textureID = il->LoadTextureGetID(quitButtonData.fileName.c_str(), false);
+
 }
 
 void MenuScene::Update(const double dt)
@@ -72,10 +85,10 @@ void MenuScene::Update(const double dt)
 
 		ImGui::Begin("Play", NULL, menubutton);
 		{
-			ImGui::SetWindowPos(ImVec2(m_worldWidth / 2, 250));
+			ImGui::SetWindowPos(ImVec2(m_worldWidth / 2, 300));
 			ImGui::SetWindowSize(ImVec2(50.0f, 100.0f));
 			ImGui::SetWindowFontScale(3.f);
-			if (ImGui::ImageButton("..//Image//RestartButton.png", ImVec2(600, 150), ImVec2(0, 0), ImVec2(0, 0), 1, ImVec4(1, 1, 1, 1), ImVec4(1, 0, 1, 1)))
+			if (ImGui::ImageButton((ImTextureID)playButtonData.textureID, ImVec2(600, 150), ImVec2(0, 0), ImVec2(1, 1), 1))
 			{
 				SceneManager::GetInstance()->SetActiveScene("Level1");
 				ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -91,7 +104,7 @@ void MenuScene::Update(const double dt)
 			ImGui::SetWindowPos(ImVec2(m_worldWidth / 2, 500));
 			ImGui::SetWindowSize(ImVec2(50.0f, 100.0f));
 			ImGui::SetWindowFontScale(3.f);
-			if (ImGui::ImageButton("..//Image//RestartButton.png", ImVec2(600, 150), ImVec2(0, 0), ImVec2(0, 0), 1, ImVec4(1, 1, 1, 1), ImVec4(1, 0, 1, 1)))
+			if (ImGui::ImageButton((ImTextureID)howtoButtonData.textureID, ImVec2(600, 150), ImVec2(0, 0), ImVec2(1, 1), 1))
 			{
 				SceneManager::GetInstance()->SetActiveScene("HowtoScene");
 				ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -104,10 +117,10 @@ void MenuScene::Update(const double dt)
 
 		ImGui::Begin("quit", NULL, menubutton);
 		{
-			ImGui::SetWindowPos(ImVec2(m_worldWidth / 2, 750));
+			ImGui::SetWindowPos(ImVec2(m_worldWidth / 2, 700));
 			ImGui::SetWindowSize(ImVec2(50.0f, 100.0f));
 			ImGui::SetWindowFontScale(3.f);
-			if (ImGui::ImageButton("..//Image//RestartButton.png", ImVec2(600, 150), ImVec2(0, 0), ImVec2(0, 0), 1, ImVec4(1, 1, 1, 1), ImVec4(1, 0, 1, 1)))
+			if (ImGui::ImageButton((ImTextureID)quitButtonData.textureID, ImVec2(600, 150), ImVec2(0, 0), ImVec2(1, 1), 1))
 			{
 				Application::GetInstance().Exit();
 				ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -119,17 +132,6 @@ void MenuScene::Update(const double dt)
 		ImGui::End();
 	}
 	ImGui::End();
-
-
-	static bool bEnterPressed = false;
-	if (!bEnterPressed && Application::IsKeyPressed(VK_RETURN))
-	{
-		SceneManager::GetInstance()->SetActiveScene("Level1");
-		//SceneManager::GetInstance()->SetActiveScene("Level1");
-		bEnterPressed = true;
-	}
-	else if (bEnterPressed && !Application::IsKeyPressed(VK_RETURN))
-		bEnterPressed = false;
 }
 
 void MenuScene::Render(void)

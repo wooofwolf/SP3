@@ -11,6 +11,8 @@
 #include "SceneGUI.h"
 #include "SingletonPattern.h"
 #include "Boss.h"
+#include "SoundController.h"
+
 
 class SceneLevel2 : public SceneBase, public SingletonPattern<SceneLevel2>
 {
@@ -40,6 +42,8 @@ public:
 	GunComponent* revolver;
 	GunComponent* shotgun;
 	GunComponent* minigun;
+
+	SoundController* soundController;
 
 	std::vector <Vector3> activeTileList;
 	std::vector <Vector3> HazardTileList;
