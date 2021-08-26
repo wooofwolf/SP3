@@ -27,7 +27,6 @@ protected:
 
 	float cooldownTimer2;
 
-	float dashCooldown;
 	float dashTimer;
 	bool dash;
 
@@ -38,6 +37,8 @@ public:
 	Player();
 	// Destructor
 	~Player();
+
+	float dashCooldown;
 
 	void Init();
 	void Init(int m_worldWidth, int m_worldHeight, GunComponent* activeGun);

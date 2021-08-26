@@ -27,7 +27,10 @@ protected:
 
 	// Flags for IMGUI
 	ImGuiWindowFlags windowFlags;
-
+	SceneBase::ButtonData abilityOneData;
+	SceneBase::ButtonData abilityTwoData;
+	SceneBase::ButtonData abilityThreeData;
+	SceneBase::ButtonData dashData;
 	Player* player;
 };
 

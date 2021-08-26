@@ -150,10 +150,6 @@ void Player::Update(double dt)
 		{
 			dash = true;
 			vel.Set(0, 500, 0);
-			if (dash )
-			{
-				dashTimer = 0;
-			}
 		}
 	}	
 	if (Application::IsKeyPressed('S'))
@@ -163,10 +159,6 @@ void Player::Update(double dt)
 		{
 			dash = true;
 			vel.Set(0, -500, 0);
-			if (dash)
-			{
-				dashTimer = 0;
-			}
 		}
 	}	
 	if (Application::IsKeyPressed('A'))
@@ -176,10 +168,6 @@ void Player::Update(double dt)
 		{
 			dash = true;
 			vel.Set(-500, 0, 0);
-			if (dash)
-			{
-				dashTimer = 0;
-			}
 		}
 	}	
 	if (Application::IsKeyPressed('D'))
@@ -189,20 +177,12 @@ void Player::Update(double dt)
 		{
 			dash = true;
 			vel.Set(500, 0, 0);
-			if (dash)
-			{
-				dashTimer = 0;
-			}
 		}
 	}
 	if (dash)
-	{
-		dashTimer += dt;
-		if (dashTimer >= 1)
-		{
-			dashCooldown = 1;
-			dash = false;
-		}
+	{	
+		dashCooldown = 3;
+		dash = false;	
 	}
 	dashCooldown -= dt;
 	//std::cout << dashCooldown << std::endl;
