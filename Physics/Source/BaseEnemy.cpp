@@ -115,6 +115,16 @@ void BaseEnemy::Movement(double dt)
 			}
 		}
 	}
+	else
+	{
+		stasisTimer += dt;
+	}
+
+	if (stasisTimer >= 10.0)
+	{
+		moving = true;
+		stasisTimer = 0.0;
+	}
 }
 
 void BaseEnemy::FindPath()
@@ -276,8 +286,11 @@ CavemenMelee::CavemenMelee(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 
 void CavemenMelee::Attack()
 {
-	Player::GetInstance()->SetHealth(Player::GetInstance()->GetHealth() - 5);
-	std::cout << "Cavemen Melee Attack!!" << std::endl;
+	if (moving)
+	{
+		Player::GetInstance()->SetHealth(Player::GetInstance()->GetHealth() - 5);
+		SoundController::GetInstance()->PlaySoundFile("Sounds/bonk.wav");
+	}
 }
 
 void CavemenMelee::Update(double dt)
@@ -305,43 +318,38 @@ void CavemenMelee::Update(double dt)
 	attackCD -= dt;
 	//std::cout << attackCD << std::endl;
 	//std::cout << "IM BEING USED" << std::endl;
-	if (moving)
+	switch (currentFSM)
 	{
-		switch (currentFSM)
+	case IDLE:
+	{
+		//std::cout << "IDLING" << std::endl;
+		//Movement(dt);
+		if ((pos - Player::GetInstance()->GetPos()).Length() < 50 && attackCD <= 0)
 		{
-		case IDLE:
+			currentFSM = MOVE;
+		}
+		/*std::cout << "lalala" << std::endl;*/
+		break;
+	}
+	case ATTACK:
+	{
+		Attack();
+		attacked = true;
+		currentFSM = IDLE;
+		break;
+	}
+	case MOVE:
+	{
+		if ((pos - Player::GetInstance()->GetPos()).Length() < 50)
 		{
-			//std::cout << "IDLING" << std::endl;
-			//Movement(dt);
-			if ((pos - Player::GetInstance()->GetPos()).Length() < 50 && attackCD <= 0)
-			{
-				currentFSM = MOVE;
-			}
-			/*std::cout << "lalala" << std::endl;*/
-			break;
+			Movement(dt);
 		}
-		case ATTACK:
+		if ((pos - Player::GetInstance()->GetPos()).Length() <= 10)
 		{
-			Attack();
-			attacked = true;
-			SoundController::GetInstance()->PlaySoundFile("Sounds/bonk.wav");
-			std::cout << "sound" << std::endl;
-			currentFSM = IDLE;
-			break;
+			currentFSM = ATTACK;
 		}
-		case MOVE:
-		{
-			if ((pos - Player::GetInstance()->GetPos()).Length() < 50)
-			{
-				Movement(dt);
-			}
-			if ((pos - Player::GetInstance()->GetPos()).Length() <= 10)
-			{
-				currentFSM = ATTACK;
-			}
-			break;
-		}
-		}
+		break;
+	}
 	}
 
 }
@@ -394,38 +402,38 @@ void CavemenRanged::Update(double dt)
 	{
 		Vector3 shootingDir = (Player::GetInstance()->GetPos() - pos).Normalized();
 		normal.Set(shootingDir.x, shootingDir.y, shootingDir.z);
-		switch (currentFSM)
+	}
+	switch (currentFSM)
+	{
+	case IDLE:
+	{
+		if ((pos - Player::GetInstance()->GetPos()).Length() < 75 && attackCD <= 0)
 		{
-		case IDLE:
+			currentFSM = MOVE;
+		}
+		/*std::cout << "lalala" << std::endl;*/
+		break;
+	}
+	case ATTACK:
+	{
+		Projectile* proj = new Projectile();
+		proj->EnemyShoot(Projectile::PROJECTILE_TYPE::PROJECTILE_SPEARS,this, dt);
+		attacked = true;
+		currentFSM = IDLE;
+		break;
+	}
+	case MOVE:
+	{
+		if ((pos - Player::GetInstance()->GetPos()).Length() >= 50 && (pos - Player::GetInstance()->GetPos()).Length() < 75)
 		{
-			if ((pos - Player::GetInstance()->GetPos()).Length() < 75 && attackCD <= 0)
-			{
-				currentFSM = MOVE;
-			}
-			/*std::cout << "lalala" << std::endl;*/
-			break;
+			Movement(dt);
 		}
-		case ATTACK:
+		if ((pos - Player::GetInstance()->GetPos()).Length() < 50)
 		{
-			Projectile* proj = new Projectile();
-			proj->EnemyShoot(Projectile::PROJECTILE_TYPE::PROJECTILE_SPEARS,this);
-			attacked = true;
-			currentFSM = IDLE;
-			break;
+			currentFSM = ATTACK;
 		}
-		case MOVE:
-		{
-			if ((pos - Player::GetInstance()->GetPos()).Length() >= 50 && (pos - Player::GetInstance()->GetPos()).Length() < 75)
-			{
-				Movement(dt);
-			}
-			if ((pos - Player::GetInstance()->GetPos()).Length() < 50)
-			{
-				currentFSM = ATTACK;
-			}
-			break;
-		}
-		}
+		break;
+	}
 	}
 
 }
@@ -450,8 +458,11 @@ Knights::Knights(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 
 void Knights::Attack()
 {
-	Player::GetInstance()->SetHealth(Player::GetInstance()->GetHealth() - 15);
-	std::cout << "Knights Attack!!" << std::endl;
+	if (moving)
+	{
+		Player::GetInstance()->SetHealth(Player::GetInstance()->GetHealth() - 15);
+		SoundController::GetInstance()->PlaySoundFile("Sounds/Sword.wav");
+	}
 }
 
 void Knights::Update(double dt)
@@ -479,42 +490,38 @@ void Knights::Update(double dt)
 	attackCD -= dt;
 	//std::cout << attackCD << std::endl;
 	//std::cout << "IM BEING USED" << std::endl;
-	if (moving)
+	switch (currentFSM)
 	{
-		switch (currentFSM)
+	case IDLE:
+	{
+		//std::cout << "IDLING" << std::endl;
+		//Movement(dt);
+		if ((pos - Player::GetInstance()->GetPos()).Length() < 50 && attackCD <= 0)
 		{
-		case IDLE:
+			currentFSM = MOVE;
+		}
+		/*std::cout << "lalala" << std::endl;*/
+		break;
+	}
+	case ATTACK:
+	{
+		Attack();
+		attacked = true;
+		currentFSM = IDLE;
+		break;
+	}
+	case MOVE:
+	{
+		if ((pos - Player::GetInstance()->GetPos()).Length() < 50)
 		{
-			//std::cout << "IDLING" << std::endl;
-			//Movement(dt);
-			if ((pos - Player::GetInstance()->GetPos()).Length() < 50 && attackCD <= 0)
-			{
-				currentFSM = MOVE;
-			}
-			/*std::cout << "lalala" << std::endl;*/
-			break;
+			Movement(dt);
 		}
-		case ATTACK:
+		if ((pos - Player::GetInstance()->GetPos()).Length() <= 10)
 		{
-			Attack();
-			SoundController::GetInstance()->PlaySoundFile("Sounds/Sword.wav");
-			attacked = true;
-			currentFSM = IDLE;
-			break;
+			currentFSM = ATTACK;
 		}
-		case MOVE:
-		{
-			if ((pos - Player::GetInstance()->GetPos()).Length() < 50)
-			{
-				Movement(dt);
-			}
-			if ((pos - Player::GetInstance()->GetPos()).Length() <= 10)
-			{
-				currentFSM = ATTACK;
-			}
-			break;
-		}
-		}
+		break;
+	}
 	}
 }
 
@@ -565,39 +572,40 @@ void Archer::Update(double dt)
 	{
 		Vector3 shootingDir = (Player::GetInstance()->GetPos() - pos).Normalized();
 		normal.Set(shootingDir.x, shootingDir.y, shootingDir.z);
-		switch (currentFSM)
+	}
+	switch (currentFSM)
+	{
+	case IDLE:
+	{
+		if ((pos - Player::GetInstance()->GetPos()).Length() < 75 && attackCD <= 0)
 		{
-		case IDLE:
-		{
-			if ((pos - Player::GetInstance()->GetPos()).Length() < 75 && attackCD <= 0)
-			{
-				currentFSM = MOVE;
-			}
-			/*std::cout << "lalala" << std::endl;*/
-			break;
+			currentFSM = MOVE;
 		}
-		case ATTACK:
-		{
-			Projectile* proj = new Projectile();
-			proj->EnemyShoot(Projectile::PROJECTILE_TYPE::PROJECTILE_ARROWS, this);
-			attacked = true;
-			currentFSM = IDLE;
+		/*std::cout << "lalala" << std::endl;*/
+		break;
+	}
+	case ATTACK:
+	{
+		Projectile* proj = new Projectile();
+		proj->EnemyShoot(Projectile::PROJECTILE_TYPE::PROJECTILE_ARROWS, this, dt);
+		attacked = true;
+		currentFSM = IDLE;
+		if (moving)
 			SoundController::GetInstance()->PlaySoundFile("Sounds/bow_shoot.mp3");
-			break;
-		}
-		case MOVE:
+		break;
+	}
+	case MOVE:
+	{
+		if ((pos - Player::GetInstance()->GetPos()).Length() >= 50 && (pos - Player::GetInstance()->GetPos()).Length() < 75)
 		{
-			if ((pos - Player::GetInstance()->GetPos()).Length() >= 50 && (pos - Player::GetInstance()->GetPos()).Length() < 75)
-			{
-				Movement(dt);
-			}
-			if ((pos - Player::GetInstance()->GetPos()).Length() < 50)
-			{
-				currentFSM = ATTACK;
-			}
-			break;
+			Movement(dt);
 		}
+		if ((pos - Player::GetInstance()->GetPos()).Length() < 50)
+		{
+			currentFSM = ATTACK;
 		}
+		break;
+	}
 	}
 }
 
@@ -621,8 +629,11 @@ Cyborg::Cyborg(BaseEnemy* baseEnemy) : EnemyDecorator(baseEnemy)
 
 void Cyborg::Attack()
 {
-	Player::GetInstance()->SetHealth(Player::GetInstance()->GetHealth() - 25);
-	std::cout << "Cyborg Attack!!" << std::endl;
+	if (moving)
+	{
+		Player::GetInstance()->SetHealth(Player::GetInstance()->GetHealth() - 25);
+		SoundController::GetInstance()->PlaySoundFile("Sounds/Lightsaber.wav");
+	}
 }
 
 void Cyborg::Update(double dt)
@@ -650,42 +661,38 @@ void Cyborg::Update(double dt)
 	attackCD -= dt;
 	//std::cout << attackCD << std::endl;
 	//std::cout << "IM BEING USED" << std::endl;
-	if (moving)
+	switch (currentFSM)
 	{
-		switch (currentFSM)
+	case IDLE:
+	{
+		//std::cout << "IDLING" << std::endl;
+		//Movement(dt);
+		if ((pos - Player::GetInstance()->GetPos()).Length() < 50 && attackCD <= 0)
 		{
-		case IDLE:
+			currentFSM = MOVE;
+		}
+		/*std::cout << "lalala" << std::endl;*/
+		break;
+	}
+	case ATTACK:
+	{
+		Attack();
+		attacked = true;
+		currentFSM = IDLE;
+		break;
+	}
+	case MOVE:
+	{
+		if ((pos - Player::GetInstance()->GetPos()).Length() < 50)
 		{
-			//std::cout << "IDLING" << std::endl;
-			//Movement(dt);
-			if ((pos - Player::GetInstance()->GetPos()).Length() < 50 && attackCD <= 0)
-			{
-				currentFSM = MOVE;
-			}
-			/*std::cout << "lalala" << std::endl;*/
-			break;
+			Movement(dt);
 		}
-		case ATTACK:
+		if ((pos - Player::GetInstance()->GetPos()).Length() <= 10)
 		{
-			Attack();
-			attacked = true;
-			currentFSM = IDLE;
-			SoundController::GetInstance()->PlaySoundFile("Sounds/Lightsaber.wav");
-			break;
+			currentFSM = ATTACK;
 		}
-		case MOVE:
-		{
-			if ((pos - Player::GetInstance()->GetPos()).Length() < 50)
-			{
-				Movement(dt);
-			}
-			if ((pos - Player::GetInstance()->GetPos()).Length() <= 10)
-			{
-				currentFSM = ATTACK;
-			}
-			break;
-		}
-		}
+		break;
+	}
 	}
 }
 
@@ -736,39 +743,40 @@ void Sniper::Update(double dt)
 	{
 		Vector3 shootingDir = (Player::GetInstance()->GetPos() - pos).Normalized();
 		normal.Set(shootingDir.x, shootingDir.y, shootingDir.z);
-		switch (currentFSM)
+	}
+	switch (currentFSM)
+	{
+	case IDLE:
+	{
+		if ((pos - Player::GetInstance()->GetPos()).Length() < 75 && attackCD <= 0)
 		{
-		case IDLE:
-		{
-			if ((pos - Player::GetInstance()->GetPos()).Length() < 75 && attackCD <= 0)
-			{
-				currentFSM = MOVE;
-			}
-			/*std::cout << "lalala" << std::endl;*/
-			break;
+			currentFSM = MOVE;
 		}
-		case ATTACK:
-		{
-			Projectile* proj = new Projectile();
-			proj->EnemyShoot(Projectile::PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET, this);
-			attacked = true;
-			currentFSM = IDLE;
+		/*std::cout << "lalala" << std::endl;*/
+		break;
+	}
+	case ATTACK:
+	{
+		Projectile* proj = new Projectile();
+		proj->EnemyShoot(Projectile::PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET, this, dt);
+		attacked = true;
+		currentFSM = IDLE;
+		if (moving)
 			SoundController::GetInstance()->PlaySoundFile("Sounds/EnemySniper.wav");
-			break;
-		}
-		case MOVE:
+		break;
+	}
+	case MOVE:
+	{
+		if ((pos - Player::GetInstance()->GetPos()).Length() >= 50 && (pos - Player::GetInstance()->GetPos()).Length() < 75)
 		{
-			if ((pos - Player::GetInstance()->GetPos()).Length() >= 50 && (pos - Player::GetInstance()->GetPos()).Length() < 75)
-			{
-				Movement(dt);
-			}
-			if ((pos - Player::GetInstance()->GetPos()).Length() < 50)
-			{
-				currentFSM = ATTACK;
-			}
-			break;
+			Movement(dt);
 		}
+		if ((pos - Player::GetInstance()->GetPos()).Length() < 50)
+		{
+			currentFSM = ATTACK;
 		}
+		break;
+	}
 	}
 }
 

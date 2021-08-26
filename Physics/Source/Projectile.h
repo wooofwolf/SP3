@@ -31,7 +31,7 @@ struct Projectile: public Entity
 	void Init();
 	void Init(int shotgunID);
 	void Init(BaseEnemy* enemy);
-	void EnemyShoot(PROJECTILE_TYPE type , BaseEnemy* enemy);
+	void EnemyShoot(PROJECTILE_TYPE type , BaseEnemy* enemy, double dt);
 	void Update(double dt);
 	void Render();
 	void Exit();

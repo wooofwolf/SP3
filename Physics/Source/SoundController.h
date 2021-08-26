@@ -19,6 +19,8 @@ protected:
 public:
 	void Init();
 	void PlaySoundFile(std::string fileName, bool loop = false);
+	void StopSoundFile(std::string fileName);
+	void StopAllSounds();
 	void Exit();
 };
 
