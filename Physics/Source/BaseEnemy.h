@@ -60,8 +60,6 @@ public:
 	Vector3 destination;
 	Vector3 pathDir;
 	int damage;
-	float FSMcounter;
-	float FSMMaxCounter = 60;
 	void UpdateDirection();
 	void UpdatePosition();
 	bool bPathFind;

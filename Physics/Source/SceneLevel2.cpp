@@ -237,6 +237,11 @@ void SceneLevel2::Update(double dt)
 
 	boss->Update(dt);
 
+	if (enemyList.empty())
+	{
+		objectiveCompleted = true;
+	}
+
 	sceneGUI->Update(dt);
 }
 
@@ -293,7 +298,7 @@ void SceneLevel2::Render()
 					modelStack.PushMatrix();
 					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 0);
 					modelStack.Scale(2, 2, 2);
-					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE), true);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_LEVEL2_WALL), true);
 					modelStack.PopMatrix();
 					break;
 				}
@@ -314,30 +319,33 @@ void SceneLevel2::Render()
 					modelStack.PushMatrix();
 					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 0);
 					modelStack.Scale(2, 2, 2);
-					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_HAZARD), true);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_LEVEL2_HAZARD), true);
 					modelStack.PopMatrix();
 					break;
 				}
 			}
 			case Tile::TILE_TYPE::TILE_EXIT:
 			{
-				Vector3 ExitPos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 0);
-				float width = (ExitPos - Camera::GetInstance()->position).Length();
-				float height = Camera::GetInstance()->position.z - ExitPos.z;
-				float hypotenuse = sqrtf(width * width + height * height);
-				float maxWidth = (Vector3(m_worldWidth / 2 + 2, 0, 1).Dot(Vector3(m_worldHeight / 2 + 2, 0, 1)) - Camera::GetInstance()->position.Length());
-				float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
-
-				// Occlusion Rendering
-				if (hypotenuse <= maxHypotenuse)
+				if (objectiveCompleted)
 				{
-					ExitTileList.push_back(ExitPos);
-					modelStack.PushMatrix();
-					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 0);
-					modelStack.Scale(2, 2, 2);
-					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_EXIT), true);
-					modelStack.PopMatrix();
-					break;
+					Vector3 ExitPos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 0);
+					float width = (ExitPos - Camera::GetInstance()->position).Length();
+					float height = Camera::GetInstance()->position.z - ExitPos.z;
+					float hypotenuse = sqrtf(width * width + height * height);
+					float maxWidth = (Vector3(m_worldWidth / 2 + 2, 0, 1).Dot(Vector3(m_worldHeight / 2 + 2, 0, 1)) - Camera::GetInstance()->position.Length());
+					float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
+
+					// Occlusion Rendering
+					if (hypotenuse <= maxHypotenuse)
+					{
+						ExitTileList.push_back(ExitPos);
+						modelStack.PushMatrix();
+						modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 0);
+						modelStack.Scale(2, 2, 2);
+						RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_EXIT), true);
+						modelStack.PopMatrix();
+						break;
+					}
 				}
 			}
 			}

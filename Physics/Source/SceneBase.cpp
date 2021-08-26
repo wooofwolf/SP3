@@ -104,6 +104,8 @@ void SceneBase::Init()
 
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
+
+	objectiveCompleted = false;
 }
 
 void SceneBase::Update(double dt)
@@ -262,4 +264,14 @@ float SceneBase::GetWorldWidth()
 float SceneBase::GetWorldHeight()
 {
 	return m_worldHeight;
+}
+
+bool SceneBase::GetObjectiveCompleted()
+{
+	return objectiveCompleted;
+}
+
+void SceneBase::SetObjectiveCompleted(bool completed)
+{
+	this->objectiveCompleted = completed;
 }
