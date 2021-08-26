@@ -188,7 +188,7 @@ void Boss::SpawnEnemies()
 			Vector3 unitVector = Vector3(cosf(randAngle), sinf(randAngle));
 			CavemenMelee* enemy = new CavemenMelee(baseEnemy);
 			enemy->Init();
-			enemy->SetEnemyPos(pos + (unitVector * Math::RandFloatMinMax(20.f, 50.f)));
+			enemy->SetEnemyPos(pos + (unitVector * Math::RandFloatMinMax(40.f, 60.f)));
 			SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(enemy);
 		}
 		for (int i = 0; i < randInt3; ++i)
@@ -197,7 +197,7 @@ void Boss::SpawnEnemies()
 			Vector3 unitVector = Vector3(cosf(randAngle), sinf(randAngle));
 			CavemenRanged* enemy = new CavemenRanged(baseEnemy);
 			enemy->Init();
-			enemy->SetEnemyPos(pos + (unitVector * Math::RandFloatMinMax(20.f, 50.f)));
+			enemy->SetEnemyPos(pos + (unitVector * Math::RandFloatMinMax(40.f, 60.f)));
 			SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(enemy);
 		}
 		break;
