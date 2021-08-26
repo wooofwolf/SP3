@@ -74,7 +74,6 @@ void SceneLevel4::Init()
 	HazardTileList.clear();
 
 	soundController = SoundController::GetInstance();
-	soundController->PlaySoundFile("Sounds/Music_lvl4.wav", true);
 
 	for (int y = 0; y < 200; ++y)
 	{
@@ -108,6 +107,8 @@ void SceneLevel4::Init()
 
 void SceneLevel4::Update(double dt)
 {
+	
+
 	//for (int i = 0; i < entitylist.size(); i++)
 	//{
 	//	entitylist[i]->pos += go->vel * player.GetGameSpeed() * dt;
@@ -249,7 +250,15 @@ void SceneLevel4::Update(double dt)
 
 	boss->Update(dt);
 
+	if (boss->GetFightActive() && (musicstart == false))
+	{
+		soundController->PlaySoundFile("Sounds/Music_lvl3.wav", true);
+		musicstart = true;
+	}
+
 	sceneGUI->Update(dt);
+
+	
 }
 
 void SceneLevel4::Render()
