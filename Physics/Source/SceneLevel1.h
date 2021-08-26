@@ -10,6 +10,8 @@
 #include "Collectible.h"
 #include "SceneGUI.h"
 #include "SingletonPattern.h"
+#include "SoundController.h"
+
 
 class SceneLevel1 : public SceneBase, public SingletonPattern<SceneLevel1>
 {
@@ -38,6 +40,8 @@ public:
 	GunComponent* shotgun;
 	GunComponent* minigun;
 
+	SoundController* soundController;
+
 	std::vector <Vector3> activeTileList;
 	std::vector <Vector3> HazardTileList;
 	std::vector <Vector3> ExitTileList;
@@ -51,5 +55,7 @@ public:
 	virtual void Update(double dt);
 	virtual void Render();
 	virtual void Exit();
+
+
 };
 

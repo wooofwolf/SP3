@@ -30,7 +30,7 @@ void Projectile::Init()
 	{
 	case PROJECTILE_TYPE::PROJECTILE_REVOLVER:
 		vel = normal * 200;
-		damage = 10;
+		damage = 15;
 		break;
 	case PROJECTILE_TYPE::PROJECTILE_SHOTGUN:
 		vel = normal * 130;

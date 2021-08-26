@@ -27,5 +27,11 @@ public:
 	virtual void Update(const double dt);
 	virtual void Render(void);
 	virtual void Destroy(void);
+
+protected:
+	SceneBase::ButtonData playButtonData;
+	SceneBase::ButtonData howtoButtonData;
+	SceneBase::ButtonData quitButtonData;
+
 };
 

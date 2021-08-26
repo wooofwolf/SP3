@@ -64,6 +64,8 @@ void SceneLevel3::Init()
 	activeTileList.clear();
 	HazardTileList.clear();
 
+	soundController = SoundController::GetInstance();
+
 	for (int y = 0; y < 200; ++y)
 	{
 		for (int x = 0; x < 200; ++x)
@@ -147,6 +149,14 @@ void SceneLevel3::Update(double dt)
 			if (proj != nullptr)
 			{
 				proj->Init();
+				if (player->GetActiveGun() == minigun)
+				{
+					soundController->PlaySoundFile("Sounds/Sound_minigun.ogg");
+				}
+				if (player->GetActiveGun() == revolver)
+				{
+					soundController->PlaySoundFile("Sounds/Sound_revolver.ogg");
+				}
 				projectileList.push_back(proj);
 			}
 		}
@@ -163,6 +173,7 @@ void SceneLevel3::Update(double dt)
 						projectileList.push_back(proj);
 					}
 				}
+				soundController->PlaySoundFile("Sounds/Sound_shotgun.ogg");
 				player->GetActiveGun()->fireRateTimer = 0;
 			}
 		}
@@ -198,6 +209,11 @@ void SceneLevel3::Update(double dt)
 	}
 
 	Boss::GetInstance()->Update(dt);
+
+	if (enemyList.empty())
+	{
+		objectiveCompleted = true;
+	}
 
 	sceneGUI->Update(dt);
 }
@@ -282,24 +298,27 @@ void SceneLevel3::Render()
 			}
 			case Tile::TILE_TYPE::TILE_EXIT:
 			{
-				Vector3 ExitPos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 0);
-				float width = (ExitPos - Camera::GetInstance()->position).Length();
-				float height = Camera::GetInstance()->position.z - ExitPos.z;
-				float hypotenuse = sqrtf(width * width + height * height);
-				float maxWidth = (Vector3(m_worldWidth / 2 + 2, 0, 1).Dot(Vector3(m_worldHeight / 2 + 2, 0, 1)) - Camera::GetInstance()->position.Length());
-				float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
-
-				// Occlusion Rendering
-				if (hypotenuse <= maxHypotenuse)
+				if (objectiveCompleted)
 				{
-					ExitTileList.push_back(ExitPos);
-					modelStack.PushMatrix();
-					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 0);
-					modelStack.Scale(2, 2, 2);
-					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_EXIT), true);
-					modelStack.PopMatrix();
+					Vector3 ExitPos = Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 0);
+					float width = (ExitPos - Camera::GetInstance()->position).Length();
+					float height = Camera::GetInstance()->position.z - ExitPos.z;
+					float hypotenuse = sqrtf(width * width + height * height);
+					float maxWidth = (Vector3(m_worldWidth / 2 + 2, 0, 1).Dot(Vector3(m_worldHeight / 2 + 2, 0, 1)) - Camera::GetInstance()->position.Length());
+					float maxHypotenuse = sqrtf(maxWidth * maxWidth + height * height);
+
+					// Occlusion Rendering
+					if (hypotenuse <= maxHypotenuse)
+					{
+						ExitTileList.push_back(ExitPos);
+						modelStack.PushMatrix();
+						modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 0);
+						modelStack.Scale(2, 2, 2);
+						RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_EXIT), true);
+						modelStack.PopMatrix();
+					}
+					break;
 				}
-				break;
 			}
 			}
 		}
@@ -539,4 +558,5 @@ void SceneLevel3::Exit()
 	enemyList.clear();
 
 	sceneGUI->Exit();
+
 }
