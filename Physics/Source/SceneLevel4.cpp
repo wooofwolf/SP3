@@ -461,7 +461,7 @@ void SceneLevel4::Render()
 				projectile->active = false;
 		}
 
-		if (projectile->active && (projectile->GetPos() - boss->GetPos()).Length() < projectile->GetScale().x + boss->GetScale().x && boss->GetFightActive() && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION)
+		if (projectile->active && (projectile->GetPos() - boss->GetPos()).Length() < projectile->GetScale().x + boss->GetScale().x && boss->GetFightActive() && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ARROWS && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_SPEARS)
 		{
 			projectile->active = false;
 			if (!boss->GetInvincible())
