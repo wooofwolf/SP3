@@ -40,6 +40,7 @@ public:
 		GEO_SNIPER,
 
 		GEO_BOSS,
+		GEO_BOSSTARGET,
 
 		GEO_SPHERE_BLUE,
 		GEO_WIN_1,

@@ -300,7 +300,7 @@ void BossAttack::Render()
 	scene->GetModelStack().PushMatrix();
 		scene->GetModelStack().Translate(pos.x, pos.y, pos.z);
 		scene->GetModelStack().Scale(scale.x, scale.y, scale.z);
-		scene->RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_SPHERE_BLUE), false);
+		scene->RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BOSSTARGET), false);
 	scene->GetModelStack().PopMatrix();
 }
 

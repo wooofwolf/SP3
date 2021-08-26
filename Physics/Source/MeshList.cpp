@@ -74,7 +74,10 @@ MeshList::MeshList()
 	meshlist[GEO_SNIPER]->textureID = LoadTGA("Image//futureRanged.tga");
 	
 	meshlist[GEO_BOSS] = MeshBuilder::GenerateQuad("BaseEnemy/Boss", Color(1, 1, 1), 2.f);
-	meshlist[GEO_BOSS]->textureID = LoadTGA("Image//boss.tga");
+	meshlist[GEO_BOSS]->textureID = LoadTGA("Image//boss.tga");	
+	
+	meshlist[GEO_BOSSTARGET] = MeshBuilder::GenerateQuad("BaseEnemy/BossTarget", Color(1, 1, 1), 2.f);
+	meshlist[GEO_BOSSTARGET]->textureID = LoadTGA("Image//bossTarget.tga");
 	
 	meshlist[GEO_SPHERE_BLUE] = MeshBuilder::GenerateSphere("Explosion", Color(175.f / 255.f, 238.f / 255.f, 238 / 255.f), 10, 10, 1.f);
 	
