@@ -33,6 +33,8 @@ Map::Map()
 			mapGrid[i][j] = Tile();
 		}
 	}
+
+	totalEnemyCount = 0;
 }
 
 Map::~Map()
@@ -121,6 +123,7 @@ void Map::ReadFile(std::string fileName)
 					CavemanMelee->SetEnemyPos(Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1));
 					SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(CavemanMelee);
 					val = 0;
+					++totalEnemyCount;
 				}
 				if (val == 6)
 				{
@@ -129,6 +132,7 @@ void Map::ReadFile(std::string fileName)
 					CavemanRanged->SetEnemyPos(Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1));
 					SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(CavemanRanged);
 					val = 0;
+					++totalEnemyCount;
 				}
 				if (val == 7)
 				{
@@ -137,6 +141,7 @@ void Map::ReadFile(std::string fileName)
 					knight->SetEnemyPos(Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1));
 					SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(knight);
 					val = 0;
+					++totalEnemyCount;
 				}
 				if (val == 8)
 				{
@@ -145,6 +150,7 @@ void Map::ReadFile(std::string fileName)
 					archers->SetEnemyPos(Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1));
 					SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(archers);
 					val = 0;
+					++totalEnemyCount;
 				}
 				if (val == 9)
 				{
@@ -153,6 +159,7 @@ void Map::ReadFile(std::string fileName)
 					cyborg->SetEnemyPos(Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1));
 					SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(cyborg);
 					val = 0;
+					++totalEnemyCount;
 				}
 				if (val == 10)
 				{
@@ -161,12 +168,14 @@ void Map::ReadFile(std::string fileName)
 					snipers->SetEnemyPos(Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1));
 					SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(snipers);
 					val = 0;
+					++totalEnemyCount;
 				}
 				if (val == 100)
 				{
 					Boss* boss = Boss::GetInstance();
 					boss->SetPos(Vector3(2 + 4 * x, m_worldHeight - 2 - 4 * y, 1));
 					val = 0;
+					++totalEnemyCount;
 				}
 
 				if (val >= static_cast<int>(Tile::TILE_TYPE::TILE_NONE) && val <= static_cast<int>(Tile::TILE_TYPE::TILE_TOTAL))

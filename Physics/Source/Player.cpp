@@ -24,8 +24,8 @@ void Player::Init(int m_worldWidth, int m_worldHeight, GunComponent* activeGun)
 	this->m_worldHeight = m_worldHeight;
 
 	hp = 100.f;
-	pos.Set(1, 1, 1);
-	prevpos.Set(1, 1, 1);
+	pos.Set(1, 1, 2);
+	prevpos.Set(1, 1, 2);
 	scale.Set(3, 3, 3);
 	normal.Set(1, 0, 0);
 	vel.Set(0, 0, 0);
