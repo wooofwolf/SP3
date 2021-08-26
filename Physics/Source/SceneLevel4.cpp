@@ -252,7 +252,7 @@ void SceneLevel4::Update(double dt)
 
 	if (boss->GetFightActive() && (musicstart == false))
 	{
-		soundController->PlaySoundFile("Sounds/Music_lvl3.wav", true);
+		soundController->PlaySoundFile("Sounds/Music_lvl4.wav", true);
 		musicstart = true;
 	}
 
