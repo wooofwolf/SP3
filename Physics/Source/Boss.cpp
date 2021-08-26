@@ -19,7 +19,7 @@ void Boss::Init()
 	pos.SetZero();
 	prevpos = pos;
 	vel.SetZero();
-	scale.Set(10.f, 10.f, 1.f);
+	scale.Set(25.f, 25.f, 1.f);
 	normal.SetZero();
 	active = true;
 
@@ -118,8 +118,9 @@ void Boss::Render()
 		{
 			scene->GetModelStack().PushMatrix();
 			scene->GetModelStack().Translate(pos.x, pos.y, pos.z);
+			//scene->GetModelStack().Rotate(180, 0, 0, 1);
 			scene->GetModelStack().Scale(scale.x, scale.y, scale.z);
-			scene->RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CAVEMAN), false);
+			scene->RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BOSS), false);
 			scene->GetModelStack().PopMatrix();
 		}
 

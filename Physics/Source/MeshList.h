@@ -38,6 +38,9 @@ public:
 		GEO_ARCHER,
 		GEO_CYBORG,
 		GEO_SNIPER,
+
+		GEO_BOSS,
+
 		GEO_SPHERE_BLUE,
 		GEO_WIN_1,
 		GEO_WIN_2,
