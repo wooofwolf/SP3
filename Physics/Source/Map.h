@@ -87,5 +87,6 @@ private:
 	std::vector <Vector3> activeTileList;
 
 	MS modelStack;
+	int totalEnemyCount;
 };
 
