@@ -44,6 +44,7 @@ void Player::Init(int m_worldWidth, int m_worldHeight, GunComponent* activeGun)
 	dashCooldown = 0;
 	dash = false;
 	lose = false;
+	win = false;
 	nearX = false;
 	nearY = false;
 }
