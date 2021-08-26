@@ -47,6 +47,7 @@ public:
 		GEO_HAZARD,
 		GEO_LOSE,
 		GEO_EXIT,
+		GEO_WIN,
 
 		NUM_GEOMETRY,
 	};

@@ -65,6 +65,7 @@ void SceneLevel3::Init()
 	HazardTileList.clear();
 
 	soundController = SoundController::GetInstance();
+	soundController->PlaySoundFile("Sounds/Music_lvl3.wav", true);
 
 	for (int y = 0; y < 200; ++y)
 	{
@@ -329,7 +330,8 @@ void SceneLevel3::Render()
 
 	if (player->nearXBoundary() == true || player->nearYBoundary() == true)
 	{
-		playerpos = player->GetPos() - camera->position;	}
+		playerpos = player->GetPos() - camera->position;
+	}
 	else
 	{
 		playerpos.Set(m_worldWidth * 0.5, m_worldHeight * 0.5);
@@ -392,7 +394,7 @@ void SceneLevel3::Render()
 
 		for (BaseEnemy* enemy : enemyList)
 		{
-			if (projectile->active && (projectile->GetPos() - enemy->GetEnemyPos()).Length() < projectile->GetScale().x + 2 && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_SPEARS && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ARROWS && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET)
+			if (projectile->active && (projectile->GetPos() - enemy->GetEnemyPos()).Length() < projectile->GetScale().x + 2 && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_SPEARS && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ARROWS && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET)
 			{
 				projectile->active = false;
 				enemy->SetEnemyHP(enemy->GetEnemyHP() - projectile->damage);
@@ -414,9 +416,12 @@ void SceneLevel3::Render()
 			projectile->active = false;
 			player->SetHealth(player->GetHealth() - projectile->damage);
 		}
-		if (projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION && projectile->explosionTimer >= 0.1)
+		if (projectile->active && projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION)
 		{
-			projectile->active = false;
+			if (projectile->explosionTimer >= 9 && projectile->explosionTimer < 10)
+				projectile->SetScale(projectile->GetScale() * 0.8f);
+			else if (projectile->explosionTimer >= 10)
+				projectile->active = false;
 		}
 
 		if (!projectile->active)
@@ -436,7 +441,7 @@ void SceneLevel3::Render()
 				if (projectile->type == Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION)
 				{
 					modelStack.PushMatrix();
-					modelStack.Translate(projectile->GetPos().x, projectile->GetPos().y, 2);
+					modelStack.Translate(projectile->GetPos().x, projectile->GetPos().y, 0);
 					modelStack.Scale(projectile->GetScale().x, projectile->GetScale().y, projectile->GetScale().z);
 					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_SPHERE_BLUE), false);
 					modelStack.PopMatrix();
@@ -556,6 +561,7 @@ void SceneLevel3::Exit()
 		delete enemy;
 
 	enemyList.clear();
+	soundController->StopAllSounds();
 
 	sceneGUI->Exit();
 

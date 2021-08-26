@@ -130,13 +130,13 @@ void Player::Update(double dt)
 
 	// Ability 3: Time Grenade
 	static bool bAbility3Pressed = false;
-	if (!bAbility3Pressed && Application::IsKeyPressed('3') && energy >= 90)
+	if (!bAbility3Pressed && Application::IsKeyPressed('3') && energy >= 70)
 	{
 		Projectile* proj = new Projectile(Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3);
 		proj->Init();
 		SceneManager::GetInstance()->GetActiveScene()->projectileList.push_back(proj);
 
-		energy -= 90;
+		energy -= 70;
 		bAbility3Pressed = true;
 	}
 	else if (bAbility3Pressed && !Application::IsKeyPressed('3'))

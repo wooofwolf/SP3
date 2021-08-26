@@ -2,6 +2,7 @@
 
 #include "SceneBase.h"
 #include "SceneGUI.h"
+#include "SoundController.h"
 
 #include "../includes/irrKlang.h"
 
@@ -28,6 +29,7 @@ public:
 	virtual void Render(void);
 	virtual void Destroy(void);
 
+	SoundController* soundController;
 
 protected:
 	SceneBase::ButtonData returnButtonData;

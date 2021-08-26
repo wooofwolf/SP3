@@ -29,6 +29,8 @@ public:
 	static int GetWindowWidth();
 	static int GetWindowHeight();
 	static GLFWwindow* GetWindow();
+	bool quitgame;
+
 private:
 	Application();
 	~Application();
@@ -37,6 +39,7 @@ private:
 	StopWatch m_timer;
 	SceneManager* sceneManager;
 	SoundController* soundController;
+
 };
 
 #endif

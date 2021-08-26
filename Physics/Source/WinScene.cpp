@@ -39,7 +39,7 @@ void WinScene::Init()
 	windowFlags |= ImGuiWindowFlags_NoCollapse;
 
 	CImageLoader* il = CImageLoader::GetInstance();
-	restartButtonData.fileName = "Image\\retrybutton.png";
+	restartButtonData.fileName = "Image\\returnmain.png";
 	restartButtonData.textureID = il->LoadTextureGetID(restartButtonData.fileName.c_str(), false);
 
 }
@@ -124,7 +124,7 @@ void WinScene::Render(void)
 	modelStack.Translate(m_worldWidth / 2, (m_worldHeight / 2) + 10, 0);
 	modelStack.Rotate(-180, 0, 0, 1);
 	modelStack.Scale(50, 6, 2);
-	RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_LOSE), true);
+	RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_WIN), true);
 	modelStack.PopMatrix();
 
 	ImGui::Render();
