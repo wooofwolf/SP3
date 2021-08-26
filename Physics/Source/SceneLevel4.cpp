@@ -74,6 +74,7 @@ void SceneLevel4::Init()
 	HazardTileList.clear();
 
 	soundController = SoundController::GetInstance();
+	soundController->PlaySoundFile("Sounds/Music_lvl4.wav", true);
 
 	for (int y = 0; y < 200; ++y)
 	{
@@ -632,6 +633,7 @@ void SceneLevel4::Exit()
 		delete enemy;
 
 	enemyList.clear();
+	soundController->StopAllSounds();
 
 	sceneGUI->Exit();
 

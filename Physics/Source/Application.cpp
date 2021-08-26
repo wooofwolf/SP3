@@ -155,12 +155,14 @@ void Application::Init()
 	soundController->Init();
 	// Test sound
 	//soundController->PlaySoundFile("Sounds/Sound_Explosion.ogg");
+
+	quitgame = false;
 }
 
 void Application::Run()
 {
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
-	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
+	while (!glfwWindowShouldClose(m_window) && (quitgame == false))
 	{
 		sceneManager->Update(m_timer.getElapsedTime());
 		sceneManager->Render();
