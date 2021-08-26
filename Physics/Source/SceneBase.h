@@ -87,6 +87,8 @@ public:
 	MS& GetModelStack();
 	float GetWorldWidth();
 	float GetWorldHeight();
+	bool GetObjectiveCompleted();
+	void SetObjectiveCompleted(bool completed);
 
 protected:
 	unsigned m_vertexArrayID;
@@ -107,6 +109,7 @@ protected:
 
 	float fps;
 	float m_worldWidth, m_worldHeight;
+	bool objectiveCompleted;
 };
 
 #endif
