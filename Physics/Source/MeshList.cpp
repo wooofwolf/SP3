@@ -44,7 +44,8 @@ MeshList::MeshList()
 	meshlist[GEO_LOSE] = MeshBuilder::GenerateQuad("lose", Color(1, 1, 1), 3.f);
 	meshlist[GEO_LOSE]->textureID = LoadTGA("Image//youlose.tga");
 
-	meshlist[GEO_CUBE_GREEN] = MeshBuilder::GenerateCube("cube3", Color(0, 1, 0), 2.f);
+	meshlist[GEO_CUBE_GREEN] = MeshBuilder::GenerateQuad("cube3", Color(1, 1, 1), 2.f);
+	meshlist[GEO_CUBE_GREEN]->textureID = LoadTGA("Image//hpPickup.tga");
 	meshlist[GEO_CYLINDER] = MeshBuilder::GenerateCylinder("cylinder", Color(1, 1, 1), 8, 1.f, 1.f);
 	meshlist[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshlist[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
