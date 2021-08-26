@@ -78,6 +78,7 @@ void SceneLevel2::Init()
 	HazardTileList.clear();
 	ExitTileList.clear();
 
+	soundController = SoundController::GetInstance();
 
 	for (int y = 0; y < 200; ++y)
 	{
@@ -174,6 +175,14 @@ void SceneLevel2::Update(double dt)
 			if (proj != nullptr)
 			{
 				proj->Init();
+				if (player->GetActiveGun() == minigun)
+				{
+					soundController->PlaySoundFile("Sounds/Sound_minigun.ogg");
+				}
+				if (player->GetActiveGun() == revolver)
+				{
+					soundController->PlaySoundFile("Sounds/Sound_revolver.ogg");
+				}
 				projectileList.push_back(proj);
 			}
 		}
@@ -190,6 +199,7 @@ void SceneLevel2::Update(double dt)
 						projectileList.push_back(proj);
 					}
 				}
+				soundController->PlaySoundFile("Sounds/Sound_shotgun.ogg");
 				player->GetActiveGun()->fireRateTimer = 0;
 			}
 		}
@@ -577,4 +587,5 @@ void SceneLevel2::Exit()
 	enemyList.clear();
 
 	sceneGUI->Exit();
+
 }
