@@ -131,15 +131,21 @@ void Projectile::Init(BaseEnemy* enemy)
 	}
 }
 
-void Projectile::EnemyShoot(PROJECTILE_TYPE type , BaseEnemy* enemy)
+void Projectile::EnemyShoot(PROJECTILE_TYPE type , BaseEnemy* enemy, double dt)
 {
-
-	std::cout << Player::GetInstance()->GetPos() << std::endl;
-	Projectile* proj = new Projectile(type);
-	enemy->active = true;
-	proj->Init(enemy);
-	proj->active = true;
-	SceneManager::GetInstance()->GetActiveScene()->projectileList.push_back(proj);
+	if (enemy->moving)
+	{
+		std::cout << Player::GetInstance()->GetPos() << std::endl;
+		Projectile* proj = new Projectile(type);
+		enemy->active = true;
+		proj->Init(enemy);
+		proj->active = true;
+		SceneManager::GetInstance()->GetActiveScene()->projectileList.push_back(proj);
+	}
+	else
+	{
+		enemy->moving = true;
+	}
 }
 
 void Projectile::Movement(double dt)
