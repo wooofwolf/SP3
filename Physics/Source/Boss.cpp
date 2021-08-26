@@ -300,7 +300,10 @@ void BossAttack::Render()
 	scene->GetModelStack().PushMatrix();
 		scene->GetModelStack().Translate(pos.x, pos.y, pos.z);
 		scene->GetModelStack().Scale(scale.x, scale.y, scale.z);
-		scene->RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BOSSTARGET), false);
+		if (targetTimer < 3.0)
+			scene->RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BOSSTARGET), false);
+		else
+			scene->RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BOSSTARGET_TRIGGERED), false);
 	scene->GetModelStack().PopMatrix();
 }
 

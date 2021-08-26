@@ -15,8 +15,11 @@ MeshList::MeshList()
 	meshlist[GEO_AXES] = MeshBuilder::GenerateAxes("reference", 1000, 1000, 1000);
 	meshlist[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(1, 1, 0), 10, 10, 1.f);
 	meshlist[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 1, 1), 2.f);
-	meshlist[GEO_CUBE_RED] = MeshBuilder::GenerateQuad("player", Color(1, 1, 1), 2.f);
-	meshlist[GEO_CUBE_RED]->textureID = LoadTGA("Image//player.tga");	
+	
+	meshlist[GEO_PLAYER] = MeshBuilder::GenerateQuad("player", Color(1, 1, 1), 2.f);
+	meshlist[GEO_PLAYER]->textureID = LoadTGA("Image//player.tga");	
+	meshlist[GEO_PLAYERTARGET] = MeshBuilder::GenerateQuad("playerTarget", Color(1, 1, 1), 2.f);
+	meshlist[GEO_PLAYERTARGET]->textureID = LoadTGA("Image//playerTarget.tga");	
 
 
 
@@ -75,9 +78,10 @@ MeshList::MeshList()
 	
 	meshlist[GEO_BOSS] = MeshBuilder::GenerateQuad("BaseEnemy/Boss", Color(1, 1, 1), 2.f);
 	meshlist[GEO_BOSS]->textureID = LoadTGA("Image//boss.tga");	
-	
 	meshlist[GEO_BOSSTARGET] = MeshBuilder::GenerateQuad("BaseEnemy/BossTarget", Color(1, 1, 1), 2.f);
-	meshlist[GEO_BOSSTARGET]->textureID = LoadTGA("Image//bossTarget.tga");
+	meshlist[GEO_BOSSTARGET]->textureID = LoadTGA("Image//bossTarget.tga");	
+	meshlist[GEO_BOSSTARGET_TRIGGERED] = MeshBuilder::GenerateQuad("BaseEnemy/BossTargetTriggered", Color(1, 1, 1), 2.f);
+	meshlist[GEO_BOSSTARGET_TRIGGERED]->textureID = LoadTGA("Image//bossTargetTriggered.tga");
 	
 	meshlist[GEO_SPHERE_BLUE] = MeshBuilder::GenerateSphere("Explosion", Color(175.f / 255.f, 238.f / 255.f, 238 / 255.f), 10, 10, 1.f);
 	
