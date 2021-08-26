@@ -3,7 +3,7 @@
 #include "Entity.h"
 #include "Vector3.h"
 #include <vector>
-
+#include "SoundController.h"
 #include <stack>
 
 class BaseEnemy : public Entity

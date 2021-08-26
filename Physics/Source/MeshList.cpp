@@ -39,7 +39,7 @@ MeshList::MeshList()
 	//meshlist[GEO_WIN_2]->textureID = LoadTGA("Image//right-wins.tga");
 	meshlist[GEO_CAVEMAN] = MeshBuilder::GenerateCube("BaseEnemy/Caveman", Color(0, 0, 1), 2.f);
 	meshlist[GEO_SPEARMAN] = MeshBuilder::GenerateCube("BaseEnemy/Spearman", Color(1, 0, 1), 2.f);
-	meshlist[GEO_KNIGHT] = MeshBuilder::GenerateCube("BaseEnemy/Caveman", Color(1, 1, 0), 2.f);
+	meshlist[GEO_KNIGHT] = MeshBuilder::GenerateCube("BaseEnemy/Caveman", Color(1, 0, 1), 2.f);
 	meshlist[GEO_ARCHER] = MeshBuilder::GenerateCube("BaseEnemy/Archer", Color(0, 1, 0), 2.f);
 	meshlist[GEO_CYBORG]= MeshBuilder::GenerateCube("BaseEnemy/Caveman", Color(1, 1, 0), 2.f);
 	meshlist[GEO_SNIPER] = MeshBuilder::GenerateCube("BaseEnemy/Archer", Color(0, 1, 1), 2.f);

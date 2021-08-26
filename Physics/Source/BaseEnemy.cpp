@@ -324,6 +324,8 @@ void CavemenMelee::Update(double dt)
 		{
 			Attack();
 			attacked = true;
+			SoundController::GetInstance()->PlaySoundFile("Sounds/bonk.wav");
+			std::cout << "sound" << std::endl;
 			currentFSM = IDLE;
 			break;
 		}
@@ -495,6 +497,7 @@ void Knights::Update(double dt)
 		case ATTACK:
 		{
 			Attack();
+			SoundController::GetInstance()->PlaySoundFile("Sounds/Sword.wav");
 			attacked = true;
 			currentFSM = IDLE;
 			break;
@@ -579,6 +582,7 @@ void Archer::Update(double dt)
 			proj->EnemyShoot(Projectile::PROJECTILE_TYPE::PROJECTILE_ARROWS, this);
 			attacked = true;
 			currentFSM = IDLE;
+			SoundController::GetInstance()->PlaySoundFile("Sounds/bow_shoot.mp3");
 			break;
 		}
 		case MOVE:
@@ -666,6 +670,7 @@ void Cyborg::Update(double dt)
 			Attack();
 			attacked = true;
 			currentFSM = IDLE;
+			SoundController::GetInstance()->PlaySoundFile("Sounds/Lightsaber.wav");
 			break;
 		}
 		case MOVE:
@@ -748,6 +753,7 @@ void Sniper::Update(double dt)
 			proj->EnemyShoot(Projectile::PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET, this);
 			attacked = true;
 			currentFSM = IDLE;
+			SoundController::GetInstance()->PlaySoundFile("Sounds/EnemySniper.wav");
 			break;
 		}
 		case MOVE:
