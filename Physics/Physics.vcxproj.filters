@@ -91,6 +91,9 @@
     <ClCompile Include="Source\HowtoScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="Source\WinScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
@@ -184,6 +187,9 @@
     </ClInclude>
     <ClInclude Include="..\ImGui\ImageLoader.h">
       <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\WinScene.h">
+      <Filter>Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

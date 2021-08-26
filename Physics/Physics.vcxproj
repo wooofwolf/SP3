@@ -192,6 +192,7 @@
     <ClCompile Include="Source\shader.cpp" />
     <ClCompile Include="Source\SoundController.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
+    <ClCompile Include="Source\WinScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ImGui\filesystem.h" />
@@ -236,6 +237,7 @@
     <ClInclude Include="Source\SoundController.h" />
     <ClInclude Include="Source\Utility.h" />
     <ClInclude Include="Source\Vertex.h" />
+    <ClInclude Include="Source\WinScene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
