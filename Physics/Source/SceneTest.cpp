@@ -366,7 +366,7 @@ void SceneTest::Render()
 		modelStack.Translate(player->GetPos().x, player->GetPos().y, 1);
 		modelStack.Rotate(Math::RadianToDegree(atan2f(dir.y, dir.x)), 0, 0, 1);
 		modelStack.Scale(player->GetScale().x, player->GetScale().y, player->GetScale().z);
-		RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE_RED), false);
+		RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_PLAYER), false);
 	}
 	modelStack.PopMatrix();
 
@@ -451,7 +451,7 @@ void SceneTest::Render()
 					modelStack.PushMatrix();
 					modelStack.Translate(projectile->GetPos().x, projectile->GetPos().y, 2);
 					modelStack.Scale(projectile->GetScale().x, projectile->GetScale().y, projectile->GetScale().z);
-					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_SPHERE_BLUE), false);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_PLAYERTARGET), false);
 					modelStack.PopMatrix();
 				}
 				else

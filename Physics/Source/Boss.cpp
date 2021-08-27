@@ -188,7 +188,7 @@ void Boss::SpawnEnemies()
 			Vector3 unitVector = Vector3(cosf(randAngle), sinf(randAngle));
 			CavemenMelee* enemy = new CavemenMelee(baseEnemy);
 			enemy->Init();
-			enemy->SetEnemyPos(pos + (unitVector * Math::RandFloatMinMax(20.f, 50.f)));
+			enemy->SetEnemyPos(pos + (unitVector * Math::RandFloatMinMax(40.f, 60.f)));
 			SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(enemy);
 		}
 		for (int i = 0; i < randInt3; ++i)
@@ -197,7 +197,7 @@ void Boss::SpawnEnemies()
 			Vector3 unitVector = Vector3(cosf(randAngle), sinf(randAngle));
 			CavemenRanged* enemy = new CavemenRanged(baseEnemy);
 			enemy->Init();
-			enemy->SetEnemyPos(pos + (unitVector * Math::RandFloatMinMax(20.f, 50.f)));
+			enemy->SetEnemyPos(pos + (unitVector * Math::RandFloatMinMax(40.f, 60.f)));
 			SceneManager::GetInstance()->GetActiveScene()->enemyList.push_back(enemy);
 		}
 		break;
@@ -286,6 +286,12 @@ void BossAttack::Update(double dt)
 {
 	if (targetTimer < 3.0)
 		Movement(dt);
+
+	if (targetTimer >= 4.5 && targetTimer <= 4.52)
+		scale = scale * 1.15f;
+	if (targetTimer > 4.55 && targetTimer < 4.8)
+		scale = scale * 0.99f;
+
 	if (targetTimer >= 5.0)
 	{
 		DamagePlayer();
@@ -300,7 +306,10 @@ void BossAttack::Render()
 	scene->GetModelStack().PushMatrix();
 		scene->GetModelStack().Translate(pos.x, pos.y, pos.z);
 		scene->GetModelStack().Scale(scale.x, scale.y, scale.z);
-		scene->RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BOSSTARGET), false);
+		if (targetTimer < 4.5)
+			scene->RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BOSSTARGET), false);
+		else
+			scene->RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BOSSTARGET_TRIGGERED), false);
 	scene->GetModelStack().PopMatrix();
 }
 

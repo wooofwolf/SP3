@@ -387,7 +387,7 @@ void SceneLevel4::Render()
 		modelStack.Translate(player->GetPos().x, player->GetPos().y, 1);
 		modelStack.Rotate(Math::RadianToDegree(atan2f(dir.y, dir.x)), 0, 0, 1);
 		modelStack.Scale(player->GetScale().x, player->GetScale().y, player->GetScale().z);
-		RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE_RED), false);
+		RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_PLAYER), false);
 
 		modelStack.Translate(1, 0, 0);
 
@@ -461,7 +461,7 @@ void SceneLevel4::Render()
 				projectile->active = false;
 		}
 
-		if (projectile->active && (projectile->GetPos() - boss->GetPos()).Length() < projectile->GetScale().x + boss->GetScale().x && boss->GetFightActive() && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION)
+		if (projectile->active && (projectile->GetPos() - boss->GetPos()).Length() < projectile->GetScale().x + boss->GetScale().x && boss->GetFightActive() && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3 && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ABILITY_3_EXPLOSION && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_ARROWS && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_SNIPERBULLET && projectile->type != Projectile::PROJECTILE_TYPE::PROJECTILE_SPEARS)
 		{
 			projectile->active = false;
 			if (!boss->GetInvincible())
@@ -486,7 +486,7 @@ void SceneLevel4::Render()
 					modelStack.PushMatrix();
 					modelStack.Translate(projectile->GetPos().x, projectile->GetPos().y, 0);
 					modelStack.Scale(projectile->GetScale().x, projectile->GetScale().y, projectile->GetScale().z);
-					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_SPHERE_BLUE), false);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_PLAYERTARGET), false);
 					modelStack.PopMatrix();
 				}
 				else
