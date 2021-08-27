@@ -73,6 +73,7 @@ void SceneLevel4::Init()
 	activeTileList.clear();
 	HazardTileList.clear();
 
+	musicstart = false;
 	soundController = SoundController::GetInstance();
 
 	for (int y = 0; y < 200; ++y)
