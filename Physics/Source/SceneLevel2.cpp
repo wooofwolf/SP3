@@ -114,15 +114,6 @@ void SceneLevel2::Init()
 
 void SceneLevel2::Update(double dt)
 {
-	static bool bZPressed = false;
-	if (!bZPressed && Application::IsKeyPressed('Z'))
-	{
-		SceneManager::GetInstance()->SetActiveScene("Level3");
-		bZPressed = true;
-	}
-	else if (bZPressed && !Application::IsKeyPressed('Z'))
-		bZPressed = false;
-
 	SceneBase::Update(dt);
 	
 	//camera->Update(dt);
