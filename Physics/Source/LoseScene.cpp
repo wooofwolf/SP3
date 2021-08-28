@@ -59,8 +59,6 @@ void LoseScene::Update(const double dt)
 		ImGui::SetWindowSize(ImVec2((float)Application::GetInstance().GetWindowWidth(),		(float)Application::GetInstance().GetWindowHeight()));
 		ImGui::SetWindowFontScale(3.f);
 
-	// Display the FPS
-		ImGui::TextColored(ImVec4(0, 1, 0, 1), "FPS: %f", fps);
 			// Render which gun the player is holding
 		ImGuiWindowFlags Playbutton = ImGuiWindowFlags_AlwaysAutoResize |
 			ImGuiWindowFlags_NoBackground |
@@ -89,15 +87,6 @@ void LoseScene::Update(const double dt)
 		ImGui::End();
 		
 	ImGui::End();
-
-	static bool bEnterPressed = false;
-	if (!bEnterPressed && Application::IsKeyPressed(VK_RETURN))
-	{
-		SceneManager::GetInstance()->SetActiveScene(SceneManager::GetInstance()->GetPrevScene());
-		bEnterPressed = true;
-	}
-	else if (bEnterPressed && !Application::IsKeyPressed(VK_RETURN))
-		bEnterPressed = false;
 }
 
 void LoseScene::Render(void)

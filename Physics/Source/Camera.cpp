@@ -27,27 +27,4 @@ void Camera::Reset()
 
 void Camera::Update(double dt)
 {
-    Vector3 view = (target - position).Normalized();
-    Vector3 right = view.Cross(up).Normalized();
-
-    if (Application::IsKeyPressed(VK_LEFT))
-    {
-        position -= right * dt * camspeed;
-        target = position + view;
-    }
-    if (Application::IsKeyPressed(VK_RIGHT))
-    {
-        position += right * dt * camspeed;
-        target = position + view;
-    }
-    if (Application::IsKeyPressed(VK_UP))
-    {
-        position += up * dt * camspeed;
-        target = position + view;
-    }
-    if (Application::IsKeyPressed(VK_DOWN))
-    {
-        position -= up * dt * camspeed;
-        target = position + view;
-    }
 }
