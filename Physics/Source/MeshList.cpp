@@ -17,7 +17,9 @@ MeshList::MeshList()
 	meshlist[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 1, 1), 2.f);
 	
 	meshlist[GEO_PLAYER] = MeshBuilder::GenerateQuad("player", Color(1, 1, 1), 2.f);
-	meshlist[GEO_PLAYER]->textureID = LoadTGA("Image//player.tga");	
+	meshlist[GEO_PLAYER]->textureID = LoadTGA("Image//player.tga");
+	meshlist[GEO_PLAYERDASH] = MeshBuilder::GenerateQuad("dash", Color(1, 1, 1), 2.f);
+	meshlist[GEO_PLAYERDASH]->textureID = LoadTGA("Image//playerDash.tga");
 	meshlist[GEO_PLAYERTARGET] = MeshBuilder::GenerateQuad("playerTarget", Color(1, 1, 1), 2.f);
 	meshlist[GEO_PLAYERTARGET]->textureID = LoadTGA("Image//playerTarget.tga");	
 

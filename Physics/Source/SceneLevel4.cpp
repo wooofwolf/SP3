@@ -73,6 +73,7 @@ void SceneLevel4::Init()
 	activeTileList.clear();
 	HazardTileList.clear();
 
+	musicstart = false;
 	soundController = SoundController::GetInstance();
 
 	for (int y = 0; y < 200; ++y)
@@ -313,7 +314,7 @@ void SceneLevel4::Render()
 					modelStack.PushMatrix();
 					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 0);
 					modelStack.Scale(2, 2, 2);
-					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_CUBE), true);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_LEVEL3_WALL), true);
 					modelStack.PopMatrix();
 					break;
 				}
@@ -334,7 +335,7 @@ void SceneLevel4::Render()
 					modelStack.PushMatrix();
 					modelStack.Translate(2 + 4 * x, m_worldHeight - 2 - 4 * y, 0);
 					modelStack.Scale(2, 2, 2);
-					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_HAZARD), true);
+					RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_LEVEL3_HAZARD), true);
 					modelStack.PopMatrix();
 					break;
 				}
