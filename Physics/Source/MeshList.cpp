@@ -23,7 +23,11 @@ MeshList::MeshList()
 	meshlist[GEO_PLAYERTARGET] = MeshBuilder::GenerateQuad("playerTarget", Color(1, 1, 1), 2.f);
 	meshlist[GEO_PLAYERTARGET]->textureID = LoadTGA("Image//playerTarget.tga");	
 
+	meshlist[GEO_BG] = MeshBuilder::GenerateQuad("bg", Color(1, 1, 1), 1.f);
+	meshlist[GEO_BG]->textureID = LoadTGA("Image//splashscreen.tga");
 
+	meshlist[GEO_LOGO] = MeshBuilder::GenerateQuad("bg", Color(1, 1, 1), 1.f);
+	meshlist[GEO_LOGO]->textureID = LoadTGA("Image//logo.tga");
 
 	meshlist[GEO_LEVEL1_WALL] = MeshBuilder::GenerateQuad("walltile1", Color(1, 1, 1), 2.f);
 	meshlist[GEO_LEVEL1_WALL]->textureID = LoadTGA("Image//cavemanWallTile.tga");
