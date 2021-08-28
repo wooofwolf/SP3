@@ -38,6 +38,7 @@ public:
 
 	MeshList* meshlist;
 	
+	GunComponent* component;
 	GunComponent* simpleGun;
 	GunComponent* revolver;
 	GunComponent* shotgun;

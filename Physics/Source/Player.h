@@ -32,7 +32,11 @@ protected:
 
 	bool nearX;
 	bool nearY;
+
 public:
+	Vector3 preDashPos;
+	Vector3 postDashPos;
+	Vector3 preDashNorm;
 	// Constructor
 	Player();
 	// Destructor

@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "GL\glew.h"
 #include "SceneBase.h"
+#include "MeshList.h"
 //#include "SceneTest.h"
 //#include "SceneLevel3.h"
 
@@ -148,8 +149,12 @@ void Player::Update(double dt)
 		pos.y += 30 * dt * m_speed;
 		if (Application::IsKeyPressed(' ') && !dash && dashCooldown <= 0)
 		{
+			preDashNorm = normal;
+			preDashPos = pos;
 			dash = true;
 			vel.Set(0, 500, 0);
+			postDashPos = pos;
+			
 		}
 	}	
 	if (Application::IsKeyPressed('S'))
@@ -157,6 +162,8 @@ void Player::Update(double dt)
 		pos.y -= 30 * dt * m_speed;
 		if (Application::IsKeyPressed(' ') && !dash && dashCooldown <= 0)
 		{
+			preDashNorm = normal;
+			preDashPos = pos;
 			dash = true;
 			vel.Set(0, -500, 0);
 		}
@@ -166,6 +173,8 @@ void Player::Update(double dt)
 		pos.x -= 30 * dt * m_speed;
 		if (Application::IsKeyPressed(' ') && !dash && dashCooldown <= 0)
 		{
+			preDashNorm = normal;
+			preDashPos = pos;
 			dash = true;
 			vel.Set(-500, 0, 0);
 		}
@@ -175,6 +184,8 @@ void Player::Update(double dt)
 		pos.x += 30 * dt * m_speed;
 		if (Application::IsKeyPressed(' ') && !dash && dashCooldown <= 0)
 		{
+			preDashNorm = normal;
+			preDashPos = pos;
 			dash = true;
 			vel.Set(500, 0, 0);
 		}
@@ -184,6 +195,8 @@ void Player::Update(double dt)
 		dashCooldown = 3;
 		dash = false;	
 	}
+	
+
 	dashCooldown -= dt;
 	//std::cout << dashCooldown << std::endl;
 

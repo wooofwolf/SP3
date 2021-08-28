@@ -45,12 +45,8 @@ void MenuScene::Init()
 	CImageLoader* il = CImageLoader::GetInstance();
 	playButtonData.fileName = "Image\\playbutton.png";
 	playButtonData.textureID = il->LoadTextureGetID(playButtonData.fileName.c_str(), false);
-	
-	CImageLoader* il2 = CImageLoader::GetInstance();
 	howtoButtonData.fileName = "Image\\howtobutton.png";
 	howtoButtonData.textureID = il->LoadTextureGetID(howtoButtonData.fileName.c_str(), false);
-
-	CImageLoader* il3 = CImageLoader::GetInstance();
 	quitButtonData.fileName = "Image\\quitbutton.png";
 	quitButtonData.textureID = il->LoadTextureGetID(quitButtonData.fileName.c_str(), false);
 
@@ -93,8 +89,6 @@ void MenuScene::Update(const double dt)
 			if (ImGui::ImageButton((ImTextureID)playButtonData.textureID, ImVec2(600, 150), ImVec2(0, 0), ImVec2(1, 1), 1))
 			{
 				SceneManager::GetInstance()->SetActiveScene("Level1");
-				ImGuiIO& io = ImGui::GetIO(); (void)io;
-				io.WantCaptureMouse = false;
 				Player::GetInstance()->lose = false;
 				goback = true;
 			}
@@ -109,8 +103,6 @@ void MenuScene::Update(const double dt)
 			if (ImGui::ImageButton((ImTextureID)howtoButtonData.textureID, ImVec2(600, 150), ImVec2(0, 0), ImVec2(1, 1), 1))
 			{
 				SceneManager::GetInstance()->SetActiveScene("HowtoScene");
-				ImGuiIO& io = ImGui::GetIO(); (void)io;
-				io.WantCaptureMouse = false;
 				Player::GetInstance()->lose = false;
 				goback = true;
 			}
@@ -125,8 +117,6 @@ void MenuScene::Update(const double dt)
 			if (ImGui::ImageButton((ImTextureID)quitButtonData.textureID, ImVec2(600, 150), ImVec2(0, 0), ImVec2(1, 1), 1))
 			{
 				Application::GetInstance().quitgame = true;
-				ImGuiIO& io = ImGui::GetIO(); (void)io;
-				io.WantCaptureMouse = false;
 				Player::GetInstance()->lose = false;
 				goback = true;
 			}

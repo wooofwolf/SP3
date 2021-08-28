@@ -325,7 +325,15 @@ void SceneLevel3::Render()
 		}
 	}
 
-
+	if (player->dashCooldown > 1.5)
+	{
+		SceneManager::GetInstance()->GetActiveScene()->GetModelStack().PushMatrix();
+		SceneManager::GetInstance()->GetActiveScene()->GetModelStack().Translate(player->preDashPos.x, player->preDashPos.y, 0.5);
+		SceneManager::GetInstance()->GetActiveScene()->GetModelStack().Rotate(Math::RadianToDegree(atan2f(player->preDashNorm.y, player->preDashNorm.x)), 0, 0, 1);
+		SceneManager::GetInstance()->GetActiveScene()->GetModelStack().Scale(player->GetScale().x, player->GetScale().y, player->GetScale().z);
+		SceneManager::GetInstance()->GetActiveScene()->RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_PLAYERDASH), false);
+		SceneManager::GetInstance()->GetActiveScene()->GetModelStack().PopMatrix();
+	}
 	Vector3 playerpos;
 
 	if (player->nearXBoundary() == true || player->nearYBoundary() == true)
