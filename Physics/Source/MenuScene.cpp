@@ -85,7 +85,7 @@ void MenuScene::Update(const double dt)
 
 
 
-		ImGui::SetWindowPos(ImVec2(m_worldWidth / 2, 300));
+		ImGui::SetWindowPos(ImVec2(m_worldWidth / 2, 400));
 
 		if (ImGui::ImageButton((ImTextureID)playButtonData.textureID, ImVec2(600, 150), ImVec2(0, 0), ImVec2(1, 1), 1))
 		{
@@ -142,6 +142,22 @@ void MenuScene::Render(void)
 
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
+
+	modelStack.PushMatrix();
+	{
+		modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, -1);
+		modelStack.Scale(m_worldWidth, m_worldHeight, 2);
+		RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_BG), true);
+	}
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	{
+		modelStack.Translate(m_worldWidth / 4, 3.8 * (m_worldHeight / 5), 0);
+		modelStack.Scale(80, 20, 2);
+		RenderMesh(MeshList::GetInstance()->GetMesh(MeshList::GEO_LOGO), true);
+	}
+	modelStack.PopMatrix();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
