@@ -44,7 +44,6 @@ void Collectible::Collisioncheck(std::vector<Vector3> activeTileList)
 		if ((pos - Player::GetInstance()->GetPos()).Length() < scale.x + 2)
 		{
 			active = false;
-			std::cout << "PICKUP DETECTED" << std::endl;
 
 			if (Player::GetInstance()->GetHealth() < 100)
 			{

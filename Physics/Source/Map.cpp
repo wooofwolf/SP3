@@ -251,18 +251,15 @@ void Map::AStarSearch(Vector3 source, Vector3 destination, std::vector<Vector3>*
 
 	if (IsValid(src) == false)
 	{
-		std::cout << "Source is invalid" << std::endl;
 		return;
 	}
 	if (IsValid(dest) == false)
 	{
-		std::cout << "Destination is invalid" << std::endl;
 		return;
 	}
 
 	if (IsDestination(src, dest))
 	{
-		std::cout << "Already at destination" << std::endl;
 		return;
 	}
 
@@ -538,8 +535,6 @@ void Map::AStarSearch(Vector3 source, Vector3 destination, std::vector<Vector3>*
 			}
 		}
 	}
-	if (foundDest == false)
-		std::cout << "Failed to find the Destination Cell" << std::endl;
 
 	return;
 }

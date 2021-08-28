@@ -56,7 +56,6 @@ void Player::Update(double dt)
 	if (hp <= 0)
 	{
 		SceneManager::GetInstance()->SetActiveScene("LoseScene");
-		std::cout << "lost detected" << std::endl;
 		lose = true;
 	}
 	// Energy Regeneration

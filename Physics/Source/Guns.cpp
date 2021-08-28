@@ -16,8 +16,6 @@ void GunComponent::UpdateFireRateTimer(double dt)
 
 Projectile* ConcreteGunComponent::FireGun()
 {
-	std::cout << "Firing from ConcreteGunComponent" << std::endl;
-
 	return new Projectile(Projectile::PROJECTILE_TYPE::PROJECTILE_NONE);
 }
 
@@ -27,8 +25,6 @@ GunDecorator::GunDecorator(GunComponent* component) : component(component)
 
 Projectile* GunDecorator::FireGun()
 {
-	std::cout << "Firing from GunDecorator" << std::endl;
-
 	return new Projectile(Projectile::PROJECTILE_TYPE::PROJECTILE_NONE);
 }
 

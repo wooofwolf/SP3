@@ -328,8 +328,6 @@ void SceneLevel3::Render()
 		playerpos.Set(m_worldWidth * 0.5, m_worldHeight * 0.5);
 	}
 
-	std::cout << player->GetPos().x << ' ' << player->GetPos().y << std::endl;
-
 	float mousePosX = (x / w) * m_worldWidth;
 	float mousePosY = m_worldHeight - (y / h) * m_worldHeight;
 

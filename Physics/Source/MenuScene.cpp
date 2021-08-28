@@ -74,8 +74,6 @@ void MenuScene::Update(const double dt)
 		ImGui::SetWindowSize(ImVec2((float)Application::GetInstance().GetWindowWidth(), (float)Application::GetInstance().GetWindowHeight()));
 		ImGui::SetWindowFontScale(3.f);
 
-		// Display the FPS
-		ImGui::TextColored(ImVec4(0, 1, 0, 1), "FPS: %f", fps);
 		// Render which gun the player is holding
 		ImGuiWindowFlags menubutton = ImGuiWindowFlags_AlwaysAutoResize |
 			ImGuiWindowFlags_NoBackground |
