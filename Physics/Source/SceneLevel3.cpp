@@ -104,15 +104,6 @@ void SceneLevel3::Update(double dt)
 	//	entitylist[i]->pos += go->vel * player.GetGameSpeed() * dt;
 	//}
 
-	static bool bZPressed = false;
-	if (!bZPressed && Application::IsKeyPressed('Z'))
-	{
-		SceneManager::GetInstance()->SetActiveScene("Level4");
-		bZPressed = true;
-	}
-	else if (bZPressed && !Application::IsKeyPressed('Z'))
-		bZPressed = false;
-
 	SceneBase::Update(dt);
 	
 	//camera->Update(dt);
@@ -344,8 +335,6 @@ void SceneLevel3::Render()
 	{
 		playerpos.Set(m_worldWidth * 0.5, m_worldHeight * 0.5);
 	}
-
-	std::cout << player->GetPos().x << ' ' << player->GetPos().y << std::endl;
 
 	float mousePosX = (x / w) * m_worldWidth;
 	float mousePosY = m_worldHeight - (y / h) * m_worldHeight;

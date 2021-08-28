@@ -302,7 +302,6 @@ void CavemenMelee::Update(double dt)
 	if (!moving)
 	{
 		stasisTimer += dt;
-		std::cout << stasisTimer << std::endl;
 	}
 	if (stasisTimer >= 5)
 	{
@@ -382,7 +381,6 @@ void CavemenRanged::Update(double dt)
 	if (!moving)
 	{
 		stasisTimer += dt;
-		std::cout << stasisTimer << std::endl;
 	}
 	if (stasisTimer >= 5)
 	{
@@ -474,7 +472,6 @@ void Knights::Update(double dt)
 	if (!moving)
 	{
 		stasisTimer += dt;
-		std::cout << stasisTimer << std::endl;
 	}
 	if (stasisTimer >= 5)
 	{
@@ -552,7 +549,6 @@ void Archer::Update(double dt)
 	if (!moving)
 	{
 		stasisTimer += dt;
-		std::cout << stasisTimer << std::endl;
 	}
 	if (stasisTimer >= 5)
 	{
@@ -645,7 +641,6 @@ void Cyborg::Update(double dt)
 	if (!moving)
 	{
 		stasisTimer += dt;
-		std::cout << stasisTimer << std::endl;
 	}
 	if (stasisTimer >= 5)
 	{
@@ -723,7 +718,6 @@ void Sniper::Update(double dt)
 	if (!moving)
 	{
 		stasisTimer += dt;
-		std::cout << stasisTimer << std::endl;
 	}
 	if (stasisTimer >= 5)
 	{

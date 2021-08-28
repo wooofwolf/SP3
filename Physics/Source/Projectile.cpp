@@ -135,7 +135,6 @@ void Projectile::EnemyShoot(PROJECTILE_TYPE type , BaseEnemy* enemy, double dt)
 {
 	if (enemy->moving)
 	{
-		std::cout << Player::GetInstance()->GetPos() << std::endl;
 		Projectile* proj = new Projectile(type);
 		enemy->active = true;
 		proj->Init(enemy);

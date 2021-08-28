@@ -54,9 +54,6 @@ void SceneGUI::Update(double dt)
 		ImGui::SetWindowSize(ImVec2((float)Application::GetInstance().GetWindowWidth(), (float)Application::GetInstance().GetWindowHeight()));
 		ImGui::SetWindowFontScale(3.f);
 
-		// Display the FPS
-		ImGui::TextColored(ImVec4(0, 1, 0, 1), "FPS: %f", fps);
-
 		// Render the health and energy bars
 		ImGuiWindowFlags healthWindowFlags = ImGuiWindowFlags_AlwaysAutoResize |
 			ImGuiWindowFlags_NoBackground |

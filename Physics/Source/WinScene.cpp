@@ -59,8 +59,6 @@ void WinScene::Update(const double dt)
 		ImGui::SetWindowSize(ImVec2((float)Application::GetInstance().GetWindowWidth(),		(float)Application::GetInstance().GetWindowHeight()));
 		ImGui::SetWindowFontScale(3.f);
 
-	// Display the FPS
-		ImGui::TextColored(ImVec4(0, 1, 0, 1), "FPS: %f", fps);
 			// Render which gun the player is holding
 		ImGuiWindowFlags Playbutton = ImGuiWindowFlags_AlwaysAutoResize |
 			ImGuiWindowFlags_NoBackground |
@@ -70,12 +68,8 @@ void WinScene::Update(const double dt)
 			ImGuiWindowFlags_NoCollapse |
 			ImGuiWindowFlags_NoScrollbar;
 		
-		ImGui::Begin("Win", NULL, Playbutton);
 		ImGui::SetWindowPos(ImVec2(750, 600));
-		ImGui::SetWindowSize(ImVec2(50.0f, 100.0f));
-		ImGui::SetWindowFontScale(3.f);
-		ImGuiStyle& style = ImGui::GetStyle();
-		style.FrameRounding = 200.0f;
+	
 		if (ImGui::ImageButton((ImTextureID)restartButtonData.textureID, ImVec2(400, 200), ImVec2(0, 0), ImVec2(1, 1), 1))
 		{
 			SceneManager::GetInstance()->SetActiveScene("MenuScene");	
@@ -83,20 +77,7 @@ void WinScene::Update(const double dt)
 			io.WantCaptureMouse = false;
 			Player::GetInstance()->win = false;
 		}
-		/*ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
-		ImGui::PopStyleColor();*/
-		ImGui::End();
-		
 	ImGui::End();
-
-	static bool bEnterPressed = false;
-	if (!bEnterPressed && Application::IsKeyPressed(VK_RETURN))
-	{
-		SceneManager::GetInstance()->SetActiveScene(SceneManager::GetInstance()->GetPrevScene());
-		bEnterPressed = true;
-	}
-	else if (bEnterPressed && !Application::IsKeyPressed(VK_RETURN))
-		bEnterPressed = false;
 }
 
 void WinScene::Render(void)
