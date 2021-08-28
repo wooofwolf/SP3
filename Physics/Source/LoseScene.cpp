@@ -89,15 +89,6 @@ void LoseScene::Update(const double dt)
 		ImGui::End();
 		
 	ImGui::End();
-
-	static bool bEnterPressed = false;
-	if (!bEnterPressed && Application::IsKeyPressed(VK_RETURN))
-	{
-		SceneManager::GetInstance()->SetActiveScene(SceneManager::GetInstance()->GetPrevScene());
-		bEnterPressed = true;
-	}
-	else if (bEnterPressed && !Application::IsKeyPressed(VK_RETURN))
-		bEnterPressed = false;
 }
 
 void LoseScene::Render(void)

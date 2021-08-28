@@ -104,15 +104,6 @@ void SceneLevel3::Update(double dt)
 	//	entitylist[i]->pos += go->vel * player.GetGameSpeed() * dt;
 	//}
 
-	static bool bZPressed = false;
-	if (!bZPressed && Application::IsKeyPressed('Z'))
-	{
-		SceneManager::GetInstance()->SetActiveScene("Level4");
-		bZPressed = true;
-	}
-	else if (bZPressed && !Application::IsKeyPressed('Z'))
-		bZPressed = false;
-
 	SceneBase::Update(dt);
 	
 	//camera->Update(dt);
