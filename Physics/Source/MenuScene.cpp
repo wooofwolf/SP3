@@ -85,53 +85,41 @@ void MenuScene::Update(const double dt)
 			ImGuiWindowFlags_NoCollapse |
 			ImGuiWindowFlags_NoScrollbar;
 
-		ImGui::Begin("Play", NULL, menubutton);
-		{
-			ImGui::SetWindowPos(ImVec2(m_worldWidth / 2, 300));
-			ImGui::SetWindowSize(ImVec2(50.0f, 100.0f));
-			ImGui::SetWindowFontScale(3.f);
-			if (ImGui::ImageButton((ImTextureID)playButtonData.textureID, ImVec2(600, 150), ImVec2(0, 0), ImVec2(1, 1), 1))
-			{
-				SceneManager::GetInstance()->SetActiveScene("Level1");
-				ImGuiIO& io = ImGui::GetIO(); (void)io;
-				io.WantCaptureMouse = false;
-				Player::GetInstance()->lose = false;
-				goback = true;
-			}
-		}
-		ImGui::End();
 
-		ImGui::Begin("Howto", NULL, menubutton);
-		{
-			ImGui::SetWindowPos(ImVec2(m_worldWidth / 2, 500));
-			ImGui::SetWindowSize(ImVec2(50.0f, 100.0f));
-			ImGui::SetWindowFontScale(3.f);
-			if (ImGui::ImageButton((ImTextureID)howtoButtonData.textureID, ImVec2(600, 150), ImVec2(0, 0), ImVec2(1, 1), 1))
-			{
-				SceneManager::GetInstance()->SetActiveScene("HowtoScene");
-				ImGuiIO& io = ImGui::GetIO(); (void)io;
-				io.WantCaptureMouse = false;
-				Player::GetInstance()->lose = false;
-				goback = true;
-			}
-		}
-		ImGui::End();
 
-		ImGui::Begin("quit", NULL, menubutton);
+		ImGui::SetWindowPos(ImVec2(m_worldWidth / 2, 300));
+
+		if (ImGui::ImageButton((ImTextureID)playButtonData.textureID, ImVec2(600, 150), ImVec2(0, 0), ImVec2(1, 1), 1))
 		{
-			ImGui::SetWindowPos(ImVec2(m_worldWidth / 2, 700));
-			ImGui::SetWindowSize(ImVec2(50.0f, 100.0f));
-			ImGui::SetWindowFontScale(3.f);
-			if (ImGui::ImageButton((ImTextureID)quitButtonData.textureID, ImVec2(600, 150), ImVec2(0, 0), ImVec2(1, 1), 1))
-			{
-				Application::GetInstance().quitgame = true;
-				ImGuiIO& io = ImGui::GetIO(); (void)io;
-				io.WantCaptureMouse = false;
-				Player::GetInstance()->lose = false;
-				goback = true;
-			}
+			SceneManager::GetInstance()->SetActiveScene("Level1");
+			ImGuiIO& io = ImGui::GetIO(); (void)io;
+			io.WantCaptureMouse = false;
+			Player::GetInstance()->lose = false;
+			goback = true;
 		}
-		ImGui::End();
+
+		ImGui::Dummy(ImVec2(0.0f, 20.f));
+
+		if (ImGui::ImageButton((ImTextureID)howtoButtonData.textureID, ImVec2(600, 150), ImVec2(0, 0), ImVec2(1, 1), 1))
+		{
+			SceneManager::GetInstance()->SetActiveScene("HowtoScene");
+			ImGuiIO& io = ImGui::GetIO(); (void)io;
+			io.WantCaptureMouse = false;
+			Player::GetInstance()->lose = false;
+			goback = true;
+		}
+
+		ImGui::Dummy(ImVec2(0.0f, 20.f));
+
+		if (ImGui::ImageButton((ImTextureID)quitButtonData.textureID, ImVec2(600, 150), ImVec2(0, 0), ImVec2(1, 1), 1)
+			|| Application::IsKeyPressed(VK_ESCAPE))
+		{
+			Application::GetInstance().quitgame = true;
+			ImGuiIO& io = ImGui::GetIO(); (void)io;
+			io.WantCaptureMouse = false;
+			Player::GetInstance()->lose = false;
+			goback = true;
+		}
 	}
 	ImGui::End();
 }
@@ -156,11 +144,6 @@ void MenuScene::Render(void)
 
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
-
-	std::ostringstream ss;
-	ss << "button 1 to play,button 2 for howto page and 3 is quit";
-	RenderTextOnScreen(MeshList::GetInstance()->
-		GetMesh(MeshList::GEO_TEXT), ss.str(), Color(0, 1, 0), 1.4f, 0, 1);
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
