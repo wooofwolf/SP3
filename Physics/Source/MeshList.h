@@ -51,6 +51,8 @@ public:
 		GEO_HAZARD,
 		GEO_LOSE,
 		GEO_EXIT,
+		GEO_BG,
+		GEO_LOGO,
 		GEO_WIN,
 
 		NUM_GEOMETRY,
