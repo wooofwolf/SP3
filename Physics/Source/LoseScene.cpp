@@ -60,7 +60,7 @@ void LoseScene::Update(const double dt)
 		ImGui::SetWindowFontScale(3.f);
 
 			// Render which gun the player is holding
-		ImGuiWindowFlags Playbutton = ImGuiWindowFlags_AlwaysAutoResize |
+		ImGuiWindowFlags Playbutton =ImGuiWindowFlags_AlwaysAutoResize |
 			ImGuiWindowFlags_NoBackground |
 			ImGuiWindowFlags_NoTitleBar |
 			ImGuiWindowFlags_NoMove |
@@ -68,12 +68,8 @@ void LoseScene::Update(const double dt)
 			ImGuiWindowFlags_NoCollapse |
 			ImGuiWindowFlags_NoScrollbar;
 		
-		ImGui::Begin("lose", NULL, Playbutton);
 		ImGui::SetWindowPos(ImVec2(750, 600));
-		ImGui::SetWindowSize(ImVec2(50.0f, 100.0f));
-		ImGui::SetWindowFontScale(3.f);
-		ImGuiStyle& style = ImGui::GetStyle();
-		style.FrameRounding = 200.0f;
+		
 		if (ImGui::ImageButton((ImTextureID)restartButtonData.textureID, ImVec2(400, 200), ImVec2(0, 0), ImVec2(1, 1), 1))
 		{
 			SceneManager::GetInstance()->SetActiveScene(SceneManager::GetInstance()->GetPrevScene());
@@ -82,9 +78,6 @@ void LoseScene::Update(const double dt)
 			Player::GetInstance()->lose = false;
 			goback = true;
 		}
-		/*ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
-		ImGui::PopStyleColor();*/
-		ImGui::End();
 		
 	ImGui::End();
 }
